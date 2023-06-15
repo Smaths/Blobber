@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -47,7 +48,7 @@ public class SceneFader : MonoBehaviour
 
     private void Start()
     {
-        FadeIn();
+        _canvasGroup.alpha = 0;
     }
     #endregion
 
