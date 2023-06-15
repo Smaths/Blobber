@@ -398,5 +398,11 @@ MonoBehaviour:
     customWindowSize: {x: 500, y: 300}
     alignWindowToBar: 1
     windowMode: 0
-  _sceneHistory: []
+  _sceneHistory:
+  - name: Start
+    path: Assets/Scenes/Start.unity
+  - name: Other
+    path: Assets/Scenes/Other.unity
+  - name: SampleScene
+    path: Assets/Scenes/SampleScene.unity
   _notes: []
