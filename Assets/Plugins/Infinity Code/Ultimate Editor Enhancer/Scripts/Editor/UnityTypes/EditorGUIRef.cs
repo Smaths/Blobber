@@ -22,6 +22,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         private static MethodInfo _helpIconButtonMethod;
         private static MethodInfo _isEditingTextFieldMethod;
         private static FieldInfo _recycledEditorField;
+        private static MethodInfo _scrollableTextAreaInternalMethod;
 
         private static FieldInfo activeEditorField
         {
@@ -69,7 +70,10 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_doObjectFoldoutMethod == null)
                 {
-                    _doObjectFoldoutMethod = Reflection.GetMethod(type, "DoObjectFoldout", new[] { typeof(bool), typeof(Rect), typeof(Rect), typeof(Object[]), typeof(int) }, Reflection.StaticLookup);
+                    _doObjectFoldoutMethod = Reflection.GetMethod(type, "DoObjectFoldout", new[]
+                    {
+                        typeof(bool), typeof(Rect), typeof(Rect), typeof(Object[]), typeof(int)
+                    }, Reflection.StaticLookup);
                 }
 
                 return _doObjectFoldoutMethod;
@@ -222,6 +226,25 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
+        public static MethodInfo scrollableTextAreaInternalMethod
+        {
+            get
+            {
+                if (_scrollableTextAreaInternalMethod == null)
+                {
+                    _scrollableTextAreaInternalMethod = Reflection.GetMethod(type, "ScrollableTextAreaInternal", new[]
+                    {
+                        typeof(Rect), 
+                        typeof(string), 
+                        typeof(Vector2).MakeByRefType(), 
+                        typeof(GUIStyle)
+                    }, Reflection.StaticLookup);
+                }
+                
+                return _scrollableTextAreaInternalMethod;
+            }
+        }
+
         private static Type type
         {
             get => typeof(EditorGUI);
@@ -236,6 +259,17 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         public static bool IsEditingTextField()
         {
             return (bool)isEditingTextFieldMethod.Invoke(null, new object[0]);
+        }
+        
+        public static string ScrollableTextAreaInternal(Rect position, string text, ref Vector2 scrollPosition, GUIStyle style)
+        {
+            object[] parameters = new object[]
+            {
+                position, text, scrollPosition, style
+            };
+            string result = (string)scrollableTextAreaInternalMethod.Invoke(null, parameters);
+            scrollPosition = (Vector2) parameters[2];
+            return result;
         }
 
         public struct NumberFieldValue

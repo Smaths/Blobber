@@ -109,6 +109,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
 
         }
+        
+        protected virtual void OnHeaderMiddleClick()
+        {
+            
+        }
 
         protected virtual void OnLoad(JsonItem json)
         {
@@ -237,28 +242,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
         }
 
-        private void ProcessHeaderRelease(Rect sceneRect, Rect headerRect)
-        {
-            Event e = Event.current;
-
-            if (e.button == 0)
-            {
-                if (isDragging)
-                {
-                    isDragging = false;
-                    TryFixPosition(sceneRect);
-                    e.Use();
-                    GUIUtility.hotControl = 0;
-                    SceneViewAlignDrawer.Hide();
-                }
-
-                if (headerRect.Contains(e.mousePosition) && (e.mousePosition - pressMousePosition).sqrMagnitude < 10)
-                {
-                    OnHeaderClick();
-                }
-            }
-        }
-
         private void ProcessHeaderPress(Rect sceneRect, Rect headerRect)
         {
             Event e = Event.current;
@@ -266,11 +249,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (!headerRect.Contains(e.mousePosition)) return;
 
             Vector2 mousePosition = e.mousePosition;
+            pressMousePosition = mousePosition;
+            
             if (e.button == 0)
             {
                 GUIUtility.hotControl = GUIUtility.GetControlID(FocusType.Passive);
-
-                pressMousePosition = mousePosition;
 
                 if (!isDragging && (e.control || e.command) && headerRect.Contains(mousePosition))
                 {
@@ -294,6 +277,46 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 {
                     e.Use();
                     ShowHeaderContextMenu();
+                }
+            }
+            else if (e.button == 2)
+            {
+                e.Use();
+            }
+        }
+
+        private void ProcessHeaderRelease(Rect sceneRect, Rect headerRect)
+        {
+            Event e = Event.current;
+            bool isClick = headerRect.Contains(e.mousePosition) && (e.mousePosition - pressMousePosition).sqrMagnitude < 10;
+            
+            if (e.button == 0)
+            {
+                if (isDragging)
+                {
+                    isDragging = false;
+                    TryFixPosition(sceneRect);
+                    GUIUtility.hotControl = 0;
+                    SceneViewAlignDrawer.Hide();
+                }
+
+                if (isClick)
+                {
+                    OnHeaderClick();
+                }
+                
+                e.Use();
+            }
+            else if (e.button == 1)
+            {
+                e.Use();
+            }
+            else if (e.button == 2)
+            {
+                if (isClick)
+                {
+                    OnHeaderMiddleClick();
+                    e.Use();
                 }
             }
         }

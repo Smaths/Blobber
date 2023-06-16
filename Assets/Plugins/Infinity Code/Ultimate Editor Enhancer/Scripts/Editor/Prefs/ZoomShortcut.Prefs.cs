@@ -85,6 +85,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Super Fast Move Backward", "Scene View", zoomBoostShortcutModifiers, zoomOutShortcutKeyCode),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                zoomShortcut = state;
+            }
         }
     }
 }

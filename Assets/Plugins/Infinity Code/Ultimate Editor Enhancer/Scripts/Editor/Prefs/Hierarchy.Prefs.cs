@@ -21,6 +21,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool hierarchyErrorIcons = true;
         public static bool hierarchyIcons = true;
         public static HierarchyIconsDisplayRule hierarchyIconsDisplayRule = HierarchyIconsDisplayRule.onHoverWithModifiers;
+        public static bool hierarchyNote = true;
         public static bool hierarchyOverrideMainIcon = true;
         public static bool hierarchySoloVisibility = true;
         public static float hierarchyMarginRight = 0;
@@ -34,7 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 #endif
         public static int hierarchyIconsMaxItems = 6;
 
-        public class HierarchyManager : StandalonePrefManager<HierarchyManager>, IHasShortcutPref
+        public class HierarchyManager : StandalonePrefManager<HierarchyManager>, IHasShortcutPref, IStateablePref
         {
             private const string sectionLabel = "Show Components In Hierarchy";
 
@@ -50,6 +51,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         "Enable / Disable GameObject",
                         "Filter by Type",
                         "Icon Right Margin",
+                        "Note",
                         "Show Bookmark Button",
                         "Tree",
                         "Solo Visibility",
@@ -82,6 +84,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 DrawHierarchyIcons();
 
                 hierarchyBookmarks = EditorGUILayout.ToggleLeft("Show Bookmark Button", hierarchyBookmarks);
+                hierarchyNote = EditorGUILayout.ToggleLeft("Show Note", hierarchyNote);
                 hierarchyErrorIcons = EditorGUILayout.ToggleLeft("Show Error Icon When GameObject Has an Error or Exception", hierarchyErrorIcons);
                 hierarchySoloVisibility = EditorGUILayout.ToggleLeft("Solo Visibility", hierarchySoloVisibility);
                 hierarchyTree = EditorGUILayout.ToggleLeft("Tree", hierarchyTree);
@@ -139,6 +142,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.indentLevel--;
             }
 
+            public string GetMenuName()
+            {
+                return "Hierarchy";
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 List<Shortcut> shortcuts = new List<Shortcut>();
@@ -154,6 +162,23 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
 
                 return shortcuts;
+            }
+
+            public void SetState(bool state)
+            {
+                _hierarchyTypeFilter = state;
+                hierarchyBookmarks = state;
+                hierarchyEnableGameObject = state;
+                hierarchyEnableMiddleClick = state;
+                hierarchyErrorIcons = state;
+                hierarchyIcons = state;
+                hierarchyNote = state;
+                hierarchyOverrideMainIcon = state;
+                hierarchyRowBackground = state;
+                hierarchySoloVisibility = state;
+                hierarchyTree = state;
+
+                HeadersManager.SetState(state);
             }
         }
 

@@ -204,7 +204,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 for (int j = 0; j < container.childCount; j++)
                 {
                     ToolbarButton b = container[j] as ToolbarButton;
-                    bool visible = SearchableItem.GetAccuracy(pattern, b.text) > 0;
+                    bool visible = SearchableItem.Match(pattern, b.text);
                     if (visible)
                     {
                         b.style.display = DisplayStyle.Flex;

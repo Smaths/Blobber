@@ -10,7 +10,24 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 {
     public static class ReorderableListRef
     {
+        private static MethodInfo _clearCacheMethod;
         private static MethodInfo _doListElementsMethod;
+        private static MethodInfo _invalidateCacheMethod;
+        private static bool _clearCacheMethodChecked;
+        private static bool _invalidateCacheMethodChecked;
+
+        private static MethodInfo clearCacheMethodHidden
+        {
+            get
+            {
+                if (_clearCacheMethod == null && !_clearCacheMethodChecked)
+                {
+                    _clearCacheMethod = type.GetMethod("ClearCache", Reflection.InstanceLookup);
+                    _clearCacheMethodChecked = true;
+                }
+                return _clearCacheMethod;
+            }
+        }
 
         public static MethodInfo doListElementsMethod
         {
@@ -31,42 +48,28 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
+        private static MethodInfo invalidateCacheMethodHidden
+        {
+            get
+            {
+                if (_invalidateCacheMethod == null && !_invalidateCacheMethodChecked)
+                {
+                    _invalidateCacheMethod = type.GetMethod("InvalidateCache", Reflection.InstanceLookup);
+                    _invalidateCacheMethodChecked = true;
+                }
+                return _invalidateCacheMethod;
+            }
+        }
+
         public static Type type
         {
             get => typeof(ReorderableList);
         }
 
-#if UNITY_2021_3_OR_NEWER || UNITY_2022_1_OR_NEWER
-        private static MethodInfo _invalidateCacheMethod;
-
-        private static MethodInfo invalidateCacheMethod
-        {
-            get
-            {
-                if (_invalidateCacheMethod == null) _invalidateCacheMethod = type.GetMethod("InvalidateCache", Reflection.InstanceLookup);
-                return _invalidateCacheMethod;
-            }
-        }
-#elif UNITY_2020_2_OR_NEWER
-        private static MethodInfo _clearCacheMethod;
-
-        private static MethodInfo clearCacheMethod
-        {
-            get
-            {
-                if (_clearCacheMethod == null) _clearCacheMethod = type.GetMethod("ClearCache", Reflection.InstanceLookup);
-                return _clearCacheMethod;
-            }
-        }
-#endif
-
         public static void ClearCache(ReorderableList list)
         {
-#if UNITY_2021_3_OR_NEWER || UNITY_2022_1_OR_NEWER
-            invalidateCacheMethod.Invoke(list, null);
-#elif UNITY_2020_2_OR_NEWER
-            clearCacheMethod.Invoke(list, null);
-#endif
+            if (invalidateCacheMethodHidden != null) invalidateCacheMethodHidden.Invoke(list, null);
+            else if (clearCacheMethodHidden != null) clearCacheMethodHidden.Invoke(list, null);
         }
     }
 }

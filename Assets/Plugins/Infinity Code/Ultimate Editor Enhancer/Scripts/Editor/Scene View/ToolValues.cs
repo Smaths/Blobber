@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Tools;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
@@ -41,7 +42,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             OnSelectionChanged();
         }
 
-        private static void AppendPosition()
+        private static void AppendPosition(StringBuilder builder)
         {
             Vector3 pos;
 
@@ -49,52 +50,52 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (rt != null)
             {
-                StaticStringBuilder.Append("Anchored Position (");
+                builder.Append("Anchored Position (");
                 pos = rt.anchoredPosition3D;
             }
             else
             {
-                StaticStringBuilder.Append("Position (");
+                builder.Append("Position (");
                 pos = firstTransform.localPosition;
             }
 
-            StaticStringBuilder.Append(samePositionX ? pos.x.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(samePositionY ? pos.y.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(samePositionZ ? pos.z.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(")");
+            builder.Append(samePositionX ? pos.x.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(", ");
+            builder.Append(samePositionY ? pos.y.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(", ");
+            builder.Append(samePositionZ ? pos.z.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(")");
         }
 
-        private static void AppendRotation()
+        private static void AppendRotation(StringBuilder builder)
         {
-            StaticStringBuilder.Append("Rotation (");
-            StaticStringBuilder.Append(sameRotationX ? firstTransform.eulerAngles.x.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameRotationY ? firstTransform.eulerAngles.y.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameRotationZ ? firstTransform.eulerAngles.z.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(")");
+            builder.Append("Rotation (");
+            builder.Append(sameRotationX ? firstTransform.eulerAngles.x.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(", ");
+            builder.Append(sameRotationY ? firstTransform.eulerAngles.y.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(", ");
+            builder.Append(sameRotationZ ? firstTransform.eulerAngles.z.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(")");
         }
 
-        private static void AppendScale()
+        private static void AppendScale(StringBuilder builder)
         {
-            StaticStringBuilder.Append("Scale (");
-            StaticStringBuilder.Append(sameScaleX ? firstTransform.localScale.x.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameScaleY ? firstTransform.localScale.y.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameScaleZ ? firstTransform.localScale.z.ToString("F2", Culture.numberFormat) : "---");
-            StaticStringBuilder.Append(")");
+            builder.Append("Scale (");
+            builder.Append(sameScaleX ? firstTransform.localScale.x.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(", ");
+            builder.Append(sameScaleY ? firstTransform.localScale.y.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(", ");
+            builder.Append(sameScaleZ ? firstTransform.localScale.z.ToString("F2", Culture.numberFormat) : "---");
+            builder.Append(")");
         }
 
-        private static void AppendSize(RectTransform rt)
+        private static void AppendSize(RectTransform rt, StringBuilder builder)
         {
-            StaticStringBuilder.Append("Size (");
-            StaticStringBuilder.Append(rt.sizeDelta.x.ToString("F2", Culture.numberFormat));
-            StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(rt.sizeDelta.y.ToString("F2", Culture.numberFormat));
-            StaticStringBuilder.Append(")");
+            builder.Append("Size (");
+            builder.Append(rt.sizeDelta.x.ToString("F2", Culture.numberFormat));
+            builder.Append(", ");
+            builder.Append(rt.sizeDelta.y.ToString("F2", Culture.numberFormat));
+            builder.Append(")");
         }
 
         private static void DrawLabel(SceneView sceneView, string text)
@@ -162,7 +163,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (UnityEditor.Tools.hidden || UnityEditor.Tools.current == Tool.View) return;
             if (e.modifiers != Prefs.toolValuesModifiers) return;
 
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
             Tool tool = UnityEditor.Tools.current;
 #if UNITY_2020_2_OR_NEWER
@@ -171,38 +172,38 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (tool == Tool.Move || EditorTools.activeToolType == typeof(DuplicateTool))
 #endif
             {
-                AppendPosition();
-                label = StaticStringBuilder.GetString(true);
+                AppendPosition(builder);
+                label = builder.ToString();
             }
             else if (tool == Tool.Rotate)
             {
-                AppendRotation();
-                label = StaticStringBuilder.GetString(true);
+                AppendRotation(builder);
+                label = builder.ToString();
             }
             else if (tool == Tool.Scale)
             {
-                AppendScale();
-                label = StaticStringBuilder.GetString(true);
+                AppendScale(builder);
+                label = builder.ToString();
             }
             else if (tool == Tool.Rect)
             {
-                AppendPosition();
-                StaticStringBuilder.Append("\n");
+                AppendPosition(builder);
+                builder.Append("\n");
 
                 RectTransform rt = firstTransform as RectTransform;
-                if (rt != null) AppendSize(rt);
-                else AppendScale();
+                if (rt != null) AppendSize(rt, builder);
+                else AppendScale(builder);
 
-                label = StaticStringBuilder.GetString(true);
+                label = builder.ToString();
             }
             else if (tool == Tool.Transform)
             {
-                AppendPosition();
-                StaticStringBuilder.Append("\n");
-                AppendRotation();
-                StaticStringBuilder.Append("\n");
-                AppendScale();
-                label = StaticStringBuilder.GetString(true);
+                AppendPosition(builder);
+                builder.Append("\n");
+                AppendRotation(builder);
+                builder.Append("\n");
+                AppendScale(builder);
+                label = builder.ToString();
             }
         }
 

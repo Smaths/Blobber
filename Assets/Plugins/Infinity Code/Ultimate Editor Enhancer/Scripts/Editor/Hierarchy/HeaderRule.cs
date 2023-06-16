@@ -28,9 +28,13 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private TextAlignment _textAlign = TextAlignment.Center;
         private FontStyle _textStyle = FontStyle.Bold;
 
+        [NonSerialized]
         private GUIStyle _headerStyle;
+        [NonSerialized]
         private GUIStyle _headerStyleHovered;
+        [NonSerialized]
         private GUIStyle _headerStyleSelected;
+        [NonSerialized]
         private GUIStyle _headerStyleHoveredSelected;
 
         private GUIStyle headerStyle
@@ -105,7 +109,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                     color.a = 1;
                     _headerStyleSelected.normal.background = Resources.CreateSinglePixelTexture(color);
                 }
-                else if (_headerStyle.normal.background == null)
+                else if (_headerStyleSelected.normal.background == null)
                 {
                     Color color = Color.Lerp(backgroundColor, SELECTED_TINT, 0.4f);
                     color.a = 1;
@@ -119,7 +123,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private GUIStyle headerStyleHoveredSelected
         {
             get
-            {
+            { 
                 if (_headerStyleHoveredSelected == null)
                 {
                     _headerStyleHoveredSelected = new GUIStyle(headerStyle);
@@ -127,7 +131,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                     color.a = 1;
                     _headerStyleHoveredSelected.normal.background = Resources.CreateSinglePixelTexture(color);
                 }
-                else if (_headerStyle.normal.background == null)
+                else if (_headerStyleHoveredSelected.normal.background == null)
                 {
                     Color color = Color.Lerp(backgroundColor, HOVERED_SELECTED_TINT, 0.4f);
                     color.a = 1;
@@ -151,7 +155,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             return backgroundColor != _backgroundColor ||
                    textAlign != _textAlign ||
                    textStyle != _textStyle ||
-                   MathHelper.ColorsEqualWithoutAlpha(textColor, _textColor);
+                   !MathHelper.ColorsEqualWithoutAlpha(textColor, _textColor);
         }
 
         public void Draw(HierarchyItem item, int textPadding = 0)
@@ -216,8 +220,8 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (!enabled) return false;
 
             string name = go.name;
-            if (condition == HeaderCondition.nameStarts) return name.StartsWith(value);
-            if (condition == HeaderCondition.nameContains) return name.Contains(value);
+            if (condition == HeaderCondition.nameStarts) return StringHelper.StartsWith(name, value);
+            if (condition == HeaderCondition.nameContains) return StringHelper.Contains(name, value);
             if (condition == HeaderCondition.nameEqual) return name == value;
             return false;
         }

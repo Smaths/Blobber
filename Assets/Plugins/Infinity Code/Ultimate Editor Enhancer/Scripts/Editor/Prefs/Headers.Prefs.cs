@@ -29,6 +29,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.EndDisabledGroup();
             }
+            
+            public static void SetState(bool state)
+            {
+                hierarchyHeaders = state;
+            }
         }
     }
 }

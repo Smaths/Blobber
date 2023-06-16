@@ -17,7 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool _improveCurveEditor = true;
         public static bool _searchInEnumFields = true;
         public static bool _unsafeFeatures = true;
-        public static int searchInEnumFieldsMinValues = 6;
+        public static int searchInEnumFieldsMinValues = 10;
         public static bool longTextFieldsInVisualScripting = false;
 
         private static int hasUnsafeBlock = -1; // -1 - unknown, 0 - no block, 1 - has block
@@ -59,7 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
         }
 
-        public class UnsafeManager: StandalonePrefManager<UnsafeManager>
+        public class UnsafeManager: StandalonePrefManager<UnsafeManager>, IStateablePref
         {
             public override IEnumerable<string> keywords
             {
@@ -89,12 +89,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 _unsafeFeatures = EditorGUILayout.ToggleLeft("Unsafe Features", _unsafeFeatures);
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                    EnumPopupInterceptor.Refresh();
-                    HierarchyToolbarInterceptor.Refresh();
-                    NumberFieldInterceptor.Refresh();
-                }
+                if (EditorGUI.EndChangeCheck()) RefreshFeatures();
 
                 EditorGUI.BeginDisabledGroup(!_unsafeFeatures);
 
@@ -118,6 +113,24 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
 
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public string GetMenuName()
+            {
+                return "Unsafe";
+            }
+
+            private static void RefreshFeatures()
+            {
+                EnumPopupInterceptor.Refresh();
+                HierarchyToolbarInterceptor.Refresh();
+                NumberFieldInterceptor.Refresh();
+            }
+
+            public void SetState(bool state)
+            {
+                _unsafeFeatures = state;
+                RefreshFeatures();
             }
         }
     }

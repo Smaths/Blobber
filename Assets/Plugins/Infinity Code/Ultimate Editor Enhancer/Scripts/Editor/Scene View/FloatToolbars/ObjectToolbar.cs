@@ -348,7 +348,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             Rect labelRect = new Rect(headerRect);
             labelRect.width -= 40;
             GUIStyle style = labelRect.Contains(Event.current.mousePosition) ? headerHoverStyle : headerStyle;
+            GUILayoutUtils.BeginDisabledStyle(targets.All(t =>
+            {
+                GameObject go = t as GameObject;
+                return go != null && !go.activeSelf;
+            }));
             GUI.Label(labelRect, labelContent, style);
+            GUILayoutUtils.EndDisabledStyle();
 
             buttonRect = new Rect(headerRect);
             buttonRect.xMin = buttonRect.xMax - 40;
@@ -373,7 +379,14 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             GUIStyle style = normalStyle;
             if (index == activeIndex) style = selectedStyle;
+            Component component = item.target as Component;
+            
+            bool isDisabled = component != null && !ComponentUtils.GetEnabled(component);
+            
+            GUILayoutUtils.BeginDisabledStyle(isDisabled);
             ButtonEvent buttonEvent = GUILayoutUtils.Button(item.content, style, GUILayout.Width(item.width));
+            GUILayoutUtils.EndDisabledStyle();
+            
             if (buttonEvent == ButtonEvent.click)
             {
                 if (e.button == 0)
@@ -384,6 +397,16 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 else if (e.button == 1)
                 {
                     ComponentUtils.ShowContextMenu(item.target);
+                    e.Use();
+                }
+                else if (e.button == 2)
+                {
+                    if (component != null && ComponentUtils.CanBeDisabled(component))
+                    {
+                        Undo.RecordObject(component, "Modified Property in " + component.gameObject.name);
+                        ComponentUtils.SetEnabled(component, !ComponentUtils.GetEnabled(component));
+                        EditorUtility.SetDirty(component);
+                    }
                     e.Use();
                 }
             }
@@ -641,6 +664,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 _activeWindow = null;
                 activeIndex = -1;
             };
+        }
+
+        protected override void OnHeaderMiddleClick()
+        {
+            foreach (Object target in targets)
+            {
+                GameObject go = target as GameObject;
+                if (go == null) continue;
+                
+                Undo.RecordObject(go, "Modified Property in " + go);
+                if (go.activeSelf) go.SetActive(false);
+                else go.SetActive(true);
+                EditorUtility.SetDirty(go);
+            }
         }
 
         private void OnInvokeKey()

@@ -24,6 +24,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Rename Selected Items", "Everywhere", "F2"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                renameByShortcut = state;
+            }
         }
     }
 }

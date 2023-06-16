@@ -63,6 +63,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Fast Change size of Terrain Brush", "Scene View", terrainBrushSizeBoostModifiers, "Mouse Wheel"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                terrainBrushSize = state;
+                terrainBrushSizeBoost = state;
+            }
         }
     }
 }

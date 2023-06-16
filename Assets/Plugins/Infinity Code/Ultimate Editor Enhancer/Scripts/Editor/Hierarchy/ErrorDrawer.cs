@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,11 +26,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (entries[0] == null || string.IsNullOrEmpty(entries[0].message)) return;
 
             GUIContent content = EditorIconContents.consoleErrorIconSmall;
-            StaticStringBuilder.Clear();
-            StaticStringBuilder.Append(entries[0].message.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries)[0]);
-            if (entries.Count > 1) StaticStringBuilder.Append("\n+").Append(entries.Count - 1).Append(" errors");
+            StringBuilder builder = StaticStringBuilder.Start();
+            builder.Append(entries[0].message.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries)[0]);
+            if (entries.Count > 1) builder.Append("\n+").Append(entries.Count - 1).Append(" errors");
 
-            content.tooltip = StaticStringBuilder.GetString(true);
+            content.tooltip = builder.ToString();
             Rect localRect = new Rect(item.rect);
             localRect.xMin = localRect.xMax - 20;
             item.rect.width -= 22;

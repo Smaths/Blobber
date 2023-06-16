@@ -18,6 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
     public static class EditorMenu
     {
         public static bool allowCloseWindow = true;
+        public static Func<bool> OnValidateOpen;
 
         private static List<MainLayoutItem> items;
         private static bool _isOpened;
@@ -205,6 +206,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 
         public static void Show(Vector2 position)
         {
+            if (!ValidateOpen()) return;
+            
 #if !UNITY_2021_1_OR_NEWER || UNITY_2021_2_OR_NEWER
             EditorWindow focusedWindow = EditorWindow.focusedWindow;
             if (focusedWindow != null) position -= focusedWindow.position.position;
@@ -216,8 +219,30 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
             Show();
         }
 
+        private static bool ValidateOpen()
+        {
+            if (OnValidateOpen == null) return true;
+
+            Delegate[] invocationList = OnValidateOpen.GetInvocationList();
+            for (int i = 0; i < invocationList.Length; i++)
+            {
+                try
+                {
+                    if (!(bool)invocationList[i].DynamicInvoke()) return false;
+                }
+                catch (Exception e)
+                {
+                    Log.Add(e);
+                }
+            }
+
+            return true;
+        }
+
         private static void Show()
         {
+            if (!ValidateOpen()) return;
+            
             EventManager.BroadcastClosePopup();
 
             if (Prefs.contextMenuPauseInPlayMode && EditorApplication.isPlaying) EditorApplication.isPaused = true;
@@ -234,6 +259,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 
         public static void ShowInLastPosition()
         {
+            if (!ValidateOpen()) return;
+            
             EventManager.BroadcastClosePopup();
 
             GetWindows();

@@ -22,7 +22,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static string[] createBrowserBlacklists;
 
-        public class CreateBrowserManager : StandalonePrefManager<CreateBrowserManager>
+        public class CreateBrowserManager : StandalonePrefManager<CreateBrowserManager>, IStateablePref
         {
             public override IEnumerable<string> keywords
             {
@@ -93,6 +93,16 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
 
                 e.Use();
+            }
+
+            void IStateablePref.SetState(bool state)
+            {
+                ObjectPlacerManager.SetState(state);
+            }
+
+            public string GetMenuName()
+            {
+                return "Create Browser";
             }
         }
     }

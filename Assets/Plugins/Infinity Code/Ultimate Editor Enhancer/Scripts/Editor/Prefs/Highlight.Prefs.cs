@@ -84,6 +84,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Highlight GameObject In Scene View", "Hierarchy", highlightOnHierarchyModifiers)
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                highlight = state;
+                highlightOnWaila = state;
+                highlightOnHierarchy = state;
+                highlightHierarchyRow = state;
+            }
         }
     }
 }

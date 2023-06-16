@@ -37,6 +37,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Display Bounds of Selected Renderers", "Scene View", "CapsLock"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                selectionBounds = state;
+            }
         }
     }
 }

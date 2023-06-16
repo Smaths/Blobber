@@ -43,6 +43,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Rotate Selection By View Counterclockwise +90°", "Scene View", modifiers, KeyCode.PageDown),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                rotateByShortcut = state;
+            }
         }
     }
 }

@@ -742,7 +742,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             throw new Exception("Unrecognized token at index" + index);
         }
 
-        public static JsonItem Serialize(object obj, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public static JsonItem Serialize(object obj, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
         {
             return Serialize(obj, false, bindingFlags);
         }
@@ -754,7 +754,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// <param name="includeChildren"></param>
         /// <param name="bindingFlags">A bitmask comprised of one or more BindingFlags that specify how the search is conducted.</param>
         /// <returns>JSON</returns>
-        public static JsonItem Serialize(object obj, bool includeChildren, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public static JsonItem Serialize(object obj, bool includeChildren, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
         {
 #if !UNITY_WP_8_1 || UNITY_EDITOR
             if (obj == null || obj is DBNull) return new JsonValue(obj, JsonValue.ValueType.NULL);
@@ -763,9 +763,9 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 #endif
             if (obj is string || obj is bool || obj is int || obj is long || obj is short || obj is float || obj is double) return new JsonValue(obj);
             if (obj.GetType().IsEnum) return new JsonValue(Enum.GetName(obj.GetType(), obj));
-            if (obj is UnityEngine.Object)
+            if (obj is Object)
             {
-                if (!includeChildren || !(obj is Component || obj is ScriptableObject)) return new JsonValue((obj as UnityEngine.Object).GetInstanceID());
+                if (!includeChildren || !(obj is Component || obj is ScriptableObject)) return new JsonValue((obj as Object).GetInstanceID());
             }
 
             if (obj is IDictionary)
@@ -798,11 +798,11 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             JsonObject o = new JsonObject();
             Type type = obj.GetType();
 
-            if (Reflection.CheckIfAnonymousType(type)) bindingFlags |= BindingFlags.NonPublic;
             IEnumerable<FieldInfo> fields = Reflection.GetFields(type, bindingFlags);
             foreach (FieldInfo field in fields)
             {
                 string fieldName = field.Name;
+                if (field.IsDefined(typeof(NonSerializedAttribute), true)) continue;
                 if (field.Attributes == (FieldAttributes.Private | FieldAttributes.InitOnly))
                 {
                     int startIndex = fieldName.IndexOf('<') + 1;

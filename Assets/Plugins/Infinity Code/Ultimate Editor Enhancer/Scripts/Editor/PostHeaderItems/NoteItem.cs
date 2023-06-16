@@ -2,6 +2,7 @@
 /*     https://infinity-code.com    */
 
 using System;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.PostHeader
 {
@@ -11,6 +12,12 @@ namespace InfinityCode.UltimateEditorEnhancer.PostHeader
         public string text;
         public string gid;
         public bool expanded;
+        
+        [NonSerialized]
+        public Vector2 scrollPosition;
+        
+        [NonSerialized]
+        public float maxHeight = 100;
 
         public bool isEmpty
         {

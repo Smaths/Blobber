@@ -75,6 +75,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             for (int i = 0, j = viewStates.Length; i < cameras.Length; i++, j++)
             {
                 Camera cam = cameras[i];
+                if (cam == null) continue;
+                
                 Vector3 position = cam.transform.position;
                 float magnitude = (position - cameraPosition).magnitude;
 

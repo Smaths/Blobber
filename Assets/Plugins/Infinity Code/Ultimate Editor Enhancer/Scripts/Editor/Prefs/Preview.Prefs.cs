@@ -47,6 +47,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Set View", "Preview of Cameras", "F"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                preview = state;
+            }
         }
     }
 }

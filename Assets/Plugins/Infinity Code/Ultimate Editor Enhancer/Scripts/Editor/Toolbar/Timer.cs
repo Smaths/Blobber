@@ -2,6 +2,7 @@
 /*     https://infinity-code.com    */
 
 using System;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -43,23 +44,23 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
             float width = 68;
 
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
             if (hour > 0)
             {
-                StaticStringBuilder.Append(hour).Append(":");
+                builder.Append(hour).Append(":");
                 width += EditorStyles.textField.CalcSize(TempContent.Get(hour.ToString())).x;
             }
 
-            if (min < 10) StaticStringBuilder.Append("0");
-            StaticStringBuilder.Append(min).Append(":");
-            if (sec < 10) StaticStringBuilder.Append("0");
-            StaticStringBuilder.Append(sec).Append(".");
-            if (ms < 100) StaticStringBuilder.Append("0");
-            if (ms < 10) StaticStringBuilder.Append("0");
-            StaticStringBuilder.Append(ms);
+            if (min < 10) builder.Append("0");
+            builder.Append(min).Append(":");
+            if (sec < 10) builder.Append("0");
+            builder.Append(sec).Append(".");
+            if (ms < 100) builder.Append("0");
+            if (ms < 10) builder.Append("0");
+            builder.Append(ms);
 
-            if (content == null) content = new GUIContent(StaticStringBuilder.GetString(true), "Time since the start of the game.");
-            else content.text = StaticStringBuilder.GetString(true);
+            if (content == null) content = new GUIContent(builder.ToString(), "Time since the start of the game.");
+            else content.text = builder.ToString();
 
             Rect rect = GUILayoutUtility.GetRect(content, EditorStyles.textField, GUILayout.Width(width));
             GUILayoutUtils.lastRect = rect;

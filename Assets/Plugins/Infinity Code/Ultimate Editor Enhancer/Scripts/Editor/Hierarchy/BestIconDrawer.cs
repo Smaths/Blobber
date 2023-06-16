@@ -12,10 +12,13 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
     [InitializeOnLoad]
     public static class BestIconDrawer
     {
+        private const double CACHE_LIFE_TIME_SEC = 5;
+        
         private static Texture _prefabIcon;
         private static Texture _unityLogoTexture;
         private static HashSet<int> hierarchyWindows;
         private static bool inited = false;
+        private static Dictionary<int, CachedTexture> cachedTextures = new Dictionary<int, CachedTexture>();
 
         private static Texture prefabIcon
         {
@@ -103,8 +106,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                         {
                             Component c = components[3];
                             texture = AssetPreview.GetMiniThumbnail(c);
-                            textureName = texture.name;
-                            if (textureName != "cs Script Icon" && textureName != "d_cs Script Icon") best = c;
+                            if (texture != null)
+                            {
+                                textureName = texture.name;
+                                if (textureName != "cs Script Icon" && textureName != "d_cs Script Icon") best = c;
+                            }
                         }
                     }
                 }
@@ -120,7 +126,26 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private static bool GetTexture(HierarchyItem item, out Texture texture)
         {
             texture = null;
-            if (item.gameObject != null) texture = GetGameObjectIcon(item.gameObject);
+            CachedTexture cachedTexture;
+            if (cachedTextures.TryGetValue(item.id, out cachedTexture))
+            {
+                if (EditorApplication.timeSinceStartup - cachedTexture.time < CACHE_LIFE_TIME_SEC)
+                {
+                    texture = cachedTexture.texture;
+                    return true; 
+                }
+                cachedTextures.Remove(item.id);
+            }
+
+            if (item.gameObject != null)
+            {
+                texture = GetGameObjectIcon(item.gameObject);
+                cachedTextures.Add(item.id, new CachedTexture
+                {
+                    texture = texture,
+                    time = EditorApplication.timeSinceStartup
+                });
+            }
             else if (item.target == null) texture = unityLogoTexture;
             else return false;
 
@@ -155,6 +180,12 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
             EditorWindow w = EditorUtility.InstanceIDToObject(wid) as EditorWindow;
             if (w != null) HierarchyHelper.SetDefaultIconsSize(w);
+        }
+        
+        internal class CachedTexture
+        {
+            public Texture texture;
+            public double time;
         }
     }
 }

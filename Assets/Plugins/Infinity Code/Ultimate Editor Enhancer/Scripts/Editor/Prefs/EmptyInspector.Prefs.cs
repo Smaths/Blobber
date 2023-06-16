@@ -4,10 +4,7 @@
 using System.Collections.Generic;
 using InfinityCode.UltimateEditorEnhancer.InspectorTools;
 using InfinityCode.UltimateEditorEnhancer.JSON;
-using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -87,6 +84,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 
 
                 EditorGUILayout.EndScrollView();
+            }
+
+            public static void SetState(bool state)
+            {
+                emptyInspector = state;
             }
         }
     }

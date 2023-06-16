@@ -17,6 +17,124 @@ MonoBehaviour:
   _favoriteWindows: []
   _headerRules: []
   _quickAccessItems: []
+  _projectFolderIcons:
+  - folderName: Addons|Assemblies|Extensions|Library|Libraries|Packages|Plugins
+    icon: Assembly Icon
+    color: {r: 1, g: 1, b: 0, a: 1}
+  - folderName: Android
+    icon: BuildSettings.Android
+    color: {r: 0.9725491, g: 0.9725491, b: 1, a: 1}
+  - folderName: Animation|Animations
+    icon: AnimationClip Icon
+    color: {r: 0.25490198, g: 0.41176474, b: 0.882353, a: 1}
+  - folderName: Animator
+    icon: Animator Icon
+    color: {r: 0.27450982, g: 0.50980395, b: 0.7058824, a: 1}
+  - folderName: Audio|Music|Sound|Sounds|SFX
+    icon: AudioSource Gizmo
+    color: {r: 0.7803922, g: 0.08235294, b: 0.52156866, a: 1}
+  - folderName: Camera|Cameras
+    icon: Camera Gizmo
+    color: {r: 0.18039216, g: 0.54509807, b: 0.34117648, a: 1}
+  - folderName: Characters
+    icon: Avatar Icon
+    color: {r: 0.11764707, g: 0.5647059, b: 1, a: 1}
+  - folderName: Demo|Demos|Example|Examples|Sample|Samples
+    icon: UnityLogo
+    color: {r: 1, g: 0.38823533, b: 0.2784314, a: 1}
+  - folderName: Docs|Documentation|Tutorial|Tutorials
+    icon: console.infoicon
+    color: {r: 1, g: 0.64705884, b: 0, a: 1}
+  - folderName: Editor|Extensions
+    icon: TextAsset Icon
+    color: {r: 0.37254903, g: 0.61960787, b: 0.627451, a: 1}
+  - folderName: Effects|VisualEffect|VisualEffects|VFX
+    icon: VisualEffect Gizmo
+    color: {r: 0.8588236, g: 0.43921572, b: 0.5764706, a: 1}
+  - folderName: Font|Fonts
+    icon: Font Icon
+    color: {r: 0.80392164, g: 0.52156866, b: 0.24705884, a: 1}
+  - folderName: GUI|UI
+    icon: GUILayer Icon
+    color: {r: 0.7372549, g: 0.56078434, b: 0.56078434, a: 1}
+  - folderName: Icons|Images|Textures
+    icon: Texture Icon
+    color: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
+  - folderName: Input|InputSystem
+    icon: StandaloneInputModule Icon
+    color: {r: 1, g: 0.9803922, b: 0.94117653, a: 1}
+  - folderName: Mats|Materials
+    icon: Material Icon
+    color: {r: 0.28235295, g: 0.2392157, b: 0.54509807, a: 1}
+  - folderName: Mesh|Meshes
+    icon: AudioReverbFilter Icon
+    color: {r: 0.69803923, g: 0.13333334, b: 0.13333334, a: 1}
+  - folderName: Model|Models
+    icon: Mesh Icon
+    color: {r: 0.86274517, g: 0.078431375, b: 0.23529413, a: 1}
+  - folderName: Particles
+    icon: ParticleSystem Icon
+    color: {r: 1, g: 0.41176474, b: 0.7058824, a: 1}
+  - folderName: Physics|PhysicsMaterials|Physics Materials
+    icon: PhysicMaterial Icon
+    color: {r: 0.23529413, g: 0.7019608, b: 0.4431373, a: 1}
+  - folderName: PostProcessing
+    icon: VisualEffectAsset Icon
+    color: {r: 1, g: 0.078431375, b: 0.5764706, a: 1}
+  - folderName: Prefab|Prefabs
+    icon: Prefab Icon
+    color: {r: 0, g: 0.5019608, b: 0, a: 1}
+  - folderName: Presets
+    icon: Preset.Context
+    color: {r: 1, g: 1, b: 0.94117653, a: 1}
+  - folderName: RenderTexture|RenderTextures
+    icon: RenderTexture Icon
+    color: {r: 0.6, g: 0.19607845, b: 0.8000001, a: 1}
+  - folderName: Resources|StreamingAssets
+    icon: BlendTree Icon
+    color: {r: 1, g: 0.8431373, b: 0, a: 1}
+  - folderName: Rigs
+    icon: CharacterJoint Icon
+    color: {r: 0, g: 0.7490196, b: 1, a: 1}
+  - folderName: Runtime|Script|Scripts
+    icon: cs Script Icon
+    color: {r: 0, g: 0.8078432, b: 0.8196079, a: 1}
+  - folderName: Scene|Scenes
+    icon: UnityLogo
+    color: {r: 0, g: 0.3921569, b: 0, a: 1}
+  - folderName: Scene Nav
+    icon: NavMeshData Icon
+    color: {r: 0.13333334, g: 0.54509807, b: 0.13333334, a: 1}
+  - folderName: ScriptableObjects
+    icon: ScriptableObject Icon
+    color: {r: 0, g: 0.54509807, b: 0.54509807, a: 1}
+  - folderName: Settings
+    icon: Settings
+    color: {r: 0.9607844, g: 1, b: 0.9803922, a: 1}
+  - folderName: Shader|Shaders
+    icon: Shader Icon
+    color: {r: 0.49803925, g: 1, b: 0.8313726, a: 1}
+  - folderName: Skybox
+    icon: DirectionalLight Gizmo
+    color: {r: 0.854902, g: 0.64705884, b: 0.1254902, a: 1}
+  - folderName: SpriteAtlases
+    icon: SpriteAtlas Icon
+    color: {r: 0.5019608, g: 0, b: 0, a: 1}
+  - folderName: Sprites
+    icon: Sprite Icon
+    color: {r: 0.64705884, g: 0.16470589, b: 0.16470589, a: 1}
+  - folderName: Stamps
+    icon: TerrainInspector.TerrainToolSetheight On
+    color: {r: 0.4156863, g: 0.3529412, b: 0.80392164, a: 1}
+  - folderName: Stylesheets
+    icon: StyleSheet Icon
+    color: {r: 0.9921569, g: 0.9607844, b: 0.90196085, a: 1}
+  - folderName: Terrain|Terrains
+    icon: Terrain Icon
+    color: {r: 0.80392164, g: 0.36078432, b: 0.36078432, a: 1}
+  - folderName: Video|Videos
+    icon: VideoPlayer Icon
+    color: {r: 0.5764706, g: 0.43921572, b: 0.8588236, a: 1}
   _sceneHistory:
   - name: Car - Scene - Set2
     path: Assets/Plugins/FlatKit/Demos/[Demo] Car/Car - Scene - Set2.unity

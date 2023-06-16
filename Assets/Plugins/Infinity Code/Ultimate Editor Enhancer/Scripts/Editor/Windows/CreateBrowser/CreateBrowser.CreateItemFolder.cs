@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
@@ -18,14 +19,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 children = new List<Item>();
                 label = parts[index];
 
-                StaticStringBuilder.Clear();
-                StaticStringBuilder.Append("GameObject");
+                StringBuilder builder = StaticStringBuilder.Start();
+                builder.Append("GameObject");
                 for (int i = 0; i <= index; i++)
                 {
-                    StaticStringBuilder.Append("/").Append(parts[i]);
+                    builder.Append("/").Append(parts[i]);
                 }
 
-                tooltip = StaticStringBuilder.GetString(true);
+                tooltip = builder.ToString();
 
                 if (parts.Length == index + 2)
                 {

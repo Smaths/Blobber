@@ -215,7 +215,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 for (int i = 0; i < contents.Length; i++)
                 {
-                    if (SearchableItem.GetAccuracy(pattern, contents[i].text) > 0)
+                    if (SearchableItem.Match(pattern, contents[i].text))
                     {
                         items.Add(i);
                     }

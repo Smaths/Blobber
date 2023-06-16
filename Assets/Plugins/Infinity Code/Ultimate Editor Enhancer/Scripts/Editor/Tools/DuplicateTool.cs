@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.SceneTools;
 using UnityEditor;
 using UnityEditor.EditorTools;
@@ -17,6 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
     {
         public static int phase = 0;
         private static Vector3 position;
+        private static Quaternion rotation;
 
         private static GUIContent labelContent;
         private static GUIContent passiveContent;
@@ -25,13 +27,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         private static Transform container;
 
         private static List<GameObject> tempItems;
-        private Vector3 startPosition;
-        private GameObject[] sourceGameObjects;
-        private Bounds sourceBounds;
-        private Vector3Int count = Vector3Int.zero;
-        private Vector3 sourceSize;
+        private static Vector3 startPosition;
+        private static GameObject[] sourceGameObjects;
+        private static Bounds sourceBounds;
+        private static Vector3Int count = Vector3Int.zero;
+        private static Vector3 sourceSize;
         private static int lastPositionIDX;
-        private Transform parent;
+        private static Transform parent;
+        private static Vector3[] eightPoints = new Vector3[8];
+        private static Vector3[] fourCorners = new Vector3[4];
 
         public override GUIContent toolbarIcon
         {
@@ -58,6 +62,92 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             tempItems = new List<GameObject>();
         }
 
+        private Bounds GetBounds()
+        {
+            Bounds bounds = new Bounds();
+
+            bool isFirst = true;
+            Quaternion ir = Quaternion.Inverse(rotation);
+
+            for (int i = 0; i < sourceGameObjects.Length; i++)
+            {
+                GameObject go = sourceGameObjects[i];
+                Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
+
+                if (renderers.Length > 0)
+                {
+                    foreach (Renderer r in renderers)
+                    {
+                        Transform t = r.transform;
+                        Bounds b = r.bounds;
+#if UNITY_2021_2_OR_NEWER
+                        Bounds lb = r.localBounds;
+#else
+                        Quaternion tRotation = t.rotation;
+                        t.rotation = Quaternion.identity;
+                        Bounds lb = r.bounds;
+                        t.rotation = tRotation;
+                        Vector3 extents = lb.extents;
+                        Vector3 ls = t.lossyScale;
+                        lb.extents = new Vector3(extents.x / ls.x, extents.y / ls.y, extents.z / ls.z);
+#endif
+                        Matrix4x4 matrix = t.localToWorldMatrix;
+                        GetBoundPoints(lb, eightPoints, matrix.lossyScale);
+                        RotateBoundPoints(eightPoints, matrix.rotation);
+                        RotateBoundPoints(eightPoints, ir);
+
+                        if (isFirst)
+                        {
+                            bounds = new Bounds(ir * b.center + eightPoints[0], Vector3.zero);
+                            isFirst = false;
+                        }
+
+                        for (int j = 0; j < 8; j++)
+                        {
+                            bounds.Encapsulate(ir * b.center + eightPoints[j]);
+                        }
+                    }
+                }
+
+                RectTransform[] rectTransforms = go.GetComponentsInChildren<RectTransform>();
+
+                if (rectTransforms.Length > 0)
+                {
+                    foreach (RectTransform rt in rectTransforms)
+                    {
+                        rt.GetWorldCorners(fourCorners);
+
+                        if (isFirst)
+                        {
+                            bounds = new Bounds(ir * fourCorners[0], Vector3.zero);
+                            isFirst = false;
+                        }
+
+                        for (int j = 0; j < 4; j++)
+                        {
+                            bounds.Encapsulate(ir * fourCorners[j]);
+                        }
+                    }
+                }
+            }
+
+            return bounds;
+        }
+
+        private void GetBoundPoints(Bounds bounds, Vector3[] points, Vector3 scale)
+        {
+            Vector3 extents = bounds.extents;
+            extents.Scale(scale);
+            points[0] = new Vector3(extents.x, extents.y, extents.z);
+            points[1] = new Vector3(extents.x, extents.y, -extents.z);
+            points[2] = new Vector3(extents.x, -extents.y, extents.z);
+            points[3] = new Vector3(extents.x, -extents.y, -extents.z);
+            points[4] = new Vector3(-extents.x, extents.y, extents.z);
+            points[5] = new Vector3(-extents.x, extents.y, -extents.z);
+            points[6] = new Vector3(-extents.x, -extents.y, extents.z);
+            points[7] = new Vector3(-extents.x, -extents.y, -extents.z);
+        }
+
         private void Finish()
         {
             if (tempItems.Count > 0)
@@ -74,8 +164,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     {
                         Transform child = t.GetChild(0);
                         Vector3 pos = child.position;
+                        Quaternion rot = child.rotation;
                         child.SetParent(parent != null? parent: t.parent.parent, false);
                         child.position = pos;
+                        child.rotation = rot;
                         child.hideFlags = HideFlags.None;
                         gameObjects.Add(child.gameObject);
                         Undo.RegisterCreatedObjectUndo(child.gameObject, "Duplicate GameObject");
@@ -135,8 +227,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 EditorGUI.BeginChangeCheck();
 
                 position = UnityEditor.Tools.handlePosition;
+                rotation = UnityEditor.Tools.handleRotation;
                 PositionHandle.Ids ids = PositionHandle.Ids.@default;
-                Vector3 newPosition = PositionHandle.DoPositionHandle(ids, position, Quaternion.identity);
+                Vector3 newPosition = PositionHandle.DoPositionHandle(ids, position, rotation);
 
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -147,7 +240,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     sourceGameObjects = Selection.gameObjects;
                     Transform firstTransform = sourceGameObjects[0].transform;
                     sourceBounds = new Bounds(firstTransform.position, Vector3.zero);
-                    sourceSize = SelectionBoundsManager.bounds.size;
+                    sourceSize = GetBounds().size;
 
                     parent = firstTransform.parent;
 
@@ -158,7 +251,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                         if (transform.parent != parent) parent = null;
                     }
 
-                    startPosition = newPosition;
+                    startPosition = Quaternion.Inverse(rotation) * newPosition;
                     phase = 1;
                 }
 
@@ -179,10 +272,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     lastPositionIDX = ids.x;
                     GUIUtility.hotControl += delta;
                 }
-                position = PositionHandle.DoPositionHandle(ids, position, Quaternion.identity);
+                position = PositionHandle.DoPositionHandle(ids, position, rotation);
+                var p1 = Quaternion.Inverse(rotation) * position;
 
-                Vector3 center = (startPosition + position) / 2;
-                Vector3 size = startPosition - position;
+                Vector3 center = (startPosition + p1) / 2;
+                Vector3 size = startPosition - p1;
 
                 if (EditorGUI.EndChangeCheck() && GUIUtility.hotControl != 0) UpdatePreviews(size);
 
@@ -199,11 +293,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 else
                 {
                     Handles.color = Color.red;
+                    Matrix4x4 matrix = Handles.matrix;
+                    Handles.matrix = Matrix4x4.TRS(matrix.GetColumn(3), rotation, matrix.lossyScale);
                     Handles.DrawWireCube(center, size);
+                    Handles.matrix = matrix;
                 }
             }
 
-            Vector3 handlePos = position + UnityEditor.Tools.handleRotation * new Vector3(-.1f, -.1f, -.1f) * HandleUtility.GetHandleSize(position);
+            Vector3 handlePos = position + rotation * new Vector3(-.1f, -.1f, -.1f) * HandleUtility.GetHandleSize(position);
             Handles.Label(handlePos, Icons.duplicate);
         }
 
@@ -224,10 +321,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             lastPositionIDX = 0;
         }
 
+        private void RotateBoundPoints(Vector3[] points, Quaternion _rotation)
+        {
+            for (int i = 0; i < 8; i++) points[i] = _rotation * points[i];
+        }
+
         private void UpdatePreviews(Vector3 size)
         {
-            sourceSize = SelectionBoundsManager.bounds.size;
-
             bool snapEnabled = SnapHelper.enabled;
             if (snapEnabled)
             {
@@ -251,7 +351,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 if (isRectTransform)
                 {
                     container.SetParent(SelectionBoundsManager.firstGameObject.transform.parent, false);
-                    containerGO.AddComponent<RectTransform>();
+                    container = containerGO.AddComponent<RectTransform>();
                 }
             }
 
@@ -263,10 +363,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (countItems > Prefs.duplicateToolMaxCopies) return;
             if (tempItems.Count == countItems) return;
 
-            StaticStringBuilder.Clear();
-            StaticStringBuilder.Append(count.x + 1).Append("x").Append(count.y + 1).Append("x").Append(count.z + 1);
-            if (labelContent == null) labelContent = new GUIContent(StaticStringBuilder.GetString(true));
-            else labelContent.text = StaticStringBuilder.GetString(true);
+            StringBuilder builder = StaticStringBuilder.Start();
+            builder.Append(count.x + 1).Append("x").Append(count.y + 1).Append("x").Append(count.z + 1);
+            if (labelContent == null) labelContent = new GUIContent(builder.ToString());
+            else labelContent.text = builder.ToString();
 
             int i = 0;
 
@@ -328,7 +428,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                             tempItems.Add(item);
                         }
 
-                        item.transform.position = sourcePos + new Vector3(sourceSize.x * x * dx, sourceSize.y * y * dy, sourceSize.z * z * dz);
+                        item.transform.position = sourcePos + rotation * new Vector3(sourceSize.x * x * dx, sourceSize.y * y * dy, sourceSize.z * z * dz);
                         if (snapEnabled)
                         {
                             Vector3 pos = item.transform.position;

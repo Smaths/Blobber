@@ -7,6 +7,7 @@ using System.IO;
 using InfinityCode.UltimateEditorEnhancer.HierarchyTools;
 using InfinityCode.UltimateEditorEnhancer.InspectorTools;
 using InfinityCode.UltimateEditorEnhancer.PostHeader;
+using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using InfinityCode.UltimateEditorEnhancer.SceneTools;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
@@ -31,6 +32,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         [SerializeField]
         private List<QuickAccessItem> _quickAccessItems = new List<QuickAccessItem>();
+
+        [SerializeField]
+        private List<ProjectFolderRule> _projectFolderIcons = new List<ProjectFolderRule>();
 
         [SerializeField]
         private List<SceneHistoryItem> _sceneHistory = new List<SceneHistoryItem>();
@@ -77,6 +81,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static List<QuickAccessItem> quickAccessItems
         {
             get { return instance._quickAccessItems; }
+        }
+
+        public static List<ProjectFolderRule> projectFolderIcons
+        {
+            get { return instance._projectFolderIcons; }
         }
 
         public static List<SceneHistoryItem> sceneHistory
@@ -128,6 +137,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             favoriteWindows.Clear();
             headerRules.Clear();
             quickAccessItems.Clear();
+            RecordUpgrader.InitDefaultQuickAccessItems();
             Save();
         }
 

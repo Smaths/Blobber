@@ -45,6 +45,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Replace Selected GameObjects", "Everywhere", replaceModifiers, replaceKeyCode), 
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                replace = state; 
+            }
         }
     }
 }

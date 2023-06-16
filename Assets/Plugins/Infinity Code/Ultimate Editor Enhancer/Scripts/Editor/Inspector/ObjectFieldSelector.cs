@@ -11,6 +11,7 @@ using UnityEditor.Experimental.SceneManagement;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
@@ -101,17 +102,19 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                     contents = new GUIContent[objects.Length];
 
                     contents[0] = new GUIContent("None");
+                    
+                    StringBuilder builder = StaticStringBuilder.Start();
 
                     for (int i = 1; i < objects.Length; i++)
                     {
                         Component component = objects[i] as Component;
-                        StaticStringBuilder.Clear();
-                        StaticStringBuilder.Append(component.name)
+                        builder.Clear();
+                        builder.Append(component.name)
                             .Append(" (")
                             .Append(component.GetType().Name)
                             .Append(")");
 
-                        contents[i] = new GUIContent(StaticStringBuilder.GetString(true), GameObjectUtils.GetGameObjectPath(component.gameObject).ToString());
+                        contents[i] = new GUIContent(builder.ToString(), GameObjectUtils.GetGameObjectPath(component.gameObject).ToString());
                     }
                 }
             }

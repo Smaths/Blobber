@@ -254,6 +254,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 foreach (ProjectBookmark item in projectItems)
                 {
                     string[] labels = AssetDatabase.GetLabels(item.target);
+                    if (labels == null) continue;
+                    
                     foreach (string label in labels)
                     {
                         if (!temp.Contains(label)) temp.Add(label);
@@ -265,6 +267,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     foreach (ProjectFolderBookmark.Item item in folder.items)
                     {
                         string[] labels = item.labels;
+                        if (labels == null) continue;
+                        
                         foreach (string label in labels)
                         {
                             if (!temp.Contains(label)) temp.Add(label);
@@ -541,7 +545,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 selectedStyle.fixedHeight = 0;
             }
 
-            if (removeItem != null) Remove(removeItem.target);
+            if (removeItem != null) Remove(removeItem);
 
             ProcessEvents();
             Toolbar();
@@ -558,7 +562,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (removeItem != null)
             {
-                Remove(removeItem.target);
+                Remove(removeItem);
                 removeItem = null;
                 Save();
                 UpdateFilteredItems();
@@ -685,6 +689,28 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 instance.UpdateFilteredItems();
             }
+        }
+        
+        private static void Remove(BookmarkItem item)
+        {
+            if (item == null) return;
+
+            if (item.target == null)
+            {
+                if (item.isProjectItem) projectItems.Remove(item as ProjectBookmark);
+                else
+                {
+                    List<SceneReferences> sceneReferencesList = SceneReferences.instances;
+                    foreach (SceneReferences sceneReferences in sceneReferencesList)
+                    {
+                        if (sceneReferences.bookmarks.Remove(item as SceneBookmark))
+                        {
+                            EditorUtility.SetDirty(sceneReferences);
+                        }
+                    }
+                }
+            }
+            else Remove(item.target);
         }
 
         private static void RemoveLate(BookmarkItem item)
@@ -871,14 +897,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (string.IsNullOrEmpty(activeLabel))
             {
-                query = query.Where(i => i.Update(pattern, assetType) > 0);
+                query = query.Where(i => i.Update(pattern, assetType));
             }
             else
             {
-                query = query.Where(i => i.HasLabel(activeLabel) && i.Update(pattern, assetType) > 0);
+                query = query.Where(i => i.HasLabel(activeLabel) && i.Update(pattern, assetType));
             }
 
-            filteredItems = query.OrderByDescending(i => i.accuracy).ToList();
+            filteredItems = query.ToList();
         }
     }
 }

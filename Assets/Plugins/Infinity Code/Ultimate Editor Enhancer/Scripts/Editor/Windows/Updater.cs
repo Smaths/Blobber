@@ -114,7 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 hasNewVersion = CompareVersions();
                 EditorApplication.update += SetLastVersion;
             };
-            client.UploadDataAsync(new Uri("http://infinity-code.com/products_update/getlastversion.php"), "POST", Encoding.UTF8.GetBytes("c=" + (int)channel + "&package=" + UnityWebRequest.EscapeURL(packageID)));
+            client.UploadDataAsync(new Uri("https://infinity-code.com/products_update/getlastversion.php"), "POST", Encoding.UTF8.GetBytes("c=" + (int)channel + "&package=" + UnityWebRequest.EscapeURL(packageID)));
         }
 
         private static bool CompareVersions()
@@ -144,7 +144,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             WebClient client = new WebClient();
             client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            string updateKey = client.UploadString("http://infinity-code.com/products_update/getupdatekey.php",
+            string updateKey = client.UploadString("https://infinity-code.com/products_update/getupdatekey.php",
                 "key=" + invoiceNumber + "&package=" + UnityWebRequest.EscapeURL(packageID));
 
             return updateKey;
@@ -159,7 +159,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             try
             {
-                response = client.UploadString("http://infinity-code.com/products_update/checkupdates.php",
+                response = client.UploadString("https://infinity-code.com/products_update/checkupdates.php",
                     "k=" + UnityWebRequest.EscapeURL(updateKey) + "&v=" + Version.version + "&c=" + (int)channel);
             }
             catch (Exception exception)
@@ -313,12 +313,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (GUILayout.Button("Download"))
                 {
-                    Process.Start("http://infinity-code.com/products_update/download.php?k=" + download);
+                    Process.Start("https://infinity-code.com/products_update/download.php?k=" + download);
                 }
 
                 if (GUILayout.Button("Copy download link", GUILayout.ExpandWidth(false)))
                 {
-                    EditorGUIUtility.systemCopyBuffer = "http://infinity-code.com/products_update/download.php?k=" + download;
+                    EditorGUIUtility.systemCopyBuffer = "https://infinity-code.com/products_update/download.php?k=" + download;
                     EditorUtility.DisplayDialog("Success",
                         "Download link is copied to the clipboard.\nOpen a browser and paste the link into the address bar.",
                         "OK");

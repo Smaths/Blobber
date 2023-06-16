@@ -39,6 +39,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Open Bookmarks", "Everywhere", bookmarksModifiers, bookmarksKeyCode),
                 };
             }
+            
+            public static void SetState(bool state)
+            {
+                bookmarksHotKey = state;
+            }
         }
     }
 }

@@ -231,6 +231,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
                 go.transform.SetParent(container.transform, true);
                 EditorMenu.Close();
+                ViewGallery.RepaintAll();
             });
         }
     }

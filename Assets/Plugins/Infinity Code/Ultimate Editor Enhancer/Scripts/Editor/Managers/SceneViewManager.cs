@@ -91,23 +91,23 @@ namespace InfinityCode.UltimateEditorEnhancer
 #endif
         }
 
-        public static void GetWorldPosition(out Vector3 worldPosition)
+        public static void GetWorldPosition(out Vector3 worldPosition, GameObject[] ignore = null)
         {
-            GetWorldPositionAndNormal(SceneView.lastActiveSceneView, out worldPosition, out Vector3 _);
+            GetWorldPositionAndNormal(SceneView.lastActiveSceneView, out worldPosition, out Vector3 _, ignore);
         }
 
-        public static void GetWorldPosition(SceneView view, out Vector3 worldPosition)
+        public static void GetWorldPosition(SceneView view, out Vector3 worldPosition, GameObject[] ignore = null)
         {
             Vector3 normal;
-            GetWorldPositionAndNormal(view, out worldPosition, out normal);
+            GetWorldPositionAndNormal(view, out worldPosition, out normal, ignore);
         }
 
-        public static void GetWorldPositionAndNormal(out Vector3 worldPosition, out Vector3 normal)
+        public static void GetWorldPositionAndNormal(out Vector3 worldPosition, out Vector3 normal, GameObject[] ignore = null)
         {
-            GetWorldPositionAndNormal(SceneView.lastActiveSceneView, out worldPosition, out normal);
+            GetWorldPositionAndNormal(SceneView.lastActiveSceneView, out worldPosition, out normal, ignore);
         }
 
-        public static void GetWorldPositionAndNormal(SceneView view, out Vector3 worldPosition, out Vector3 normal)
+        public static void GetWorldPositionAndNormal(SceneView view, out Vector3 worldPosition, out Vector3 normal, GameObject[] ignore = null)
         {
             worldPosition = Vector3.zero;
             normal = Vector3.up;
@@ -118,7 +118,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             Camera camera = view.camera;
             if (camera == null || camera.pixelWidth == 0 || camera.pixelHeight == 0) return;
 
-            GameObject go = HandleUtility.PickGameObject(_lastMousePosition, false);
+            GameObject go = HandleUtility.PickGameObject(_lastMousePosition, false, ignore);
 
             Vector2 pixelCoordinate = HandleUtility.GUIPointToScreenPixelCoordinate(Event.current.mousePosition);
             Ray screenRay = camera.ScreenPointToRay(pixelCoordinate);
@@ -283,7 +283,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (e.type == EventType.MouseMove || e.type == EventType.DragUpdated)
             {
-                _lastMousePosition = Event.current.mousePosition;
+                _lastMousePosition = e.mousePosition;
             }
 
             InvokeSceneGUI(view);

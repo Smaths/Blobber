@@ -28,6 +28,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                 FrameSelectedBoundsManager.Draw(null);
                 ZoomShortcutManager.Draw(null);
             }
+
+            public static void SetState(bool state)
+            {
+                JumpToPointManager.SetState(state);
+                PreviewManager.SetState(state);
+                FrameSelectedBoundsManager.SetState(state);
+                ZoomShortcutManager.SetState(state);
+            }
         }
     }
 }

@@ -143,6 +143,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void DrawLeftToolbarItems()
         {
+            if (!Prefs.toolbar) return;
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             for (int i = 0; i < leftToolbarCount; i++)
@@ -179,6 +180,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void DrawRightToolbarItems()
         {
+            if (!Prefs.toolbar) return;
             GUILayout.BeginHorizontal();
 
             for (int i = 0; i < rightToolbarCount; i++)
@@ -198,6 +200,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void OnGUI()
         {
+            if (!Prefs.toolbar) return;
             if (style == null) style = new GUIStyle("CommandLeft");
 
             float screenWidth = EditorGUIUtility.currentViewWidth;

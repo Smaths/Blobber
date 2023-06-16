@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
@@ -98,11 +99,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     if (skippedLabels.Count == 1) _content.text = label + "/" + skippedLabels[0];
                     else _content.text = label + "/.../" + skippedLabels.Last();
 
-                    StaticStringBuilder.Clear();
+                    StringBuilder builder = StaticStringBuilder.Start();
 
-                    StaticStringBuilder.Append(label);
-                    foreach (string s in skippedLabels) StaticStringBuilder.Append("/").Append(s);
-                    _content.tooltip = StaticStringBuilder.GetString(true);
+                    builder.Append(label);
+                    foreach (string s in skippedLabels) builder.Append("/").Append(s);
+                    _content.tooltip = builder.ToString();
                 }
                 else
                 {

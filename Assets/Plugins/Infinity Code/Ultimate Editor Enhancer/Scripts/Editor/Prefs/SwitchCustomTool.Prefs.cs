@@ -9,6 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static partial class Prefs
     {
+        public static bool switchCustomTool = true;
         public static KeyCode switchCustomToolKeyCode = KeyCode.U;
         public static EventModifiers switchCustomToolModifiers = EventModifiers.None;
 
@@ -27,7 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             public override void Draw()
             {
-                GUILayout.Label("Select Next Custom Tool");
+                switchCustomTool = EditorGUILayout.ToggleLeft("Select Next Custom Tool", switchCustomTool);
                 EditorGUI.indentLevel++;
 
                 float oldLabelWidth = EditorGUIUtility.labelWidth;
@@ -51,6 +52,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Select Next Custom Tool", "Everywhere", switchCustomToolModifiers, switchCustomToolKeyCode)
                 };
                 return shortcuts;
+            }
+
+            public static void SetState(bool state)
+            {
+                switchCustomTool = state;
             }
         }
     }

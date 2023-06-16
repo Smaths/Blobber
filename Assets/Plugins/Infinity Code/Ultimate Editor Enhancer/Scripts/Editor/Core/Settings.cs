@@ -28,6 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         private const string HIGHLIGHT_SETTINGS_PATH = SCENEVIEW_SETTINGS_PATH + "/Highlight";
         private const string NAVIGATION_SETTINGS_PATH = SCENEVIEW_SETTINGS_PATH + "/Navigation";
         private const string QUICK_ACCESS_SETTINGS_PATH = SCENEVIEW_SETTINGS_PATH + "/Quick Access Bar";
+        private const string PROJECT_FOLDER_ICONS_SETTINGS_PATH = PROJECT_SETTINGS_PATH + "/Folder Icons";
         private const string WAILA_SETTINGS_PATH = SCENEVIEW_SETTINGS_PATH + "/WAILA";
 
         [SettingsProvider]
@@ -170,6 +171,18 @@ namespace InfinityCode.UltimateEditorEnhancer
                 label = "Project",
                 guiHandler = Prefs.ProjectManager.DrawWithToolbar,
                 keywords = Prefs.ProjectManager.GetKeywords()
+            };
+            return provider;
+        }
+
+        [SettingsProvider]
+        public static SettingsProvider GetProjectFolderIconsSettingsProvider()
+        {
+            SettingsProvider provider = new SettingsProvider(PROJECT_FOLDER_ICONS_SETTINGS_PATH, SettingsScope.Project)
+            {
+                label = "Folder Icons",
+                guiHandler = Prefs.ProjectFolderIconManager.DrawWithToolbar,
+                keywords = Prefs.ProjectFolderIconManager.GetKeywords()
             };
             return provider;
         }

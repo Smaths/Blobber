@@ -30,8 +30,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static GUIContent refreshContent;
         private static GUIContent settingsContent;
 
-        public CameraStateItem[] cameras;
-        private ViewStateItem[] views;
+        public static CameraStateItem[] cameras;
+        private static ViewStateItem[] views;
         private ViewItem[] filteredItems;
 
         public int countCols;
@@ -186,6 +186,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 go.transform.SetParent(container.transform, true);
                 EditorMenu.Close();
+                RepaintAll();
             });
         }
 
@@ -752,6 +753,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
         }
 
+        public static void RepaintAll()
+        {
+            isDirty = true;
+            ViewGallery[] galleries = UnityEngine.Resources.FindObjectsOfTypeAll<ViewGallery>();
+            Debug.Log(galleries.Length);
+            foreach (ViewGallery gallery in galleries)
+            {
+                gallery.Repaint();
+            }
+        }
+
         private static void RestoreViewState(object userdata)
         {
             ViewStateItem viewItem = userdata as ViewStateItem;
@@ -786,7 +798,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             string pattern = SearchableItem.GetPattern(_filter);
 
-            filteredItems = cameras.Select(c => c as ViewItem).Concat(views).Where(i => i.UpdateAccuracy(pattern) > 0).OrderByDescending(i => i.accuracy).ToArray();
+            filteredItems = cameras.Select(c => c as ViewItem).Concat(views).Where(i => i.Match(pattern)).ToArray();
 
             CalcItemSize();
             RenderItems();

@@ -46,6 +46,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Ungroup GameObjects", "Everywhere", ungroupModifiers, ungroupKeyCode),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                ungroup = state;
+            }
         }
     }
 }

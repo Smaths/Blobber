@@ -3,72 +3,142 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.PostHeader
 {
+    [InitializeOnLoad]
     public class HeaderNote : PostHeaderItem
     {
-        private static Dictionary<GameObject, NoteItem> cachedNotes = new Dictionary<GameObject, NoteItem>();
+        private static List<SavableNote> noteToSave = new List<SavableNote>();
 
+        static HeaderNote()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+        
         public override void OnBlockGUI(Object target)
         {
             if (!Prefs.inspectorNotes) return;
-            if (EditorApplication.isPlaying) return;
 
             GameObject go = target as GameObject;
             if (go == null) return;
 
-            NoteItem note = null;
-            if (!cachedNotes.TryGetValue(go, out note)) return;
+            NoteItem note;
+            NoteManager.TryGetValue(go, out note);
             if (!note.expanded) return;
 
             bool prevEmpty = note.isEmpty;
+            
+            GUIStyle style = EditorStyles.textArea;
+            Vector2 size = style.CalcSize(TempContent.Get(note.text));
 
             EditorGUI.BeginChangeCheck();
-            note.text = EditorGUILayout.TextArea(note.text);
+            Rect rect = EditorGUILayout.GetControlRect(GUILayout.Height(Mathf.Min(size.y, note.maxHeight)));
+            note.text = EditorGUIRef.ScrollableTextAreaInternal(rect, note.text, ref note.scrollPosition, style);
             if (EditorGUI.EndChangeCheck())
             {
-                if (prevEmpty)
+                if (!EditorApplication.isPlaying)
                 {
-                    if (ReferenceManager.notes.FirstOrDefault(n => n.gid == note.gid) == null) ReferenceManager.notes.Add(note);
+                    if (prevEmpty)
+                    {
+                        if (ReferenceManager.notes.FirstOrDefault(n => n.gid == note.gid) == null) ReferenceManager.notes.Add(note);
+                    }
+                    else if (note.isEmpty) ReferenceManager.notes.Remove(note); 
+                    ReferenceManager.Save();
                 }
-                else if (note.isEmpty) ReferenceManager.notes.Remove(note);
+                else
+                {
+                    RuntimeNote runtimeNote = go.GetComponent<RuntimeNote>();
+                    if (runtimeNote == null)
+                    {
+                        runtimeNote = go.AddComponent<RuntimeNote>();
+                        runtimeNote.hideFlags = HideFlags.HideInInspector;
+                    }
+                    runtimeNote.text = note.text;
+                }
+            }
+
+            if (size.y > note.maxHeight)
+            {
+                if (GUILayout.Button("Expand", EditorStyles.toolbarButton)) note.maxHeight = size.y;
+            }
+            else if (size.y > 100)
+            {
+                if (GUILayout.Button("Collapse", EditorStyles.toolbarButton)) note.maxHeight = 100;
+            }
+        }
+        
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.ExitingPlayMode)
+            {
+                RuntimeNote[] runtimeNotes = Object.FindObjectsOfType<RuntimeNote>();
+                foreach (RuntimeNote runtimeNote in runtimeNotes)
+                {
+                    SavableNote note = new SavableNote
+                    {
+                        gameObject = runtimeNote.gameObject,
+                        text = runtimeNote.text
+                    };
+                    
+                    noteToSave.Add(note);
+                }
+            }
+            else if (state == PlayModeStateChange.EnteredEditMode)
+            {
+                if (noteToSave.Count == 0) return;
+                
+                NoteManager.ClearCache();
+                
+                foreach (SavableNote savableNote in noteToSave)
+                {
+                    if (savableNote.gameObject == null) continue;
+                    
+                    NoteItem note;
+                    NoteManager.TryGetValue(savableNote.gameObject, out note);
+                    note.text = savableNote.text;
+
+                    bool contains = ReferenceManager.notes.Contains(note);
+
+                    if (!note.isEmpty)
+                    {
+                        if (!contains) ReferenceManager.notes.Add(note);
+                    }
+                    else if (note.isEmpty)
+                    {
+                        if (contains) ReferenceManager.notes.Remove(note);
+                    } 
+                }
+                
+                NoteManager.RemoveEmptyNotes();
+                
                 ReferenceManager.Save();
+                noteToSave.Clear();
             }
         }
 
         public override void OnRowGUI(Object target)
         {
             if (!Prefs.inspectorNotes) return;
-            if (EditorApplication.isPlaying) return;
 
             GameObject go = target as GameObject;
             if (go == null) return;
 
-            NoteItem note = null;
-            if (!cachedNotes.TryGetValue(go, out note))
-            {
-                string gid = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
-                note = ReferenceManager.notes.FirstOrDefault(n => n.gid == gid);
-                if (note != null)
-                {
-                    cachedNotes[go] = note;
-                }
-                else
-                {
-                    note = new NoteItem
-                    {
-                        gid = gid
-                    };
-                    cachedNotes[go] = note;
-                }
-            }
+            NoteItem note;
+            NoteManager.TryGetValue(go, out note);
 
             GUIContent content = note.isEmpty ? TempContent.Get(Icons.noteEmpty, "Add Note") : TempContent.Get(Icons.note, "Show/Hide Note");
             note.expanded = Toggle(content, note.expanded);
+        }
+        
+        internal class SavableNote
+        {
+            public GameObject gameObject;
+            public string text;
         }
     }
 }

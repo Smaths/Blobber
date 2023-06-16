@@ -8,6 +8,13 @@
     "slides":
     [
       {
+        "title": "Autosave",
+        "image": "Autosave.png",
+        "help": "autosave",
+        "added": 3.07,
+        "updated": 3.07
+      },
+      {
         "title": "Bookmarks",
         "image": "Bookmarks.png",
         "help": "bookmarks",
@@ -102,7 +109,17 @@
             "image": "Timer and Timescale.png",
             "help": "timer",
             "added": 2.08,
-            "updated": 2.08
+            "updated": 3.11,
+            "slides": 
+            [
+                {
+                    "title": "Stepper",
+                    "image": "Stepper.png",
+                    "help": "stepper",
+                    "added": 3.11,
+                    "updated": 3.11
+                }
+            ]
           },
           {
             "title": "Windows",
@@ -125,6 +142,13 @@
         "help": "highlighter",
         "added": 1.08,
         "updated": 1.08
+      },
+      {
+        "title": "Move to Point",
+        "image": "Move to Point.png",
+        "help": "move-to-point",
+        "added": 3.09,
+        "updated": 3.09
       },
       {
         "title": "Object Placer",
@@ -284,6 +308,13 @@
         "updated": 1.0
       },
       {
+        "title": "Custom Pivot Rotation Tool",
+        "image": "Custom Pivot Rotation Tool.png",
+        "help": "custom-pivot-rotation-tool",
+        "added": 3.11,
+        "updated": 3.11
+      },
+      {
         "title": "Drop To Floor",
         "image": "Drop To Floor.png",
         "help": "drop-to-floor",
@@ -360,6 +391,13 @@
         "updated": 3.04
       },
       {
+        "title": "Component To JSON",
+        "image": "Component To JSON.png",
+        "help": "component-to-json",
+        "added": 3.1,
+        "updated": 3.1
+      },
+      {
         "title": "Detect Bounds of Box Collider",
         "image": "Detect Bounds of Box Collider.png",
         "help": "detect-bounds-of-box-collider",
@@ -402,6 +440,23 @@
         "updated": 2.08
       },
       {
+        "title": "Notes",
+        "image": "Notes.png",
+        "help": "notes",
+        "added": 3.08,
+        "updated": 3.08,
+        "slides":
+        [
+            {
+                "title": "Note Manager",
+                "image": "Note Manager.png",
+                "help": "note-manager",
+                "added": 3.11,
+                "updated": 3.11
+            }
+        ]
+      },
+      {
         "title": "Object Field Selector",
         "image": "Object Field Selector.png",
         "help": "object-field-selector",
@@ -431,6 +486,13 @@
             "updated": 3.04
           }
         ]
+      },
+      {
+        "title": "Search By Serialized Fields",
+        "image": "Search By Serialized Fields.png",
+        "help": "search-by-serialized-fields",
+        "added": 3.1,
+        "updated": 3.1
       },
       {
         "title": "Transform in World Space",
@@ -518,6 +580,40 @@
     ]
   },
   {
+    "title": "Project Tools",
+    "slides":
+    [
+      {
+        "title": "Create Folder",
+        "image": "Project Create Folder.png",
+        "help": "create-folder-button",
+        "added": 3.08,
+        "updated": 3.08
+      },
+      {
+        "title": "Create Material",
+        "image": "Project Create Material.png",
+        "help": "create-material-button",
+        "added": 3.09,
+        "updated": 3.09
+      },
+      {
+        "title": "Create Script",
+        "image": "Project Create Scripts.png",
+        "help": "create-script-button",
+        "added": 3.09,
+        "updated": 3.09
+      },
+      {
+        "title": "Folder Icons",
+        "image": "Project Folder Icons.png",
+        "help": "folder-icons",
+        "added": 3.09,
+        "updated": 3.09
+      }
+    ]
+  },
+  {
     "title": "Interacting with Windows",
     "slides":
     [
@@ -560,7 +656,7 @@
         "image": "Custom Tool Switcher.png",
         "help": "custom-tool-switcher",
         "added": 2.10,
-        "updated": 2.10
+        "updated": 3.11
       },
       {
         "title": "Drag And Drop from Project to Canvas",

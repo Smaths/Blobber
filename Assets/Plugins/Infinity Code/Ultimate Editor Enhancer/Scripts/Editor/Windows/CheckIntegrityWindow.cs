@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using UnityEditor;
 using UnityEngine;
@@ -21,11 +22,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void OnEnable()
         {
             string nspace = "InfinityCode.UltimateEditorEnhancer.UnityTypes";
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
             types = typeof(CheckIntegrityWindow).Assembly.GetTypes()
                 .Where(t => t.IsClass && t.Namespace == nspace && t.IsAbstract && t.IsSealed && t.GetCustomAttribute<HideInIntegrityAttribute>() == null)
-                .Select(t => new TypeRecord(t)).ToArray();
-            string problems = StaticStringBuilder.GetString(true);
+                .Select(t => new TypeRecord(t, builder)).ToArray();
+            string problems = builder.ToString();
             if (string.IsNullOrEmpty(problems))
             {
                 message = "No problems were found.";
@@ -88,10 +89,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (GUILayout.Button("Report To Infinity Code"))
                 {
                     string subject = "Ultimate Editor Enhancer Integrity Check";
-                    StaticStringBuilder.Clear();
-                    StaticStringBuilder.Append("OS: ").Append(SystemInfo.operatingSystem).Append("\nUnity version: ").Append(Application.unityVersion).Append("\nUltimate Editor Enhancer version: ").Append(Version.version);
-                    StaticStringBuilder.Append("\n").Append(message);
-                    Process.Start("mailto:support@infinity-code.com?subject=" + Uri.EscapeUriString(subject) + "&body=" + Uri.EscapeUriString(StaticStringBuilder.GetString(true)));
+                    StringBuilder builder = StaticStringBuilder.Start();
+                    builder.Append("OS: ")
+                        .Append(SystemInfo.operatingSystem)
+                        .Append("\nUnity version: ")
+                        .Append(Application.unityVersion)
+                        .Append("\nUltimate Editor Enhancer version: ")
+                        .Append(Version.version)
+                        .Append("\n")
+                        .Append(message);
+                    Process.Start("mailto:support@infinity-code.com?subject=" + Uri.EscapeUriString(subject) + "&body=" + Uri.EscapeUriString(builder.ToString()));
                 }
             }
 
@@ -109,7 +116,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public PropRecord[] properties;
             public bool exist;
 
-            public TypeRecord(Type type)
+            public TypeRecord(Type type, StringBuilder builder)
             {
                 name = type.Name;
                 if (name.EndsWith("Ref")) name = name.Substring(0, name.Length - 3);
@@ -118,9 +125,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 PropertyInfo typeProp = allProps.FirstOrDefault(p => p.Name == "type");
                 if (typeProp != null) exist = typeProp.GetValue(null) != null;
-                else StaticStringBuilder.Append("Missed Type: ").Append(name).Append("\n");
+                else builder.Append("Missed Type: ").Append(name).Append("\n");
 
-                properties = allProps.Where(p => p.Name.EndsWith("Field") || p.Name.EndsWith("Prop") || p.Name.EndsWith("Method")).Select(p => new PropRecord(p, name)).ToArray();
+                properties = allProps.Where(p => p.Name.EndsWith("Field") || p.Name.EndsWith("Prop") || p.Name.EndsWith("Method")).Select(p => new PropRecord(p, name, builder)).ToArray();
             }
         }
 
@@ -129,7 +136,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public string name;
             public bool exist;
 
-            public PropRecord(PropertyInfo prop, string typeName)
+            public PropRecord(PropertyInfo prop, string typeName, StringBuilder builder)
             {
                 name = prop.Name;
 
@@ -147,7 +154,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 else if (name[name.Length - 5] == 'F') name = name.Substring(0, name.Length - 5) + " (Field)";
                 else if (name[name.Length - 6] == 'M') name = char.ToUpperInvariant(name[0]) + name.Substring(1, name.Length - 7) + " (Method)";
 
-                if (!exist) StaticStringBuilder.Append("Missed ").Append(typeName).Append(" - ").Append(name).Append("\n");
+                if (!exist) builder.Append("Missed ").Append(typeName).Append(" - ").Append(name).Append("\n");
             }
         }
     }

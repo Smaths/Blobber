@@ -61,7 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public virtual void Filter(string pattern, List<Item> filteredItems)
             {
-                if (UpdateAccuracy(pattern) > 0) filteredItems.Add(this);
+                if (Match(pattern)) filteredItems.Add(this);
             }
 
             protected override int GetSearchCount()

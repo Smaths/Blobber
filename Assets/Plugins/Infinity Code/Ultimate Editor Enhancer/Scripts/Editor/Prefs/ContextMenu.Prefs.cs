@@ -8,7 +8,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static partial class Prefs
     {
-        public class ContextMenuManager : StandalonePrefManager<ContextMenuManager>
+        public class ContextMenuManager : StandalonePrefManager<ContextMenuManager>, IStateablePref
         {
             public override IEnumerable<string> keywords
             {
@@ -27,6 +27,19 @@ namespace InfinityCode.UltimateEditorEnhancer
                 BreadcrumbsManager.Draw(null);
                 ContextMenuMainManager.Draw(null);
                 PopupWindowManager.Draw(null);
+            }
+
+            public string GetMenuName()
+            {
+                return "Context Menu";
+            }
+
+            public void SetState(bool state)
+            {
+                ActionsManager.SetState(state);
+                BreadcrumbsManager.SetState(state);
+                ContextMenuMainManager.SetState(state);
+                PopupWindowManager.SetState(state);
             }
         }
     }

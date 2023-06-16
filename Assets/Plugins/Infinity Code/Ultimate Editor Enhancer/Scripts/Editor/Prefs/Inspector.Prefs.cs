@@ -15,6 +15,8 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool boxColliderDetect = true;
         public static bool componentExtraHeaderButtons = true;
         public static bool dragObjectFields = true;
+        public static bool headerCopyPaste = true;
+        public static bool headerBookmarks = true;
         public static bool hideEmptyHelpButton = true;
         public static bool hidePresetButton = false;
         public static bool inspectorBar = true;
@@ -28,8 +30,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool saveComponentRuntime = true;
         public static bool transformInspectorGlobalValues = true;
 
-        public class InspectorManager : StandalonePrefManager<InspectorManager>
+        public class InspectorManager : StandalonePrefManager<InspectorManager>, IStateablePref
         {
+            
+
             public override IEnumerable<string> keywords
             {
                 get
@@ -94,6 +98,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.BeginDisabledGroup(!componentExtraHeaderButtons);
                 EditorGUI.indentLevel++;
                 boxColliderDetect = EditorGUILayout.ToggleLeft("Box Collider Detect Size", boxColliderDetect);
+                headerBookmarks = EditorGUILayout.ToggleLeft("Bookmarks", headerBookmarks);
+                headerCopyPaste = EditorGUILayout.ToggleLeft("Copy/Paste", headerCopyPaste);
                 saveComponentRuntime = EditorGUILayout.ToggleLeft("Save Component At Runtime", saveComponentRuntime);
                 transformInspectorGlobalValues = EditorGUILayout.ToggleLeft("Transform Global Values", transformInspectorGlobalValues);
                 EditorGUI.indentLevel--;
@@ -116,6 +122,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             private static void DrawNestedEditor()
             {
                 nestedEditors = EditorGUILayout.ToggleLeft("Nested Editors", nestedEditors);
+                
                 EditorGUI.indentLevel++;
                 EditorGUI.BeginDisabledGroup(!nestedEditors);
 
@@ -132,6 +139,39 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.EndDisabledGroup();
                 EditorGUI.indentLevel--;
+            }
+
+            public string GetMenuName()
+            {
+                return "Inspector";
+            }
+
+            public void SetState(bool state)
+            {
+                _expandLongTextFields = state;
+                animatorInspectorClips = state;
+                boxColliderDetect = state;
+                componentExtraHeaderButtons = state;
+                dragObjectFields = state;
+                hideEmptyHelpButton = state;
+                hidePresetButton = state;
+                inspectorBar = state;
+                inspectorBarShowMaterials = state;
+                inspectorNotes = state;
+                nestedEditors = state;
+                objectFieldSelector = state;
+                saveComponentRuntime = state;
+                transformInspectorGlobalValues = state;
+                
+                EmptyInspectorManager.SetState(state);
+                
+                HelpIconButtonInterceptor.Refresh();
+                DrawPresetButtonInterceptor.Refresh();
+                AnimatorInspectorInterceptor.Refresh();
+                ReorderableListInterceptor.Refresh();
+                
+                Object[] windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
+                foreach (EditorWindow wnd in windows) wnd.Repaint();
             }
         }
     }
