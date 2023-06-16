@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}" SchemaVersion="110">
 	<AudioObjects>
-		<WorkUnit Name="Default Work Unit" ID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="Sound_1" ID="{7830E097-417F-4037-A3F2-2323A5B8C380}" ShortID="32904527">
+					<ChildrenList>
+						<Sound Name="Attack_Combo_2-2" ID="{AFDA5961-02B8-46F3-842D-4DACB0B41D8B}" ShortID="16713368">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{EB35971E-D67A-495F-8702-940D2CA5B67D}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{A37854BA-6094-4D95-9D1B-4941EAA876DD}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Attack_Combo_2-2" ID="{DD6A3B18-D14A-47B0-B644-3201A98F5C05}">
+									<Language>SFX</Language>
+									<AudioFile>Attack_Combo_2-2.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="636929756"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Attack_Combo_2-2" ID="{DD6A3B18-D14A-47B0-B644-3201A98F5C05}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+			</ChildrenList>
+		</WorkUnit>
 	</AudioObjects>
 </WwiseDocument>
