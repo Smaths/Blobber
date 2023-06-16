@@ -13,10 +13,409 @@ MonoBehaviour:
   m_Name: References
   m_EditorClassIdentifier: 
   _bookmarks: []
-  _emptyInspectorItems: []
+  _emptyInspectorItems:
+  - title: Ultimate Editor Enhancer
+    enabled: 1
+    items:
+    - title: Bookmarks
+      menuPath: Tools/Infinity Code/Ultimate Editor Enhancer/Bookmarks
+      enabled: 1
+    - title: Distance Tool
+      menuPath: Tools/Infinity Code/Ultimate Editor Enhancer/Distance Tool
+      enabled: 1
+    - title: View Gallery
+      menuPath: Tools/Infinity Code/Ultimate Editor Enhancer/View Gallery
+      enabled: 1
+    - title: Documentation
+      menuPath: Tools/Infinity Code/Ultimate Editor Enhancer/Documentation
+      enabled: 1
+    - title: Settings
+      menuPath: Tools/Infinity Code/Ultimate Editor Enhancer/Settings
+      enabled: 1
+  - title: Settings
+    enabled: 1
+    items:
+    - title: Project Settings
+      menuPath: Edit/Project Settings...
+      enabled: 1
+    - title: Preferences
+      menuPath: Edit/Preferences...
+      enabled: 1
+    - title: Shortcuts
+      menuPath: Unity/Shortcuts...
+      enabled: 1
+  - title: Packages
+    enabled: 1
+    items:
+    - title: Import Custom Package
+      menuPath: Assets/Import Package/Custom Package...
+      enabled: 1
+    - title: Package Manager
+      menuPath: Window/Package Manager
+      enabled: 1
+  - title: Asset Management
+    enabled: 1
+    items:
+    - title: Version Control
+      menuPath: Window/Asset Management/Version Control
+      enabled: 1
+  - title: Text
+    enabled: 1
+    items:
+    - title: Font Asset Creator
+      menuPath: Window/Text/Font Asset Creator
+      enabled: 1
+    - title: Sprite Importer
+      menuPath: Window/Text/Sprite Importer
+      enabled: 1
+  - title: TextMeshPro
+    enabled: 1
+    items:
+    - title: Font Asset Creator
+      menuPath: Window/TextMeshPro/Font Asset Creator
+      enabled: 1
+    - title: Sprite Importer
+      menuPath: Window/TextMeshPro/Sprite Importer
+      enabled: 1
+    - title: Import TMP Essential Resources
+      menuPath: Window/TextMeshPro/Import TMP Essential Resources
+      enabled: 1
+    - title: Import TMP Examples and Extras
+      menuPath: Window/TextMeshPro/Import TMP Examples and Extras
+      enabled: 1
+    - title: Project Files GUID Remapping Tool
+      menuPath: Window/TextMeshPro/Project Files GUID Remapping Tool
+      enabled: 1
+    - title: Project Text Spacing Conversion Tool
+      menuPath: Window/TextMeshPro/Project Text Spacing Conversion Tool
+      enabled: 1
+    - title: Wwise Picker
+      menuPath: Window/Wwise Picker
+      enabled: 1
+  - title: General
+    enabled: 1
+    items:
+    - title: Scene
+      menuPath: Window/General/Scene
+      enabled: 1
+    - title: Game
+      menuPath: Window/General/Game
+      enabled: 1
+    - title: Inspector
+      menuPath: Window/General/Inspector
+      enabled: 1
+    - title: Hierarchy
+      menuPath: Window/General/Hierarchy
+      enabled: 1
+    - title: Project
+      menuPath: Window/General/Project
+      enabled: 1
+    - title: Console
+      menuPath: Window/General/Console
+      enabled: 1
+    - title: Progress
+      menuPath: Window/General/Progress
+      enabled: 1
+    - title: Test Runner
+      menuPath: Window/General/Test Runner
+      enabled: 1
+    - title: Services
+      menuPath: Window/General/Services
+      enabled: 1
+    - title: Device Simulator
+      menuPath: Window/General/Device Simulator
+      enabled: 1
+  - title: Rendering
+    enabled: 1
+    items:
+    - title: Lighting
+      menuPath: Window/Rendering/Lighting
+      enabled: 1
+    - title: Light Explorer
+      menuPath: Window/Rendering/Light Explorer
+      enabled: 1
+    - title: Render Pipeline Converter
+      menuPath: Window/Rendering/Render Pipeline Converter
+      enabled: 1
+    - title: Occlusion Culling
+      menuPath: Window/Rendering/Occlusion Culling
+      enabled: 1
+    - title: Probe Volume Settings (Experimental)
+      menuPath: Window/Rendering/Probe Volume Settings (Experimental)
+      enabled: 1
+    - title: Look Dev
+      menuPath: Window/Rendering/Look Dev
+      enabled: 1
+  - title: Animation
+    enabled: 1
+    items:
+    - title: Animation
+      menuPath: Window/Animation/Animation
+      enabled: 1
+    - title: Animator
+      menuPath: Window/Animation/Animator
+      enabled: 1
+    - title: Animator Parameter
+      menuPath: Window/Animation/Animator Parameter
+      enabled: 1
+  - title: Audio
+    enabled: 1
+    items:
+    - title: Audio Mixer
+      menuPath: Window/Audio/Audio Mixer
+      enabled: 1
+  - title: Sequencing
+    enabled: 1
+    items:
+    - title: Timeline
+      menuPath: Window/Sequencing/Timeline
+      enabled: 1
+  - title: Analysis
+    enabled: 1
+    items:
+    - title: Profiler
+      menuPath: Window/Analysis/Profiler
+      enabled: 1
+    - title: Profiler (Standalone Process)
+      menuPath: Window/Analysis/Profiler (Standalone Process)
+      enabled: 1
+    - title: Frame Debugger
+      menuPath: Window/Analysis/Frame Debugger
+      enabled: 1
+    - title: Physics Debugger
+      menuPath: Window/Analysis/Physics Debugger
+      enabled: 1
+    - title: Import Activity
+      menuPath: Window/Analysis/Import Activity
+      enabled: 1
+    - title: Input Debugger
+      menuPath: Window/Analysis/Input Debugger
+      enabled: 1
+    - title: Rendering Debugger
+      menuPath: Window/Analysis/Rendering Debugger
+      enabled: 1
+    - title: Render Graph Viewer
+      menuPath: Window/Analysis/Render Graph Viewer
+      enabled: 1
+    - title: IMGUI Debugger
+      menuPath: Window/Analysis/IMGUI Debugger
+      enabled: 1
+  - title: AI
+    enabled: 1
+    items:
+    - title: Navigation
+      menuPath: Window/AI/Navigation
+      enabled: 1
+  - title: UI Toolkit
+    enabled: 1
+    items:
+    - title: UI Builder
+      menuPath: Window/UI Toolkit/UI Builder
+      enabled: 1
+    - title: Samples
+      menuPath: Window/UI Toolkit/Samples
+      enabled: 1
+    - title: Debugger
+      menuPath: Window/UI Toolkit/Debugger
+      enabled: 1
+    - title: Event Debugger
+      menuPath: Window/UI Toolkit/Event Debugger
+      enabled: 1
+    - title: Package Asset Converter
+      menuPath: Window/UI Toolkit/Package Asset Converter
+      enabled: 1
+  - title: Visual Scripting
+    enabled: 1
+    items:
+    - title: Visual Scripting Graph
+      menuPath: Window/Visual Scripting/Visual Scripting Graph
+      enabled: 1
   _favoriteWindows: []
-  _headerRules: []
-  _quickAccessItems: []
+  _headerRules:
+  - enabled: 1
+    condition: 0
+    value: --
+    trimChars: -=
+    backgroundColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    textAlign: 1
+    textStyle: 1
+  _quickAccessItems:
+  - tooltip: Open Scene
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions.OpenAction
+    intSettings: 
+    type: 7
+    visibleRules: 0
+    icon: 1
+    iconScale: 1
+    iconSettings: 
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Save Scenes
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions.SaveAction
+    intSettings: 
+    type: 7
+    visibleRules: 0
+    icon: 1
+    iconScale: 1
+    iconSettings: 
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Hierarchy
+    expanded: 0
+    settings:
+    - UnityEditor.SceneHierarchyWindow, UnityEditor.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 1
+    icon: 0
+    iconScale: 1
+    iconSettings: Assets/Plugins/Infinity Code/Ultimate Editor Enhancer/Icons/Hierarchy2.png
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Project
+    expanded: 0
+    settings:
+    - UnityEditor.ProjectBrowser, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 1
+    icon: 0
+    iconScale: 1
+    iconSettings: Assets/Plugins/Infinity Code/Ultimate Editor Enhancer/Icons/Project.png
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Inspector
+    expanded: 0
+    settings:
+    - UnityEditor.InspectorWindow, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 1
+    icon: 0
+    iconScale: 1
+    iconSettings: Assets/Plugins/Infinity Code/Ultimate Editor Enhancer/Icons/Inspector.png
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Bookmarks
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.Windows.Bookmarks, UltimateEditorEnhancer-Editor,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 0
+    icon: 0
+    iconScale: 1
+    iconSettings: Assets/Plugins/Infinity Code/Ultimate Editor Enhancer/Icons/Star-White.png
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Note Manager
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.NoteManager, UltimateEditorEnhancer-Editor,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 0
+    icon: 0
+    iconScale: 1
+    iconSettings: Assets/Plugins/Infinity Code/Ultimate Editor Enhancer/Icons/Note-Empty.png
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: View Gallery
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.Windows.ViewGallery, UltimateEditorEnhancer-Editor,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 0
+    icon: 1
+    iconScale: 1
+    iconSettings: d_ViewToolOrbit
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Distance Tool
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.Windows.DistanceTool, UltimateEditorEnhancer-Editor,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 0
+    icon: 0
+    iconScale: 1
+    iconSettings: Assets/Plugins/Infinity Code/Ultimate Editor Enhancer/Icons/Rule.png
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: 
+    expanded: 1
+    settings: []
+    intSettings: 
+    type: 5
+    visibleRules: 0
+    icon: 1
+    iconScale: 1
+    iconSettings: 
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Edit Items
+    expanded: 0
+    settings:
+    - Project/Ultimate Editor Enhancer/Scene View/Quick Access Bar
+    intSettings: 
+    type: 6
+    visibleRules: 0
+    icon: 1
+    iconScale: 1
+    iconSettings: d_Settings
+    useCustomWindowSize: 0
+    customWindowSize: {x: 400, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
+  - tooltip: Info
+    expanded: 0
+    settings:
+    - InfinityCode.UltimateEditorEnhancer.Windows.Welcome, UltimateEditorEnhancer-Editor,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    intSettings: 
+    type: 0
+    visibleRules: 0
+    icon: 1
+    iconScale: 1
+    iconSettings: _Help
+    useCustomWindowSize: 1
+    customWindowSize: {x: 500, y: 300}
+    alignWindowToBar: 1
+    windowMode: 0
   _projectFolderIcons:
   - folderName: Addons|Assemblies|Extensions|Library|Libraries|Packages|Plugins
     icon: Assembly Icon
@@ -136,8 +535,6 @@ MonoBehaviour:
     icon: VideoPlayer Icon
     color: {r: 0.5764706, g: 0.43921572, b: 0.8588236, a: 1}
   _sceneHistory:
-  - name: Car - Scene - Set2
-    path: Assets/Plugins/FlatKit/Demos/[Demo] Car/Car - Scene - Set2.unity
   - name: Start
     path: Assets/Scenes/Start.unity
   _notes: []
