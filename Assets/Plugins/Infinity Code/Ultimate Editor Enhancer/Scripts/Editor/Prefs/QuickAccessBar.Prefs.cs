@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using InfinityCode.UltimateEditorEnhancer.JSON;
 using InfinityCode.UltimateEditorEnhancer.SceneTools;
@@ -174,6 +175,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     foreach (QuickAccessItem item in ReferenceManager.quickAccessItems) item.expanded = true;
                     ReorderableListRef.ClearCache(reorderableList);
+                }
+
+                if (GUILayout.Button("Restore Default Items"))
+                {
+                    ReferenceManager.quickAccessItems.Clear();
+                    RecordUpgrader.InitDefaultQuickAccessItems();
                 }
 
                 EditorGUILayout.EndHorizontal();
@@ -687,7 +694,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 string[] groups = new string[64];
                 int prevLevel = -1;
 
-                StaticStringBuilder.Clear();
+                StringBuilder builder = StaticStringBuilder.Start();
 
                 for (int i = 0; i < menuToString.Length; i++)
                 {
@@ -700,7 +707,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                     if (prevLevel >= level)
                     {
-                        string menuItem = StaticStringBuilder.GetString();
+                        string menuItem = builder.ToString();
                         string tooltip = groups[prevLevel];
                         menu.Add(menuItem, () =>
                         {
@@ -718,18 +725,21 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                     if (groups[0] == "CONTEXT") continue;
 
-                    StaticStringBuilder.Clear();
+                    builder.Clear();
 
                     for (int j = 0; j <= level; j++)
                     {
-                        if (j > 0) StaticStringBuilder.Append("/");
-                        StaticStringBuilder.Append(groups[j]);
+                        if (j > 0) builder.Append("/");
+                        builder.Append(groups[j]);
                     }
                 }
 
-                StaticStringBuilder.Clear();
-
                 menu.Show();
+            }
+
+            public static void SetState(bool state)
+            {
+                quickAccessBar = state;
             }
 
             private void WaitWindowChanged()

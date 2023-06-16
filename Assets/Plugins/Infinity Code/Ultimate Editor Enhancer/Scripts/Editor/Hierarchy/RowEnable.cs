@@ -23,7 +23,10 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             Event e = Event.current;
             if (e.type == EventType.MouseDown && e.button == 2)
             {
+                Undo.RecordObject(item.gameObject, "Modified Property in " + item.gameObject.name);
                 item.gameObject.SetActive(!item.gameObject.activeSelf);
+                EditorUtility.SetDirty(item.gameObject);
+                e.Use();
             }
         }
 

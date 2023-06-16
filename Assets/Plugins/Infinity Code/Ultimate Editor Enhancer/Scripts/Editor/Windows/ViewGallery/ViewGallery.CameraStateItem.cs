@@ -52,8 +52,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public override void PrepareMenu(GenericMenuEx menu)
             {
                 menu.Add("Restore", Set);
+
+                foreach (ViewStateItem view in views)
+                {
+                    menu.Add("Set From State/" + view.name, SetState, view);
+                }
+
                 menu.Add("Select", () => Selection.activeGameObject = camera.gameObject);
                 menu.Add("Create View State", CreateViewState, this);
+            }
+
+            private void SetState(object userData)
+            {
+                ViewStateItem view = userData as ViewStateItem;
+                if (view == null) return;
+
+                view.SetView(camera);
             }
 
             public override void Set(SceneView view)

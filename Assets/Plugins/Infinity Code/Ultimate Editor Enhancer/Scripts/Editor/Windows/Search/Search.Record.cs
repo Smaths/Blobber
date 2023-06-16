@@ -162,12 +162,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 e.Use();
             }
 
-            public float Update(string pattern, string valueType)
+            public bool Update(string pattern, string valueType)
             {
-                _accuracy = 0;
-
-                if (!string.IsNullOrEmpty(valueType) && !Contains(type, valueType)) return 0;
-                return UpdateAccuracy(pattern);
+                if (!string.IsNullOrEmpty(valueType) && !Contains(type, valueType)) return false;
+                return Match(pattern);
             }
 
             public virtual void UpdateGameObjectName(GameObject go)

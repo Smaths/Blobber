@@ -125,6 +125,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public void Show()
         {
             GenericMenu menu = new GenericMenu();
+            
             foreach (GenericMenuItem item in items)
             {
                 if (item.separator) menu.AddSeparator(item.path);

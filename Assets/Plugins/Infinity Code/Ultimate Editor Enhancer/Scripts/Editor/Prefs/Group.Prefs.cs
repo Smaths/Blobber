@@ -40,6 +40,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Group GameObjects", "Everywhere", groupModifiers, groupKeyCode),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                group = state;
+            }
         }
     }
 }

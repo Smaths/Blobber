@@ -15,7 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         private static GUIContent activeContent;
         private static Vector3 firstPoint;
         private static Texture handleIcon;
-        private static Mode mode = Mode.move;
+        private static Mode mode = Mode.Move;
         private static PRS[] oldValues;
 
         private static GUIContent passiveContent;
@@ -106,7 +106,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (handleIcon == null) handleIcon = EditorIconContents.avatarPivot.image;
 
             Vector3 position = UnityEditor.Tools.handlePosition;
-            Quaternion rotation = Selection.activeGameObject.transform.rotation;
+            Quaternion rotation = UnityEditor.Tools.handleRotation;
 
             Event e = Event.current;
             if (e.modifiers == EventModifiers.Alt)
@@ -129,12 +129,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             {
                 if (e.keyCode == KeyCode.V)
                 {
-                    mode = Mode.setPivot;
+                    mode = Mode.SetPivot;
                     e.Use();
                 }
-                else if (e.keyCode == KeyCode.LeftShift && mode != Mode.setOrientation)
+                else if (e.keyCode == KeyCode.LeftShift && mode != Mode.SetOrientation)
                 {
-                    mode = Mode.setOrientation;
+                    mode = Mode.SetOrientation;
                     pointIndex = 0;
                     e.Use();
                 }
@@ -143,24 +143,24 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             {
                 if (e.keyCode == KeyCode.V || e.keyCode == KeyCode.LeftShift)
                 {
-                    mode = Mode.move;
-                    e.Use();
+                    mode = Mode.Move;
+                    //e.Use();
                 }
             }
 
             bool changed = false;
             float handleSize;
             EventType eventType = e.type;
-
+            
             EditorGUI.BeginChangeCheck();
-            if (mode == Mode.move)
+            if (mode == Mode.Move)
             {
                 position = Handles.PositionHandle(position, rotation);
                 rotation = Handles.RotationHandle(rotation, position);
                 handleSize = HandleUtility.GetHandleSize(position);
                 Handles.Label(position + new Vector3(1, -1, 0) * handleSize * 0.125f, handleIcon);
             }
-            else if (mode == Mode.setPivot)
+            else if (mode == Mode.SetPivot)
             {
                 handleSize = HandleUtility.GetHandleSize(position);
                 HandleUtilityRef.FindNearestVertex(e.mousePosition, out position);
@@ -169,11 +169,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 if (eventType == EventType.MouseDown && e.button == 0)
                 {
                     changed = true;
-                    mode = Mode.move;
+                    mode = Mode.Move;
                     e.Use();
                 }
             }
-            else if (mode == Mode.setOrientation)
+            else if (mode == Mode.SetOrientation)
             {
                 if (pointIndex == 1)
                 {
@@ -205,7 +205,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     else
                     {
                         pointIndex = 0;
-                        mode = Mode.move;
+                        mode = Mode.Move;
                         e.Use();
 
                         GenericMenuEx menu = GenericMenuEx.Start();
@@ -246,9 +246,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         public enum Mode
         {
-            move,
-            setPivot,
-            setOrientation
+            Move,
+            SetPivot,
+            SetOrientation
         }
     }
 }

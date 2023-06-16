@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using InfinityCode.UltimateEditorEnhancer.JSON;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,19 +21,20 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 case SerializedPropertyType.Generic:
                     return EMPTY_VALUE;
-                case SerializedPropertyType.Integer:
                 case SerializedPropertyType.Enum:
+                    return prop.enumValueIndex;
+                case SerializedPropertyType.Integer:
 #if UNITY_2022_1_OR_NEWER
                     switch (prop.numericType)
                     {
                         case SerializedPropertyNumericType.Int8:
-                            return (sbyte) prop.intValue;
+                            return (sbyte)prop.intValue;
                         case SerializedPropertyNumericType.UInt8:
-                            return (byte) prop.uintValue;
+                            return (byte)prop.uintValue;
                         case SerializedPropertyNumericType.Int16:
-                            return (short) prop.intValue;
+                            return (short)prop.intValue;
                         case SerializedPropertyNumericType.UInt16:
-                            return (ushort) prop.uintValue;
+                            return (ushort)prop.uintValue;
                         case SerializedPropertyNumericType.UInt32:
                             return prop.uintValue;
                         case SerializedPropertyNumericType.Int64:
@@ -60,7 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 case SerializedPropertyType.ObjectReference:
                     return prop.objectReferenceValue;
                 case SerializedPropertyType.LayerMask:
-                    return (LayerMask) prop.intValue;
+                    return (LayerMask)prop.intValue;
                 case SerializedPropertyType.Vector2:
                     return prop.vector2Value;
                 case SerializedPropertyType.Vector3:
@@ -73,7 +75,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     return prop.intValue;
                 case SerializedPropertyType.Character:
 #if UNITY_2022_1_OR_NEWER
-                    return (ushort) prop.uintValue;
+                    return (ushort)prop.uintValue;
 #else
                     return (ushort)prop.intValue;
 #endif
@@ -117,6 +119,135 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
         }
 
+        public static void FromJson(SerializedProperty prop, JsonItem json)
+        {
+            switch (prop.propertyType)
+            {
+                case SerializedPropertyType.Generic:
+                    JsonArray array = json as JsonArray;
+                    if (array == null) return;
+                    int arraySize = array.count;
+                    prop.arraySize = arraySize;
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        FromJson(prop.GetArrayElementAtIndex(i), array[i]);
+                    }
+
+                    break;
+                case SerializedPropertyType.Enum:
+                    prop.enumValueIndex = json.Value<int>();
+                    break;
+                case SerializedPropertyType.Integer:
+#if UNITY_2022_1_OR_NEWER
+                    switch (prop.numericType)
+                    {
+                        case SerializedPropertyNumericType.Int8:
+                        case SerializedPropertyNumericType.Int16:
+                            prop.intValue = json.Value<int>();
+                            break;
+                        case SerializedPropertyNumericType.UInt8:
+                        case SerializedPropertyNumericType.UInt16:
+                        case SerializedPropertyNumericType.UInt32:
+                            prop.uintValue = (uint)json.Value<long>();
+                            break;
+                        case SerializedPropertyNumericType.Int64:
+                            prop.longValue = json.Value<long>();
+                            break;
+                        case SerializedPropertyNumericType.UInt64:
+                            prop.ulongValue = (ulong)json.Value<long>();
+                            break;
+                        default:
+                            prop.intValue = json.Value<int>();
+                            break;
+                    }
+#else
+                    prop.intValue = json.Value<int>();
+#endif
+                    break;
+                case SerializedPropertyType.Boolean:
+                    prop.boolValue = json.Value<bool>();
+                    break;
+                case SerializedPropertyType.Float:
+#if UNITY_2022_1_OR_NEWER
+                    if (prop.numericType == SerializedPropertyNumericType.Double)
+                    {
+                        prop.doubleValue = json.Value<double>();
+                    }
+                    else
+                    {
+                        prop.floatValue = json.Value<float>();
+                    }
+#else
+                    prop.floatValue = json.Value<float>();
+#endif
+                    break;
+                case SerializedPropertyType.String:
+                    prop.stringValue = json.Value<string>();
+                    break;
+                case SerializedPropertyType.Color:
+                    prop.colorValue = json.Deserialize<Color>();
+                    break;
+                case SerializedPropertyType.ObjectReference:
+                    prop.objectReferenceValue = json.Value<int>() != 0 ? EditorUtility.InstanceIDToObject(json.Value<int>()) : null;
+                    break;
+                case SerializedPropertyType.LayerMask:
+                    prop.intValue = json.Value<int>();
+                    break;
+                case SerializedPropertyType.Vector2:
+                    prop.vector2Value = json.Deserialize<Vector2>();
+                    break;
+                case SerializedPropertyType.Vector3:
+                    prop.vector3Value = json.Deserialize<Vector3>();
+                    break;
+                case SerializedPropertyType.Vector4:
+                    prop.vector4Value = json.Deserialize<Vector4>();
+                    break;
+                case SerializedPropertyType.Rect:
+                    prop.rectValue = json.Deserialize<Rect>();
+                    break;
+                case SerializedPropertyType.ArraySize:
+                case SerializedPropertyType.FixedBufferSize:
+                    prop.intValue = json.Value<int>();
+                    break;
+                case SerializedPropertyType.Character:
+#if UNITY_2022_1_OR_NEWER
+                    prop.uintValue = (uint)json.Value<long>();
+#else
+                    prop.intValue = json.Value<int>();
+#endif
+                    break;
+                case SerializedPropertyType.AnimationCurve:
+                    prop.animationCurveValue = json.Deserialize<AnimationCurve>();
+                    break;
+                case SerializedPropertyType.Bounds:
+                    prop.boundsValue = json.Deserialize<Bounds>();
+                    break;
+                case SerializedPropertyType.Gradient:
+#if UNITY_2022_1_OR_NEWER
+                    prop.gradientValue = json.Deserialize<Gradient>();
+#endif
+                    break;
+                case SerializedPropertyType.Quaternion:
+                    prop.quaternionValue = json.Deserialize<Quaternion>();
+                    break;
+                case SerializedPropertyType.ExposedReference:
+                    prop.exposedReferenceValue = json.Value<int>() != 0 ? EditorUtility.InstanceIDToObject(json.Value<int>()) : null;
+                    break;
+                case SerializedPropertyType.Vector2Int:
+                    prop.vector2IntValue = json.Deserialize<Vector2Int>();
+                    break;
+                case SerializedPropertyType.Vector3Int:
+                    prop.vector3IntValue = json.Deserialize<Vector3Int>();
+                    break;
+                case SerializedPropertyType.RectInt:
+                    prop.rectIntValue = json.Deserialize<RectInt>();
+                    break;
+                case SerializedPropertyType.BoundsInt:
+                    prop.boundsIntValue = json.Deserialize<BoundsInt>();
+                    break;
+            }
+        }
+
         public static void SetBoxedValue(SerializedProperty prop, object value)
         {
             if (value == EMPTY_VALUE) return;
@@ -127,8 +258,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     case SerializedPropertyType.Generic:
                         break;
-                    case SerializedPropertyType.Integer:
                     case SerializedPropertyType.Enum:
+                        prop.enumValueIndex = (int)value;
+                        break;
+                    case SerializedPropertyType.Integer:
                     case SerializedPropertyType.ArraySize:
 #if UNITY_2022_1_OR_NEWER
                         if (prop.numericType == SerializedPropertyNumericType.UInt64)
@@ -235,7 +368,104 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
             catch
             {
-                
+
+            }
+        }
+
+        public static JsonItem ToJson(SerializedProperty prop)
+        {
+            switch (prop.propertyType)
+            {
+                case SerializedPropertyType.Generic:
+                    JsonArray array = new JsonArray();
+                    IEnumerator enumerator = prop.GetEnumerator();
+                    while (enumerator.MoveNext())
+                    {
+                        array.Add(ToJson((SerializedProperty)enumerator.Current));
+                    }
+
+                    return array;
+                case SerializedPropertyType.Integer:
+                case SerializedPropertyType.Enum:
+#if UNITY_2022_1_OR_NEWER
+                    switch (prop.numericType)
+                    {
+                        case SerializedPropertyNumericType.Int8:
+                        case SerializedPropertyNumericType.Int16:
+                            return new JsonValue(prop.intValue);
+                        case SerializedPropertyNumericType.UInt8:
+                        case SerializedPropertyNumericType.UInt16:
+                        case SerializedPropertyNumericType.UInt32:
+                            return new JsonValue((long)prop.uintValue);
+                        case SerializedPropertyNumericType.Int64:
+                            return new JsonValue(prop.longValue);
+                        case SerializedPropertyNumericType.UInt64:
+                            return new JsonValue((long)prop.ulongValue);
+                        default:
+                            return new JsonValue(prop.intValue);
+                    }
+#else
+                    return new JsonValue(prop.intValue);
+#endif
+                case SerializedPropertyType.Boolean:
+                    return new JsonValue(prop.boolValue);
+                case SerializedPropertyType.Float:
+#if UNITY_2022_1_OR_NEWER
+                    return new JsonValue(prop.numericType == SerializedPropertyNumericType.Double ? prop.doubleValue : prop.floatValue);
+#else
+                    return new JsonValue(prop.floatValue);
+#endif
+                case SerializedPropertyType.String:
+                    return new JsonValue(prop.stringValue);
+                case SerializedPropertyType.Color:
+                    return Json.Serialize(prop.colorValue);
+                case SerializedPropertyType.ObjectReference:
+                    if (prop.objectReferenceValue == null) return new JsonValue(null);
+                    return new JsonValue(prop.objectReferenceValue.GetInstanceID());
+                case SerializedPropertyType.LayerMask:
+                    return new JsonValue(prop.intValue);
+                case SerializedPropertyType.Vector2:
+                    return Json.Serialize(prop.vector2Value);
+                case SerializedPropertyType.Vector3:
+                    return Json.Serialize(prop.vector3Value);
+                case SerializedPropertyType.Vector4:
+                    return Json.Serialize(prop.vector4Value);
+                case SerializedPropertyType.Rect:
+                    return Json.Serialize(prop.rectValue);
+                case SerializedPropertyType.ArraySize:
+                case SerializedPropertyType.FixedBufferSize:
+                    return Json.Serialize(prop.intValue);
+                case SerializedPropertyType.Character:
+#if UNITY_2022_1_OR_NEWER
+                    return new JsonValue((long)prop.uintValue);
+#else
+                    return new JsonValue(prop.intValue);
+#endif
+                case SerializedPropertyType.AnimationCurve:
+                    return Json.Serialize(prop.animationCurveValue);
+                case SerializedPropertyType.Bounds:
+                    return Json.Serialize(prop.boundsValue);
+                case SerializedPropertyType.Gradient:
+#if UNITY_2022_1_OR_NEWER
+                    return Json.Serialize(prop.gradientValue);
+#else
+                    return new JsonValue(null);
+#endif
+                case SerializedPropertyType.Quaternion:
+                    return Json.Serialize(prop.quaternionValue);
+                case SerializedPropertyType.ExposedReference:
+                    if (prop.exposedReferenceValue == null) return new JsonValue(null);
+                    return new JsonValue(prop.exposedReferenceValue.GetInstanceID());
+                case SerializedPropertyType.Vector2Int:
+                    return Json.Serialize(prop.vector2IntValue);
+                case SerializedPropertyType.Vector3Int:
+                    return Json.Serialize(prop.vector3IntValue);
+                case SerializedPropertyType.RectInt:
+                    return Json.Serialize(prop.rectIntValue);
+                case SerializedPropertyType.BoundsInt:
+                    return Json.Serialize(prop.boundsIntValue);
+                default:
+                    return new JsonValue(null);
             }
         }
     }

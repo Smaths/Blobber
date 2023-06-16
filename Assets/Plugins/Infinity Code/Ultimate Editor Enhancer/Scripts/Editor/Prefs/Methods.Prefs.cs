@@ -29,9 +29,9 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static string[] _keywords;
         private static PrefManager[] _generalManagers;
         private static string[] escapeChars = {"%", "%25", ";", "%3B", "(", "%28", ")", "%29"};
-        private static bool forceSave = false;
+        private static bool forceSave;
         private static Vector2 scrollPosition;
-        private static bool loaded = false;
+        private static bool loaded;
 
         internal static PrefManager[] managers
         {
@@ -82,6 +82,16 @@ namespace InfinityCode.UltimateEditorEnhancer
             File.WriteAllText(path, content, Encoding.UTF8);
         }
 
+        private static void DisableEverything()
+        {
+            foreach (PrefManager m in managers)
+            {
+                IStateablePref p = m as IStateablePref;
+                if (p != null) p.SetState(false);
+            }
+            Save();
+        }
+
         private static void DrawToolbar()
         {
             EditorGUILayout.BeginHorizontal();
@@ -90,16 +100,47 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 GenericMenuEx menu = GenericMenuEx.Start();
                 menu.Add("Export/Settings", ExportSettings);
-                menu.Add("Export/Items/Everything", ExportItems, -1 );
+                menu.Add("Export/Items/Everything", ExportItems, (int)ExportItemIndex.everything );
                 menu.AddSeparator("Export/Items/");
-                menu.Add("Export/Items/Bookmarks", ExportItems, 0);
-                menu.Add("Export/Items/Empty Inspector", ExportItems, 4);
-                menu.Add("Export/Items/Favorite Windows", ExportItems, 1 );
-                menu.Add("Export/Items/Hierarchy Headers", ExportItems, 3);
-                menu.Add("Export/Items/Quick Access Bar", ExportItems, 2 );
+                menu.Add("Export/Items/Bookmarks", ExportItems, (int)ExportItemIndex.bookmarks );
+                menu.Add("Export/Items/Empty Inspector", ExportItems, (int)ExportItemIndex.emptyInspector );
+                menu.Add("Export/Items/Favorite Windows", ExportItems, (int)ExportItemIndex.favoriteWindows );
+                menu.Add("Export/Items/Hierarchy Headers", ExportItems, (int)ExportItemIndex.hierarchyHeaders );
+                menu.Add("Export/Items/Quick Access Bar", ExportItems, (int)ExportItemIndex.quickAccessBar );
+                menu.Add("Export/Items/Project Icons", ExportItems, (int)ExportItemIndex.projectIcons );
 
                 menu.Add("Import/Settings", ImportSettings);
                 menu.Add("Import/Items", ImportItems);
+
+                menu.Show();
+            }
+            
+            if (GUILayoutUtils.ToolbarButton("Bulk Operations"))
+            {
+                GenericMenuEx menu = GenericMenuEx.Start();
+                menu.Add("Restore Default Settings", RestoreDefaultSettings);
+                menu.AddSeparator();
+                menu.Add("Disable/Everything", DisableEverything);
+                menu.AddSeparator("Disable/");
+                
+                menu.Add("Enable/Everything", EnableEverything);
+                menu.AddSeparator("Enable/");
+                
+                Dictionary<string, Action<bool>> actions = new Dictionary<string, Action<bool>>();
+
+                foreach (PrefManager m in managers)
+                {
+                    IStateablePref p = m as IStateablePref;
+                    if (p == null) continue;
+
+                    actions.Add(p.GetMenuName(), p.SetState);
+                }
+                
+                foreach (KeyValuePair<string, Action<bool>> pair in actions.OrderBy(d => d.Key))
+                {
+                    menu.Add("Enable/" + pair.Key, () => pair.Value(true));
+                    menu.Add("Disable/" + pair.Key, () => pair.Value(false));
+                }
 
                 menu.Show();
             }
@@ -112,19 +153,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 menu.Add(".collabignore/Exclude Settings", () => { CreateIgnore("collabignore", false); });
                 menu.Add(".collabignore/Exclude Entire Asset", () => { CreateIgnore("collabignore", true); });
                 menu.Show();
-            }
-
-            if (GUILayoutUtils.ToolbarButton("Restore default settings"))
-            {
-                if (EditorUtility.DisplayDialog("Restore default settings", "Are you sure you want to restore the default settings?", "Restore", "Cancel"))
-                {
-                    if (EditorPrefs.HasKey(PrefsKey)) EditorPrefs.DeleteKey(PrefsKey);
-
-                    ReferenceManager.ResetContent();
-                    LocalSettings.ResetContent();
-
-                    AssetDatabase.ImportAsset(Resources.assetFolder + "Scripts/Editor/Prefs/Methods.Prefs.cs", ImportAssetOptions.ForceUpdate);
-                }
             }
 
             GUILayout.Label("", EditorStyles.toolbarButton, GUILayout.ExpandWidth(true));
@@ -152,27 +180,39 @@ namespace InfinityCode.UltimateEditorEnhancer
             EditorGUILayout.EndHorizontal();
         }
 
+        private static void EnableEverything()
+        {
+            foreach (PrefManager m in managers)
+            {
+                IStateablePref p = m as IStateablePref;
+                if (p != null) p.SetState(true);
+            }
+            Save();
+        }
+
         private static void ExportItems(object data)
         {
-            int target = (int)data;
+            ExportItemIndex target = (ExportItemIndex)(int)data;
             string name = "UEE-Items-";
-            if (target == -1) name += "Everything";
-            else if (target == 0) name += "Bookmarks";
-            else if (target == 1) name += "Favorite-Windows";
-            else if (target == 2) name += "Quick-Access-Bar";
-            else if (target == 3) name += "Hierarchy-Headers";
-            else if (target == 4) name += "Empty-Inspector";
+            if (target == ExportItemIndex.everything) name += "Everything";
+            else if (target == ExportItemIndex.bookmarks) name += "Bookmarks";
+            else if (target == ExportItemIndex.favoriteWindows) name += "Favorite-Windows";
+            else if (target == ExportItemIndex.quickAccessBar) name += "Quick-Access-Bar";
+            else if (target == ExportItemIndex.hierarchyHeaders) name += "Hierarchy-Headers";
+            else if (target == ExportItemIndex.emptyInspector) name += "Empty-Inspector";
+            else if (target == ExportItemIndex.projectIcons) name += "Project-Icons";
 
             string filename = EditorUtility.SaveFilePanel("Export Items", EditorApplication.applicationPath, name, "json");
             if (string.IsNullOrEmpty(filename)) return;
 
             JsonObject obj = new JsonObject();
 
-            if (target == -1 || target == 0) obj.Add("bookmarks", Bookmarks.json);
-            if (target == -1 || target == 1) obj.Add("favorite-windows", FavoriteWindowsManager.json);
-            if (target == -1 || target == 2) obj.Add("quick-access-bar", QuickAccessBarManager.json);
-            if (target == -1 || target == 3) obj.Add("hierarchy-headers", Header.json);
-            if (target == -1 || target == 4) obj.Add("empty-inspector", EmptyInspectorManager.json);
+            if (target == ExportItemIndex.everything || target == ExportItemIndex.bookmarks) obj.Add("bookmarks", Bookmarks.json);
+            if (target == ExportItemIndex.everything || target == ExportItemIndex.favoriteWindows) obj.Add("favorite-windows", FavoriteWindowsManager.json);
+            if (target == ExportItemIndex.everything || target == ExportItemIndex.quickAccessBar) obj.Add("quick-access-bar", QuickAccessBarManager.json);
+            if (target == ExportItemIndex.everything || target == ExportItemIndex.hierarchyHeaders) obj.Add("hierarchy-headers", Header.json);
+            if (target == ExportItemIndex.everything || target == ExportItemIndex.emptyInspector) obj.Add("empty-inspector", EmptyInspectorManager.json);
+            if (target == ExportItemIndex.everything || target == ExportItemIndex.projectIcons) obj.Add("project-icons", ProjectFolderIconManager.json);
 
             File.WriteAllText(filename, obj.ToString(), Encoding.UTF8);
         }
@@ -204,12 +244,12 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static string GetSettings()
         {
             FieldInfo[] fields = typeof(Prefs).GetFields(BindingFlags.Static | BindingFlags.Public);
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
             try
             {
-                SaveFields(fields, null);
-                return StaticStringBuilder.GetString(true);
+                SaveFields(fields, null, builder);
+                return builder.ToString();
             }
             catch (Exception e)
             {
@@ -243,6 +283,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             JsonItem eiItem = json["empty-inspector"];
             if (eiItem != null) EmptyInspectorManager.json = eiItem as JsonArray;
+            
+            JsonItem piItem = json["project-icons"];
+            if (piItem != null) ProjectFolderIconManager.json = piItem as JsonArray;
 
             migrationReplace = false;
 
@@ -311,7 +354,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void LoadFields(string prefStr, FieldInfo[] fields, ref int i, object target)
         {
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
             bool isKey = true;
             string key = null;
 
@@ -321,12 +364,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                 i++;
                 if (c == ':' && isKey)
                 {
-                    key = StaticStringBuilder.GetString(true);
+                    key = builder.ToString();
+                    builder.Clear();
                     isKey = false;
                 }
                 else if (c == ';')
                 {
-                    string value = StaticStringBuilder.GetString(true);
+                    string value = builder.ToString();
+                    builder.Clear();
                     isKey = true;
                     SetValue(target, fields, key, value);
                 }
@@ -365,40 +410,41 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
                 else if (c == ')')
                 {
-                    string value = StaticStringBuilder.GetString(true);
+                    string value = builder.ToString();
+                    builder.Clear();
                     SetValue(target, fields, key, value);
                     return;
                 }
-                else StaticStringBuilder.Append(c);
+                else builder.Append(c);
             }
         }
 
         public static string ModifierToString(EventModifiers modifiers)
         {
-            StaticStringBuilder.Clear();
-            if ((modifiers & EventModifiers.Control) == EventModifiers.Control) StaticStringBuilder.Append("CTRL");
+            StringBuilder builder = StaticStringBuilder.Start();
+            if ((modifiers & EventModifiers.Control) == EventModifiers.Control) builder.Append("CTRL");
             if ((modifiers & EventModifiers.Command) == EventModifiers.Command)
             {
-                if (StaticStringBuilder.Length > 0) StaticStringBuilder.Append(" + ");
-                StaticStringBuilder.Append("CMD");
+                if (builder.Length > 0) builder.Append(" + ");
+                builder.Append("CMD");
             }
             if ((modifiers & EventModifiers.Shift) == EventModifiers.Shift)
             {
-                if (StaticStringBuilder.Length > 0) StaticStringBuilder.Append(" + ");
-                StaticStringBuilder.Append("SHIFT");
+                if (builder.Length > 0) builder.Append(" + ");
+                builder.Append("SHIFT");
             }
             if ((modifiers & EventModifiers.Alt) == EventModifiers.Alt)
             {
-                if (StaticStringBuilder.Length > 0) StaticStringBuilder.Append(" + ");
-                StaticStringBuilder.Append("ALT");
+                if (builder.Length > 0) builder.Append(" + ");
+                builder.Append("ALT");
             }
             if ((modifiers & EventModifiers.FunctionKey) == EventModifiers.FunctionKey)
             {
-                if (StaticStringBuilder.Length > 0) StaticStringBuilder.Append(" + ");
-                StaticStringBuilder.Append("FN");
+                if (builder.Length > 0) builder.Append(" + ");
+                builder.Append("FN");
             }
 
-            return StaticStringBuilder.GetString(true);
+            return builder.ToString();
         }
 
         public static string ModifierToString(EventModifiers modifiers, string extra)
@@ -433,9 +479,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                         forceSave = false;
                     }
                 }
-                catch (ExitGUIException e)
+                catch (ExitGUIException)
                 {
-                    throw e;
+                    throw;
                 }
                 catch
                 {
@@ -446,13 +492,31 @@ namespace InfinityCode.UltimateEditorEnhancer
             EditorGUILayout.EndScrollView();
         }
 
+        private static void RestoreDefaultSettings()
+        {
+            if (!EditorUtility.DisplayDialog(
+                    "Restore default settings",
+                    "Are you sure you want to restore the default settings?",
+                    "Restore", "Cancel"))
+            {
+                return;
+            }
+            
+            if (EditorPrefs.HasKey(PrefsKey)) EditorPrefs.DeleteKey(PrefsKey);
+
+            ReferenceManager.ResetContent();
+            LocalSettings.ResetContent();
+
+            AssetDatabase.ImportAsset(Resources.assetFolder + "Scripts/Editor/Prefs/Methods.Prefs.cs", ImportAssetOptions.ForceUpdate);
+        }
+
         public static void Save() 
         {
             string value = GetSettings();
             EditorPrefs.SetString(PrefsKey, value);
         }
 
-        private static void SaveFields(FieldInfo[] fields, object target)
+        private static void SaveFields(FieldInfo[] fields, object target, StringBuilder builder)
         {
             for (int i = 0; i < fields.Length; i++)
             {
@@ -462,13 +526,13 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (value == null) continue; 
 
-                if (i > 0) StaticStringBuilder.Append(";");
-                StaticStringBuilder.Append(field.Name).Append(":");
+                if (i > 0) builder.Append(";");
+                builder.Append(field.Name).Append(":");
 
                 Type type = value.GetType();
-                if (type == typeof(string)) StaticStringBuilder.AppendEscaped(value as string, escapeChars);
-                else if (type.IsEnum) StaticStringBuilder.Append(value.ToString());
-                else if (type.IsValueType && type.IsPrimitive) StaticStringBuilder.Append(value);
+                if (type == typeof(string)) StaticStringBuilder.AppendEscaped(builder, value as string, escapeChars);
+                else if (type.IsEnum) builder.Append(value);
+                else if (type.IsValueType && type.IsPrimitive) builder.Append(value);
                 else
                 {
                     BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -476,11 +540,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     FieldInfo[] objFields = type.GetFields(bindingFlags);
                     if (objFields.Length == 0) continue;
 
-                    StaticStringBuilder.Append("(");
+                    builder.Append("(");
 
-                    SaveFields(objFields, value);
+                    SaveFields(objFields, value, builder);
 
-                    StaticStringBuilder.Append(")");
+                    builder.Append(")");
                 }
             }
         }
@@ -535,7 +599,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (escapeChars == null || escapeChars.Length % 2 != 0) throw new Exception("Length of escapeCodes must be N * 2");
 
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
             for (int i = 0; i < value.Length; i++)
             {
@@ -558,16 +622,27 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                     if (success)
                     {
-                        StaticStringBuilder.Append(escapeCodes[j]);
+                        builder.Append(escapeCodes[j]);
                         i += code.Length - 1;
                         break;
                     }
                 }
 
-                if (!success) StaticStringBuilder.Append(value[i]);
+                if (!success) builder.Append(value[i]);
             }
 
-            return StaticStringBuilder.GetString(true);
+            return builder.ToString();
+        }
+        
+        public enum ExportItemIndex
+        {
+            everything = -1,
+            bookmarks = 0,
+            favoriteWindows = 1,
+            quickAccessBar = 2,
+            hierarchyHeaders = 3,
+            emptyInspector = 4,
+            projectIcons = 5
         }
     }
 }

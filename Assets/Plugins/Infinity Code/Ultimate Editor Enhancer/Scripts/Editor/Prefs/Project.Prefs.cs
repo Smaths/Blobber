@@ -11,8 +11,10 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public static bool projectCreateFolder = true;
         public static bool projectCreateFolderByShortcut = true;
+        public static bool projectCreateScript = true;
+        public static bool projectCreateMaterial = true;
 
-        public class ProjectManager : StandalonePrefManager<ProjectManager>, IHasShortcutPref
+        public class ProjectManager : StandalonePrefManager<ProjectManager>, IHasShortcutPref, IStateablePref
         {
             public override IEnumerable<string> keywords
             {
@@ -20,7 +22,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     return new[]
                     {
-                        "Create Folder By Shortcut"
+                        "Create Folder By Shortcut",
+                        "Create Script Button",
                     };
                 }
             }
@@ -29,6 +32,13 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 projectCreateFolder = EditorGUILayout.ToggleLeft("Create Folder Button", projectCreateFolder);
                 projectCreateFolderByShortcut = EditorGUILayout.ToggleLeft("Create Folder By Shortcut (F7)", projectCreateFolderByShortcut);
+                projectCreateMaterial = EditorGUILayout.ToggleLeft("Create Material Button", projectCreateMaterial);
+                projectCreateScript = EditorGUILayout.ToggleLeft("Create Script Button", projectCreateScript);
+            }
+
+            public string GetMenuName()
+            {
+                return "Project";
             }
 
             public IEnumerable<Shortcut> GetShortcuts()
@@ -42,6 +52,16 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
 
                 return null;
+            }
+
+            public void SetState(bool state)
+            {
+                projectCreateFolder = state;
+                projectCreateFolderByShortcut = state;
+                projectCreateMaterial = state;
+                projectCreateScript = state;
+                
+                ProjectFolderIconManager.SetState(state);
             }
         }
     }

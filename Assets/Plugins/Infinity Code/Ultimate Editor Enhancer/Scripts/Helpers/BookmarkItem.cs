@@ -74,16 +74,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static StringBuilder GetTransformPath(Transform t)
         {
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
-            StaticStringBuilder.Append(t.name);
+            builder.Append(t.name);
             while ((t = t.parent) != null)
             {
-                StaticStringBuilder.Insert(0, '/');
-                StaticStringBuilder.Insert(0, t.name);
+                builder.Insert(0, '/');
+                builder.Insert(0, t.name);
             }
 
-            return StaticStringBuilder.GetBuilder();
+            return builder;
         }
 
         public void Dispose()
@@ -104,11 +104,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public abstract bool HasLabel(string label);
 
-        public float Update(string pattern, string valueType)
+        public bool Update(string pattern, string valueType)
         {
-            _accuracy = 0;
-            if (!string.IsNullOrEmpty(valueType) && !Contains(type, valueType)) return 0;
-            return UpdateAccuracy(pattern);
+            if (!string.IsNullOrEmpty(valueType) && !Contains(type, valueType)) return false;
+            return Match(pattern);
         }
     }
 }

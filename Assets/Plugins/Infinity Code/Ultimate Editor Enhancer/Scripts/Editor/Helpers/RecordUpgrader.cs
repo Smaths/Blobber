@@ -1,12 +1,17 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using InfinityCode.UltimateEditorEnhancer.HierarchyTools;
 using InfinityCode.UltimateEditorEnhancer.InspectorTools;
+using InfinityCode.UltimateEditorEnhancer.JSON;
+using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using InfinityCode.UltimateEditorEnhancer.SceneTools;
 using InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
@@ -18,8 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer
     [InitializeOnLoad]
     public static class RecordUpgrader
     {
-        private const int CurrentUpgradeID = 4;
-        private const string BookmarkItemSeparator = "|";
+        private const int CurrentUpgradeID = 6;
 
         static RecordUpgrader()
         {
@@ -40,6 +44,16 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 InitDefaultEmptyInspectorItems();
                 UpdateQuickAccessWelcomeSize();
+            }
+
+            if (upgradeID < 5)
+            { 
+                InitDefaultProjectIcons();
+            }
+            
+            if (upgradeID < 6)
+            {
+                TryInsertNoteManager();
             }
 
             ReferenceManager.Save();
@@ -213,6 +227,15 @@ namespace InfinityCode.UltimateEditorEnhancer
                 tooltip = "Bookmarks",
                 expanded = false
             };
+            
+            QuickAccessItem notes = new QuickAccessItem(QuickAccessItemType.window)
+            {
+                settings = new[] { "InfinityCode.UltimateEditorEnhancer.NoteManager, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" },
+                icon = QuickAccessItemIcon.texture,
+                iconSettings = Resources.iconsFolder + "Note-Empty.png",
+                tooltip = "Note Manager",
+                expanded = false
+            };
 
             QuickAccessItem viewGallery = new QuickAccessItem(QuickAccessItemType.window)
             {
@@ -258,11 +281,32 @@ namespace InfinityCode.UltimateEditorEnhancer
             items.Add(project);
             items.Add(inspector);
             items.Add(bookmarks);
+            items.Add(notes);
             items.Add(viewGallery);
             items.Add(distanceTool);
             items.Add(new QuickAccessItem(QuickAccessItemType.flexibleSpace));
             items.Add(quickAccessSettings);
             items.Add(info);
+        }
+
+        private static void InitDefaultProjectIcons()
+        {
+            if (ReferenceManager.projectFolderIcons.Count > 0) return;
+
+            string path = Resources.assetFolder + "LocalResources/DefaultItems/DefaultProjectIcons.json";
+            if (!File.Exists(path)) return;
+
+            try
+            {
+                string content = File.ReadAllText(path, Encoding.UTF8);
+                JsonItem json = Json.Parse(content);
+                List<ProjectFolderRule> items = json["project-icons"].Deserialize<List<ProjectFolderRule>>();
+                ReferenceManager.projectFolderIcons.Clear();
+                ReferenceManager.projectFolderIcons.AddRange(items);
+            }
+            catch
+            {
+            }
         }
 
         private static void ReplaceSaveQuickAccessItem()
@@ -297,6 +341,37 @@ namespace InfinityCode.UltimateEditorEnhancer
                 textAlign = TextAlignment.Center,
                 textStyle = FontStyle.Bold
             });
+        }
+
+        private static void TryInsertNoteManager()
+        {
+            List<QuickAccessItem> items = ReferenceManager.quickAccessItems;
+            if (items.Count < 1) return;
+
+            if (items.Any(item => item.type == QuickAccessItemType.window && 
+                                  item.settings[0].StartsWith("InfinityCode.UltimateEditorEnhancer.NoteManager")))
+            {
+                return;
+            }
+
+            QuickAccessItem bookmarks = items.FirstOrDefault(i => i.type == QuickAccessItemType.window &&
+                i.settings[0].StartsWith("InfinityCode.UltimateEditorEnhancer.Windows.Bookmarks")); 
+            
+            Debug.Log(bookmarks); 
+
+            int index = items.Count;
+            if (bookmarks != null) index = items.IndexOf(bookmarks) + 1;
+
+            QuickAccessItem notes = new QuickAccessItem(QuickAccessItemType.window)
+            {
+                settings = new[] { "InfinityCode.UltimateEditorEnhancer.NoteManager, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" },
+                icon = QuickAccessItemIcon.texture,
+                iconSettings = Resources.iconsFolder + "Note-Empty.png",
+                tooltip = "Note Manager",
+                expanded = false
+            };
+            
+            items.Insert(index, notes);
         }
 
         private static void TryInsertOpenAction()

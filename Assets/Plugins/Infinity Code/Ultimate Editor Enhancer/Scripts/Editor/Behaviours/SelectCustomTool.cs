@@ -14,13 +14,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     [InitializeOnLoad]
     public static class SelectCustomTool
     {
+        const double waitTime = 0.5;
+        
         private static Type lastCustomTool;
+        private static double pressTime = 0;
 
         static SelectCustomTool()
         {
             KeyManager.KeyBinding binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidateShortcut;
-            binding.OnPress += Select;
+            binding.OnPress += StartWaitShowMenu;
+            binding.OnRelease += Select;
 
 #if UNITY_2020_2_OR_NEWER
             ToolManager.activeToolChanged += OnActiveToolChanged;
@@ -47,6 +51,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static bool OnValidateShortcut()
         {
+            if (!Prefs.switchCustomTool) return false;
             Event e = Event.current;
             if (e.keyCode != Prefs.switchCustomToolKeyCode || e.modifiers != Prefs.switchCustomToolModifiers) return false;
             return !EditorGUIRef.IsEditingTextField();
@@ -54,6 +59,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void Select()
         {
+            EditorApplication.update -= WaitShowMenu;
+            pressTime = 0;
+
+            if (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow.GetType() == GameViewRef.type)
+            {
+                return;
+            }
+            
             List<Type> tools = EditorToolUtilityRef.GetCustomEditorToolsForType(null);
             
             if (tools.Any(t => t == GetActiveToolType()))
@@ -87,6 +100,47 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             {
                 view.ShowNotification(TempContent.Get(label), 1);
             }
+        }
+
+        private static void ShowMenu()
+        {
+            pressTime = 0;
+            List<Type> tools = EditorToolUtilityRef.GetCustomEditorToolsForType(null);
+            Type activeToolType = GetActiveToolType();
+
+            GenericMenuEx menu = GenericMenuEx.Start();
+            for (int i = 0; i < tools.Count; i++)
+            {
+                Type type = tools[i];
+                string label;
+
+                object[] attributes = type.GetCustomAttributes(typeof(EditorToolAttribute), true);
+                if (attributes.Length > 0) label = (attributes[0] as EditorToolAttribute).displayName;
+                else label = type.Name;
+
+                menu.Add(label, type == activeToolType, () => SetTool(type));
+            }
+
+            menu.Show();
+        }
+
+        private static void StartWaitShowMenu()
+        {
+            if (pressTime != 0) return;
+            if (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow.GetType() == GameViewRef.type) return;
+            
+            pressTime = EditorApplication.timeSinceStartup;
+            EditorApplication.update += WaitShowMenu;
+        }
+
+        private static void WaitShowMenu()
+        {
+            if (EditorApplication.timeSinceStartup - pressTime < waitTime) return;
+
+            EditorApplication.update -= WaitShowMenu;
+            SceneViewManager.OnNextGUI += ShowMenu;
+            
+            SceneView.RepaintAll();
         }
     }
 }

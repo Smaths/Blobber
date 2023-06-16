@@ -15,16 +15,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public abstract bool allowPreview { get; }
             public abstract string name { get; }
 
-            public abstract void PrepareMenu(GenericMenuEx menu);
-            public abstract void Set(SceneView view);
-
-            public void Set()
-            {
-                Set(SceneView.lastActiveSceneView);
-                GetWindow<SceneView>();
-                GUI.changed = true;
-            }
-
             public bool Draw(Rect rect, float maxLabelWidth)
             {
                 bool status = false;
@@ -57,6 +47,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return name;
             }
 
+            public abstract void PrepareMenu(GenericMenuEx menu);
+
             public void ProcessEvents(Event e, ref bool status)
             {
                 if (e.type == EventType.MouseDown)
@@ -65,6 +57,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     else if (e.button == 1) ShowContextMenu();
                 }
             }
+
+            public void Set()
+            {
+                Set(SceneView.lastActiveSceneView);
+                GetWindow<SceneView>();
+                GUI.changed = true;
+            }
+
+            public abstract void Set(SceneView view);
 
             private void ShowContextMenu()
             {

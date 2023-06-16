@@ -7,7 +7,9 @@ using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.PropertyDrawers
 {
+#if !UEE_DISABLE_OBJECT_FIELD_DRAWER 
     [CustomPropertyDrawer(typeof(Object), true)]
+#endif
     public class ObjectFieldDrawer : PropertyDrawer
     {
         public delegate void GUIDelegate(Rect area, SerializedProperty property, GUIContent label);

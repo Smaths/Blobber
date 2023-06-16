@@ -379,7 +379,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             foreach (Provider provider in providers) provider.Filter(pattern, filterItems);
 
-            filterItems = filterItems.OrderByDescending(i => i.accuracy).Take(Prefs.createBrowserMaxFilterItems).ToList();
+            filterItems = filterItems.Take(Prefs.createBrowserMaxFilterItems).ToList();
 
             selectedIndex = filterItems.IndexOf(selectedItem);
             if (selectedIndex == -1)

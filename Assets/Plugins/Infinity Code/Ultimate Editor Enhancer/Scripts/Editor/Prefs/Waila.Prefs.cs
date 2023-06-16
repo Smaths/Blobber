@@ -88,6 +88,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return shortcuts;
             }
+
+            public static void SetState(bool state)
+            {
+                waila = state;
+            }
         }
     }
 }

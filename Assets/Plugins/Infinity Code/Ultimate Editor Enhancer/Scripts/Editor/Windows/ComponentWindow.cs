@@ -15,15 +15,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     [Serializable]
     public class ComponentWindow : AutoSizePopupWindow
     {
-        #region Actions
-
-        //public static Action<ComponentWindow> OnDestroyWindow;
-        //public static Predicate<ComponentWindow> OnDrawContent;
-        //public static Action<ComponentWindow, Rect> OnDrawHeader;
-        //public static Predicate<ComponentWindow> OnValidateEditor;
-
-        #endregion
-
         #region Fields
 
         #region Static
@@ -153,18 +144,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             int verticalOffset = 4;
             if (!displayGameObject) verticalOffset += 8;
 
-            Behaviour behaviour = _component as Behaviour;
-            Renderer renderer = _component as Renderer;
-            if (behaviour != null || renderer != null)
+            if (ComponentUtils.CanBeDisabled(_component))
             {
                 Rect tr1 = new Rect(r.x + 44, r.y + verticalOffset + 1, 16, 18);
                 EditorGUI.BeginChangeCheck();
-                bool v1 = GUI.Toggle(tr1, behaviour != null ? behaviour.enabled : renderer.enabled, GUIContent.none);
+                bool v1 = GUI.Toggle(tr1, ComponentUtils.GetEnabled(_component), GUIContent.none);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    if (behaviour != null) behaviour.enabled = v1;
-                    else renderer.enabled = v1;
-                    EditorUtility.SetDirty(behaviour);
+                    Undo.RecordObject(_component, "Modified Property in " + _component.gameObject.name);
+                    ComponentUtils.SetEnabled(_component, v1);
+                    EditorUtility.SetDirty(_component);
                 }
             }
 
@@ -223,38 +212,40 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (!displayGameObject) return;
 
             Event e = Event.current;
+            GameObject gameObject = _component.gameObject;
 
             Rect tr2 = new Rect(r.x + 44, r.y + 25, 16, 18);
             EditorGUI.BeginChangeCheck();
-            bool v2 = GUI.Toggle(tr2, _component.gameObject.activeSelf, GUIContent.none);
+            bool v2 = GUI.Toggle(tr2, gameObject.activeSelf, GUIContent.none);
             if (EditorGUI.EndChangeCheck())
             {
-                _component.gameObject.SetActive(v2);
-                EditorUtility.SetDirty(_component.gameObject);
+                Undo.RecordObject(_component, "Modified Property in " + gameObject.name);
+                gameObject.SetActive(v2);
+                EditorUtility.SetDirty(gameObject);
             }
 
             r = new Rect(r.x + 60, r.y + 25, r.width - 100, 18);
-            GUI.Label(r, _component.gameObject.name, EditorStyles.boldLabel);
+            GUI.Label(r, gameObject.name, EditorStyles.boldLabel);
             if (e.type == EventType.MouseDown && r.Contains(e.mousePosition))
             {
                 if (e.button == 0)
                 {
-                    Selection.activeGameObject = _component.gameObject;
+                    Selection.activeGameObject = gameObject;
                     EditorGUIUtility.PingObject(Selection.activeGameObject);
                     e.Use();
                 }
                 else if (e.button == 1)
                 {
-                    GameObjectUtils.ShowContextMenu(false, _component.gameObject);
+                    GameObjectUtils.ShowContextMenu(false, gameObject);
                     e.Use();
                 }
             }
             else if (e.type == EventType.MouseDrag && r.Contains(e.mousePosition))
             {
                 DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new[] {_component.gameObject};
+                DragAndDrop.objectReferences = new[] { gameObject };
 
-                DragAndDrop.StartDrag("Drag " + _component.gameObject.name);
+                DragAndDrop.StartDrag("Drag " + gameObject.name);
                 e.Use();
             }
         }
@@ -631,7 +622,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             string pattern = SearchableItem.GetPattern(filter);
-            filteredItems = searchableProperties.Where(p => p.UpdateAccuracy(pattern) > 0).OrderByDescending(p => p.accuracy).ToList();
+            filteredItems = searchableProperties.Where(p => p.Match(pattern)).ToList();
         }
 
         public class SearchableProperty : SearchableItem

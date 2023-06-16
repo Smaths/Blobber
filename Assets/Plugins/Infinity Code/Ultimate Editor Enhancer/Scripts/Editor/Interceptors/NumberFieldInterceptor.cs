@@ -50,12 +50,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         {
             Event e = Event.current;
             int v = 0;
+            float d = 1;
 
             if (e.type == EventType.KeyDown && GUIUtility.keyboardControl == id)
             {
                 if (e.keyCode == KeyCode.UpArrow)
                 {
-                    if (e.control || e.command) v = 100;
+                    if (e.control || e.command)
+                    {
+                        v = 1;
+                        d = 10;
+                    }
                     else if (e.shift) v = 10;
                     else v = 1;
 
@@ -63,7 +68,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                 }
                 else if (e.keyCode == KeyCode.DownArrow)
                 {
-                    if (e.control || e.command) v = -100;
+                    if (e.control || e.command)
+                    {
+                        v = -1;
+                        d = 10;
+                    }
                     else if (e.shift) v = -10;
                     else v = -1;
                     e.Use();
@@ -76,7 +85,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                     {
                         if (!double.IsInfinity(doubleVal) && !double.IsNaN(doubleVal))
                         {
-                            doubleVal += v;
+                            doubleVal += v / d;
                             recycledText = doubleVal.ToString(Culture.numberFormat);
                             GUI.changed = true;
                         }
@@ -92,7 +101,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                     {
                         if (!double.IsInfinity(value.doubleVal) && !double.IsNaN(value.doubleVal))
                         {
-                            value.doubleVal += v;
+                            value.doubleVal += v / d;
                             value.success = true;
                             recycledText = value.doubleVal.ToString(Culture.numberFormat);
                             GUI.changed = true;

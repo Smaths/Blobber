@@ -41,7 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
         }
 
         [ComponentHeaderButton]
-        public static bool DrawHeaderButton(Rect rectangle, Object[] targets)
+        public static bool DrawHeaderButton(Rect rect, Object[] targets)
         {
             if (targets.Length != 1)
             {
@@ -57,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             if (!inited) Init();
 
             EditorGUI.BeginChangeCheck();
-            enabled = GUI.Toggle(rectangle, enabled, content, enabled? activeStyle: style);
+            enabled = GUI.Toggle(rect, enabled, content, enabled? activeStyle: style);
             if (EditorGUI.EndChangeCheck())
             {
                 if (enabled) Enable(target as Transform);

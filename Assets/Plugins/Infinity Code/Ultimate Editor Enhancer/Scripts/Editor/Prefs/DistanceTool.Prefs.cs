@@ -21,6 +21,11 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 showDistanceInScene = EditorGUILayout.ToggleLeft("Show Distance In Scene View", showDistanceInScene);
             }
+
+            public static void SetState(bool state)
+            {
+                showDistanceInScene = state;
+            }
         }
     }
 }

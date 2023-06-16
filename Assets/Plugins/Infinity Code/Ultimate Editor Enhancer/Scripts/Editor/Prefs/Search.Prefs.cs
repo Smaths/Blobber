@@ -49,7 +49,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             return _searchDoNotShowOnWindows.Contains(windowType.FullName);
         }
 
-        public class SearchManager : StandalonePrefManager<SearchManager>, IHasShortcutPref
+        public class SearchManager : StandalonePrefManager<SearchManager>, IHasShortcutPref, IStateablePref
         {
             public override IEnumerable<string> keywords
             {
@@ -148,6 +148,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.EndDisabledGroup();
             }
 
+            public string GetMenuName()
+            {
+                return "Search";
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!search) return new Shortcut[0];
@@ -170,6 +175,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Start Drag Item", "Search", "Drag Item"),
                     new Shortcut("Show Context Menu For Item", "Search", "RMB"),
                 };
+            }
+
+            public void SetState(bool state)
+            { 
+                search = state;
+                searchScript = state;
             }
 
             private static void UpdateSearchDoNotShowOnWindow()

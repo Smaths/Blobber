@@ -34,6 +34,25 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
         {
             return Validate(command.context);
         }
+        
+        [MenuItem("CONTEXT/Component/Save Component On Exit Play Mode", false, 503)]
+        private static void ContextMenuSaveOnExit(MenuCommand command)
+        {
+            Component component = command.context as Component;
+            if (component == null) return;
+
+            SaveOnExitPlayMode wrapper = component.gameObject.GetComponent<SaveOnExitPlayMode>();
+            if (wrapper == null) wrapper = component.gameObject.AddComponent<SaveOnExitPlayMode>();
+            
+            if (!wrapper.saveComponents.Contains(component)) wrapper.saveComponents.Add(component);
+        }
+        
+        [MenuItem("CONTEXT/Component/Save Component On Exit Play Mode", true)]
+        private static bool ContextMenuSaveOnExitValidate(MenuCommand command)
+        {
+            return Validate(command.context);
+        }
+
 
         [ComponentHeaderButton]
         public static bool Draw(Rect rectangle, Object[] targets)
@@ -83,6 +102,17 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             {
                 RestoreSavedValues();
             }
+            else if (state == PlayModeStateChange.ExitingPlayMode)
+            {
+                SaveOnExitPlayMode[] wrappers = Object.FindObjectsOfType<SaveOnExitPlayMode>();
+                foreach (SaveOnExitPlayMode wrapper in wrappers)
+                {
+                    foreach (Component component in wrapper.saveComponents)
+                    {
+                        if (component != null) SaveComponent(component, false);
+                    }
+                }
+            }
         }
 
         private static void RestoreSavedValues()
@@ -111,7 +141,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             Undo.CollapseUndoOperations(@group);
         }
 
-        private static void SaveComponent(Component component)
+        private static void SaveComponent(Component component, bool log = true)
         {
             if (component == null) return;
             SerializedObject so = new SerializedObject(component);
@@ -124,7 +154,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
                 } while (p.NextVisible(true));
             }
 
-            Debug.Log($"{component.gameObject.name}/{ObjectNames.NicifyVariableName(component.GetType().Name)} component state saved.");
+            if (log) Debug.Log($"{component.gameObject.name}/{ObjectNames.NicifyVariableName(component.GetType().Name)} component state saved.");
         }
 
         private static bool Validate(Object target)

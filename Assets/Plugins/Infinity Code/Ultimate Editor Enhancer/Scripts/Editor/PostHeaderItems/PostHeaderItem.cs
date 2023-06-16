@@ -8,6 +8,8 @@ namespace InfinityCode.UltimateEditorEnhancer.PostHeader
 {
     public abstract class PostHeaderItem
     {
+        protected GUIStyle _style;
+        
         public virtual int rowOrder
         {
             get => 0;
@@ -18,9 +20,22 @@ namespace InfinityCode.UltimateEditorEnhancer.PostHeader
             get => 0;
         }
 
+        protected virtual GUIStyle style
+        {
+            get
+            {
+                if (_style == null)
+                {
+                    _style = new GUIStyle(EditorStyles.toolbarButton);
+                }
+                
+                return _style;
+            }
+        }
+
         public virtual bool Button(GUIContent content)
         {
-            return GUILayout.Button(content, EditorStyles.toolbarButton, GUILayout.Width(20), GUILayout.Height(20));
+            return GUILayout.Button(content, style, GUILayout.Width(20), GUILayout.Height(20));
         }
 
         public virtual void OnRowGUI(Object target)

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.PropertyDrawers;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
@@ -108,20 +109,20 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 content = new GUIContent(EditorIconContents.editIcon);
             }
 
-            StaticStringBuilder.Clear();
-            StaticStringBuilder.Append("Open ");
-            StaticStringBuilder.Append(target.name);
+            StringBuilder builder = StaticStringBuilder.Start();
+            builder.Append("Open ");
+            builder.Append(target.name);
 
             if (target is Component)
             {
-                StaticStringBuilder.Append(" (");
-                StaticStringBuilder.Append(ObjectNames.NicifyVariableName(target.GetType().Name));
-                StaticStringBuilder.Append(")");
+                builder.Append(" (");
+                builder.Append(ObjectNames.NicifyVariableName(target.GetType().Name));
+                builder.Append(")");
             }
 
-            StaticStringBuilder.Append(" in window");
+            builder.Append(" in window");
 
-            content.tooltip = StaticStringBuilder.GetString(true);
+            content.tooltip = builder.ToString();
 
             int controlId = GUIUtility.GetControlID(NestedEditorHash, FocusType.Passive, area);
             if (e.type == EventType.Repaint) GUIStyle.none.Draw(area, content, controlId, false, area.Contains(e.mousePosition));

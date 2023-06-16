@@ -212,9 +212,19 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             float maxWidth = wnd.position.width;
             Rect rect = GetRect(wrapper.width, maxWidth - (elementIndex == editorsList.childCount - 2 ? LAST_LINE_OFFSET : 0));
 
+            Component component = editor.target as Component;
+            bool isDisabled = component != null && !ComponentUtils.GetEnabled(component);
+            
             bool state = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
-            ButtonEvent buttonEvent = GUILayoutUtils.Button(rect, wrapper.content, style);
+
+            GUIContent content = TempContent.Get(wrapper.content);
+            if (isDisabled) content.tooltip += " (Disabled)";
+            
+            GUILayoutUtils.BeginDisabledStyle(isDisabled);
+            ButtonEvent buttonEvent = GUILayoutUtils.Button(rect, content, style);
+            GUILayoutUtils.EndDisabledStyle();
+
             Debug.unityLogger.logEnabled = state;
             ProcessIconEvents(wnd, editorsList, elementIndex, editorIndex, buttonEvent, isActive, editor);
 
@@ -404,6 +414,17 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                     }
                 }
                 else if (e.button == 1) ComponentUtils.ShowContextMenu(editor.target);
+                else if (e.button == 2)
+                {
+                    Component component = editor.target as Component;
+                    if (component != null && ComponentUtils.CanBeDisabled(component))
+                    {
+                        Undo.RecordObject(component, "Modified Property in " + component.gameObject.name);
+                        ComponentUtils.SetEnabled(component, !ComponentUtils.GetEnabled(component));
+                        EditorUtility.SetDirty(component);
+                    }
+                        
+                }
 
                 e.Use();
             }

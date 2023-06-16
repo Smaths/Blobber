@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -10,16 +11,6 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public abstract class SearchableItem
     {
-        private const int upFactor = -3;
-
-        protected float _accuracy;
-
-        public float accuracy
-        {
-            get { return _accuracy; }
-            set { _accuracy = value; }
-        }
-
         protected static bool Contains(string str1, string str2)
         {
             if (string.IsNullOrEmpty(str1) || string.IsNullOrEmpty(str2) || str2.Length > str1.Length) return false;
@@ -45,42 +36,12 @@ namespace InfinityCode.UltimateEditorEnhancer
             return false;
         }
 
-        public static float GetAccuracy(string pattern, params string[] values)
-        {
-            if (values == null || values.Length == 0) return 0;
-
-            if (string.IsNullOrEmpty(pattern))
-            {
-                return 1;
-            }
-
-            float accuracy = 0;
-
-            for (int i = 0; i < values.Length; i++)
-            {
-                string s = values[i];
-
-                int r = Match(s, pattern);
-                if (r == int.MinValue) continue;
-
-                float v = 1 - r / (float)s.Length;
-                if (r == pattern.Length * upFactor)
-                {
-                    accuracy = v;
-                    return accuracy;
-                }
-                if (accuracy < v) accuracy = v;
-            }
-
-            return accuracy;
-        }
-
         public static string GetPattern(string str)
         {
             string search = str;
 
             TextInfo textInfo = Culture.textInfo;
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
             bool lastWhite = false;
 
@@ -89,22 +50,22 @@ namespace InfinityCode.UltimateEditorEnhancer
                 char c = search[i];
                 if (c == ' ' || c == '\t' || c == '\n')
                 {
-                    if (!lastWhite && StaticStringBuilder.Length > 0)
+                    if (!lastWhite && builder.Length > 0)
                     {
-                        StaticStringBuilder.Append(' ');
+                        builder.Append(' ');
                         lastWhite = true;
                     }
                 }
                 else
                 {
-                    StaticStringBuilder.Append(textInfo.ToUpper(c));
+                    builder.Append(textInfo.ToUpper(c));
                     lastWhite = false;
                 }
             }
 
-            if (lastWhite) StaticStringBuilder.Length -= 1;
+            if (lastWhite) builder.Length -= 1;
 
-            return StaticStringBuilder.GetString();
+            return builder.ToString();
         }
 
         public static string GetPattern(string str, out string assetType)
@@ -122,7 +83,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 search = Regex.Replace(search, @"(:)(\w*)", "");
             }
 
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
             bool lastWhite = false;
 
@@ -131,150 +92,129 @@ namespace InfinityCode.UltimateEditorEnhancer
                 char c = search[i];
                 if (c == ' ' || c == '\t' || c == '\n')
                 {
-                    if (!lastWhite && StaticStringBuilder.Length > 0)
+                    if (!lastWhite && builder.Length > 0)
                     {
-                        StaticStringBuilder.Append(' ');
+                        builder.Append(' ');
                         lastWhite = true;
                     }
                 }
                 else
                 {
-                    StaticStringBuilder.Append(textInfo.ToUpper(c));
+                    builder.Append(textInfo.ToUpper(c));
                     lastWhite = false;
                 }
             }
 
-            if (lastWhite) StaticStringBuilder.Length -= 1;
+            if (lastWhite) builder.Length -= 1;
 
-            return StaticStringBuilder.GetString();
+            return builder.ToString();
         }
 
         protected abstract int GetSearchCount();
 
         protected abstract string GetSearchString(int index);
 
-        protected static int Match(string str1, string str2)
+        public virtual bool Match(string pattern)
         {
-            int bestExtra = int.MaxValue;
+            if (string.IsNullOrEmpty(pattern)) return true;
 
-            int l1 = str1.Length;
-            int l2 = str2.Length;
+            for (int i = 0; i < GetSearchCount(); i++)
+            {
+                if (Match(pattern, GetSearchString(i))) return true;
+            }
+
+            return false;
+        }
+
+        public static bool Match(string pattern, params string[] values)
+        {
+            if (values == null || values.Length == 0) return false;
+            if (string.IsNullOrEmpty(pattern)) return true;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (MatchInternal(pattern, values[i])) return true;
+            }
+
+            return false;
+        }
+
+        protected static bool MatchInternal(string pattern, string str)
+        {
+            int l1 = str.Length;
+            int l2 = pattern.Length;
 
             TextInfo textInfo = Culture.textInfo;
 
             for (int i = 0; i < l1 - l2 + 1; i++)
             {
                 bool success = true;
-                int iOffset = 0;
-                int extra = 0;
-                bool prevNoSkip = true;
-
+                int jOffset = 0;
+                
+                /*
+                 * 0 - search any
+                 * 1 - lower no skip or upper with skip
+                 * 2 - search lower no skip
+                 * 3 - search upper with skip
+                 */
+                int searchRule = 0;
+                
                 for (int j = 0; j < l2; j++)
                 {
-                    char c = str2[j];
+                    char pc = pattern[j];
 
-                    int j2 = i + j;
-                    int i1 = j2 + iOffset;
+                    int i1 = i + j + jOffset;
                     if (i1 >= l1)
                     {
                         success = false;
                         break;
                     }
 
-                    char c1 = str1[i1];
+                    char sc = str[i1];
+                    
+                    bool isUpperCase = char.IsUpper(sc) || char.IsDigit(sc);
 
-                    if (c1 >= 'A' && c1 <= 'Z')
+                    if (isUpperCase)
                     {
-                        if (prevNoSkip) extra += upFactor;
-                    }
-                    else if (c1 >= 'a' && c1 <= 'z') c1 = (char)(c1 - 32);
-                    else
-                    {
-                        char c2 = textInfo.ToUpper(c1);
-                        if (c1 == c2 && prevNoSkip) extra += upFactor;
-                        c1 = c2;
-                    }
-
-                    if (c == c1)
-                    {
-                        prevNoSkip = true;
-                        continue;
-                    }
-
-                    if (j == 0)
-                    {
-                        success = false;
-                        break;
-                    }
-
-                    bool successSkip = false;
-                    iOffset++;
-                    int cOffset = 0;
-
-                    while (j2 + iOffset < l1)
-                    {
-                        char oc = str1[j2 + iOffset];
-                        char uc = textInfo.ToUpper(oc);
-                        cOffset++;
-                        if (uc != c)
+                        if (sc == pc)
                         {
-                            iOffset++;
+                            searchRule = 1;
                             continue;
                         }
-
-                        if (oc == uc) extra += upFactor;
-                        else extra += cOffset;
-
-                        successSkip = true;
-                        break;
+                    }
+                    else if (textInfo.ToUpper(sc) == pc)
+                    {
+                        if (searchRule == 0)
+                        {
+                            if (j == 0) searchRule = 2;
+                            continue;
+                        }
+                        if (searchRule == 1)
+                        {
+                            continue;
+                        }
+                        if (searchRule == 2)
+                        {
+                            continue;
+                        }
                     }
 
-                    if (!successSkip)
+                    if (searchRule == 1) searchRule = 3;
+
+                    if (j == 0 || searchRule == 2)
                     {
                         success = false;
                         break;
                     }
 
-                    prevNoSkip = false;
+                    jOffset++;
+                    j--;
                 }
-
-                if (success)
-                {
-                    if (extra == l2 * upFactor) return extra;
-                    bestExtra = Math.Min(extra, bestExtra);
-                }
+                
+                if (success) return true;
             }
 
-            return bestExtra != int.MaxValue ? bestExtra : int.MinValue;
-        }
-
-        public virtual float UpdateAccuracy(string pattern)
-        {
-            _accuracy = 0;
-
-            if (string.IsNullOrEmpty(pattern))
-            {
-                _accuracy = 1;
-                return 1;
-            }
-
-            for (int i = 0; i < GetSearchCount(); i++)
-            {
-                string s = GetSearchString(i);
-
-                int r = Match(s, pattern);
-                if (r == int.MinValue) continue;
-
-                float v = 1 - r / (float)s.Length;
-                if (r == pattern.Length * upFactor)
-                {
-                    _accuracy = v;
-                    return _accuracy;
-                }
-                if (_accuracy < v) _accuracy = v;
-            }
-
-            return _accuracy;
+            return false;
         }
     }
 }

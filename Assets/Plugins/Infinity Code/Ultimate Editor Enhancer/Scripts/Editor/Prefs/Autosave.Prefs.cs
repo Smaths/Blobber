@@ -42,6 +42,12 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.indentLevel--;
             }
+            
+            public static void SetState(bool state)
+            {
+                saveScenesByTimer = state;
+                saveScenesWhenEnteringPlaymode = state;
+            }
         }
     }
 }

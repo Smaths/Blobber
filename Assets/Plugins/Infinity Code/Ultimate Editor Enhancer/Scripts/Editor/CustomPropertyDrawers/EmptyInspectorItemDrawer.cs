@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*           INFINITY CODE          */
+/*     https://infinity-code.com    */
+
+using System;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.InspectorTools;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -42,7 +46,7 @@ namespace InfinityCode.UltimateEditorEnhancer.PropertyDrawers
                 SerializedObject serializedObject = property.serializedObject;
                 string propertyPath = property.propertyPath;
 
-                StaticStringBuilder.Clear();
+                StringBuilder builder = StaticStringBuilder.Start();
 
                 for (int i = 0; i < menuToString.Length; i++)
                 {
@@ -55,7 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer.PropertyDrawers
 
                     if (prevLevel >= level)
                     {
-                        string menuItem = StaticStringBuilder.GetString();
+                        string menuItem = builder.ToString();
                         menu.Add(menuItem, () =>
                         {
                             serializedObject.Update();
@@ -73,16 +77,14 @@ namespace InfinityCode.UltimateEditorEnhancer.PropertyDrawers
 
                     if (groups[0] == "CONTEXT") continue;
 
-                    StaticStringBuilder.Clear();
+                    builder.Clear();
 
                     for (int j = 0; j <= level; j++)
                     {
-                        if (j > 0) StaticStringBuilder.Append("/");
-                        StaticStringBuilder.Append(groups[j]);
+                        if (j > 0) builder.Append("/");
+                        builder.Append(groups[j]);
                     }
                 }
-
-                StaticStringBuilder.Clear();
 
                 menu.Show();
             }

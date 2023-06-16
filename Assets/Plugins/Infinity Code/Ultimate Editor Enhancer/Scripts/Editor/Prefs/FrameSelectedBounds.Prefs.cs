@@ -37,6 +37,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Frame Selected Bounds", "Scene View", "SHIFT + F"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                frameSelectedBounds = state;
+            }
         }
     }
 }

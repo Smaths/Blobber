@@ -420,7 +420,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             string pattern = SearchableItem.GetPattern(filter);
 
-            filteredRecords = items.Where(i => i.UpdateAccuracy(pattern) > 0).OrderByDescending(i => i.accuracy).ToList();
+            filteredRecords = items.Where(i => i.Match(pattern)).ToList();
             if (!filteredRecords.Contains(selectedItem))
             {
                 if (filteredRecords.Count > 0) selectedItem = filteredRecords[0];

@@ -68,7 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 else
                 {
                     string pattern = SearchableItem.GetPattern(filterText);
-                    activeItems = flatItems.Where(p => p.UpdateAccuracy(pattern) > 0).OrderByDescending(p => p.accuracy).ToList();
+                    activeItems = flatItems.Where(p => p.Match(pattern)).ToList();
                 }
 
                 needReload = true;
@@ -237,10 +237,30 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
             protected override void RowGUI(RowGUIArgs args)
             {
-                if (args.rowRect.Contains(Event.current.mousePosition))
+                Event e = Event.current;
+                
+                if (args.rowRect.Contains(e.mousePosition))
                 {
-                    instance.highlightGO = instance.Get(args.item.id);
-                    GUI.DrawTexture(args.rowRect, Styles.selectedRowTexture, ScaleMode.StretchToFill);
+                    GameObject go = instance.highlightGO = instance.Get(args.item.id);
+                    
+                    if (e.type == EventType.Repaint)
+                    {
+                        GUI.DrawTexture(args.rowRect, Styles.selectedRowTexture, ScaleMode.StretchToFill);
+                    }
+                    else if (e.type == EventType.MouseDown)
+                    {
+                        if (e.button == 1)
+                        {
+                            GameObjectUtils.ShowContextMenu(false, go);
+                            e.Use();
+                        }
+                        else if (e.button == 2)
+                        {
+                            Undo.RecordObject(go, "Toggle Active");
+                            go.SetActive(!go.activeSelf);
+                            e.Use();
+                        }
+                    }
                 }
 
                 base.RowGUI(args);

@@ -33,6 +33,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
             }
+
+            public static void SetState(bool state)
+            {
+                actions = state;
+            }
         }
     }
 }

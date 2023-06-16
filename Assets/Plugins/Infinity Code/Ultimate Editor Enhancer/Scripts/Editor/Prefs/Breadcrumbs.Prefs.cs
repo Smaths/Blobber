@@ -75,6 +75,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Show Context Menu For GameObject", "Context Menu/Breadcrumbs", "RMB"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                breadcrumbs = state;
+            }
         }
     }
 }

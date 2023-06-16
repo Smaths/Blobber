@@ -83,7 +83,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                         b = r.bounds;
                         isFirst = false;
                     }
-                    else b.Encapsulate(r.bounds);
+                    else
+                    {
+                        b.Encapsulate(r.bounds);
+                    }
                 }
             }
 

@@ -78,6 +78,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                         ),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                objectPlacer = state;
+            }
         }
     }
 }

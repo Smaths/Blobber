@@ -54,14 +54,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 EditorApplication.ExecuteMenuItem(tooltip);
             }
-
-            public override float UpdateAccuracy(string pattern)
-            {
-                float v = base.UpdateAccuracy(pattern);
-                v *= 1.01f;
-                _accuracy = v;
-                return v;
-            }
         }
     }
 }

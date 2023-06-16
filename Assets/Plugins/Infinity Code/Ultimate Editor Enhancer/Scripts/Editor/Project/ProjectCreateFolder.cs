@@ -1,6 +1,8 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions;
+using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,9 +11,34 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
     [InitializeOnLoad]
     public static class ProjectCreateFolder
     {
+        private static string[] defaultNames = new[]
+        {
+            "Animations",
+            "Audio",
+            "Editor",
+            "Materials",
+            "Models",
+            "Plugins",
+            "Prefabs",
+            "Resources",
+            "Scenes",
+            "Scripts",
+            "Settings",
+            "Shaders",
+            "StreamingAssets",
+            "Textures",
+            "UI",
+        };
+
         static ProjectCreateFolder()
         {
             ProjectItemDrawer.Register("CREATE_FOLDER", DrawButton);
+        }
+
+        private static void CreateFolder(Object asset, string folderName)
+        {
+            Selection.activeObject = asset;
+            ProjectWindowUtilsRef.CreateFolderWithTemplates(folderName, null);
         }
 
         private static void DrawButton(ProjectItem item)
@@ -26,11 +53,39 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
             r.height = 16;
 
             item.rect.xMax -= 18;
+            
+            ButtonEvent be = GUILayoutUtils.Button(r, TempContent.Get(Icons.addFolder, "Create Subfolder\n(Right click to select default names)"), GUIStyle.none);
 
-            if (GUI.Button(r, TempContent.Get(Icons.addFolder, "Create Subfolder"), GUIStyle.none))
+            if (be == ButtonEvent.click)
             {
-                Selection.activeObject = item.asset;
-                ProjectWindowUtil.CreateFolder();
+                Event e = Event.current;
+                if (e.button == 0)
+                {
+                    CreateFolder(item.asset, "New Folder");
+                }
+                else if (e.button == 1)
+                {
+                    Object asset = item.asset;
+                    
+                    GenericMenuEx menu = GenericMenuEx.Start();
+
+                    if (item.path.EndsWith("/Scripts"))
+                    {
+                        menu.Add("Editor", () => CreateFolder(asset, "Editor"));
+                        menu.AddSeparator();
+                    }
+
+                    for (int i = 0; i < defaultNames.Length; i++)
+                    {
+                        string folderName = defaultNames[i];
+                        menu.Add(folderName, () => CreateFolder(asset, folderName));
+                    }
+                    
+                    menu.AddSeparator();
+                    menu.Add("New Folder", () => CreateFolder(asset, "New Folder"));
+                    
+                    menu.Show();
+                }
             }
         }
     }

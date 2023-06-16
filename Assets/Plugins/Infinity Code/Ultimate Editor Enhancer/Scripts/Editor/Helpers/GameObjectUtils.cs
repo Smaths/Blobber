@@ -370,7 +370,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static string GetPsIconLabel(string label, int maxLength = 4)
         {
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
             int l = 0;
             string text = Prefs.RemoveIconPrefix(label);
             for (int i = 0; i < text.Length; i++)
@@ -379,12 +379,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (!char.IsUpper(c) && !char.IsDigit(c)) continue;
                 l++;
                 if (l > 1) c = char.ToLowerInvariant(c);
-                StaticStringBuilder.Append(c);
+                builder.Append(c);
             }
 
-            if (l > maxLength) StaticStringBuilder.Length = maxLength;
+            if (l > maxLength) builder.Length = maxLength;
 
-            return StaticStringBuilder.GetString(true);
+            return builder.ToString();
         }
 
         public static T GetRoot<T>(T t) where T: Transform
@@ -395,16 +395,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static StringBuilder GetTransformPath(Transform t)
         {
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
-            StaticStringBuilder.Append(t.name);
+            builder.Append(t.name);
             while ((t = t.parent) != null)
             {
-                StaticStringBuilder.Insert(0, '/');
-                StaticStringBuilder.Insert(0, t.name);
+                builder.Insert(0, '/');
+                builder.Insert(0, t.name);
             }
 
-            return StaticStringBuilder.GetBuilder();
+            return builder;
         }
 
         public static string[] GetTypesDisplayNames()
@@ -454,11 +454,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void SetActive(GameObject[] targets, bool value)
         {
+            int group = Undo.GetCurrentGroup();
             foreach (GameObject go in targets)
             {
+                Undo.RecordObject(go, "Set Active");
                 go.SetActive(value);
                 EditorUtility.SetDirty(go);
             }
+            Undo.CollapseUndoOperations(group);
         }
 
         public static void SetCustomTag(GameObject target, string tag)
@@ -599,6 +602,15 @@ namespace InfinityCode.UltimateEditorEnhancer
             });
 
             if (OnPrepareGameObjectMenu != null) OnPrepareGameObjectMenu(menu, targets);
+
+            menu.Add("Properties...", () =>
+            {
+#if UNITY_2021_2_OR_NEWER
+                PropertyEditorRef.OpenPropertyEditor(targets);
+#else
+                PropertyEditorRef.OpenPropertyEditor(targets[0]);
+#endif
+            });
 
             menu.Show();
         }

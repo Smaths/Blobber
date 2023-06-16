@@ -13,7 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         static InputManager()
         {
-            SceneViewManager.AddListener(OnSceneView, float.MaxValue);
+            SceneViewManager.AddListener(OnSceneView, SceneViewOrder.inputManager);
         }
 
         private static void OnSceneView(SceneView view)

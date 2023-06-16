@@ -48,6 +48,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Show Tool Values", "Scene View", toolValuesModifiers),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                showToolValues = state;
+            }
         }
     }
 }

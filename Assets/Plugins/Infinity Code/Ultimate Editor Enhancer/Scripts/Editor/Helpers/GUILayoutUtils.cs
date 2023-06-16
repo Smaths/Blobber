@@ -13,6 +13,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static int toggleHash = "Toggle".GetHashCode();
         public static int hoveredButtonID;
         public static float nestedEditorMargin = 0;
+        
+        public static void BeginDisabledStyle(bool disabled)
+        {
+            if (Event.current.type == EventType.Repaint) EditorGUI.BeginDisabledGroup(disabled);
+        }
 
         public static ButtonEvent Button(GUIContent content)
         {
@@ -96,6 +101,11 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
 
             return ButtonEvent.none;
+        }
+
+        public static void EndDisabledStyle()
+        {
+            if (Event.current.type == EventType.Repaint) EditorGUI.EndDisabledGroup();
         }
 
         public static void Label(GUIContent content, GUIStyle style, params GUILayoutOption[] options)

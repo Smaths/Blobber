@@ -57,6 +57,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Open Component In Object Toolbar", "Scene View", "ALT + {1-9}"),
                 };
             }
+
+            public static void SetState(bool state)
+            {
+                objectToolbar = state;
+            }
         }
     }
 }

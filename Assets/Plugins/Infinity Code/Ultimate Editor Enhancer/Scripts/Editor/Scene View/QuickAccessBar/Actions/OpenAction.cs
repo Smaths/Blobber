@@ -2,6 +2,7 @@
 /*     https://infinity-code.com    */
 
 using System.Collections.Generic;
+using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using InfinityCode.UltimateEditorEnhancer.Behaviors;
 using InfinityCode.UltimateEditorEnhancer.Windows;
@@ -37,14 +38,15 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
             GenericMenuEx menu = GenericMenuEx.Start();
 
             EditorBuildSettingsScene[] buildScenes = EditorBuildSettings.scenes;
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
             for (int i = 0; i < buildScenes.Length; i++)
             {
                 EditorBuildSettingsScene buildScene = buildScenes[i];
                 SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(buildScene.path);
 
-                StaticStringBuilder.Append("Scenes in Build/").Append(scene.name);
-                menu.Add(StaticStringBuilder.GetString(true), () => OpenScene(buildScene.path, additive));
+                builder.Clear();
+                builder.Append("Scenes in Build/").Append(scene.name);
+                menu.Add(builder.ToString(), () => OpenScene(buildScene.path, additive));
             }
 
             if (menu.count > 0) menu.AddSeparator();

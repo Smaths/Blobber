@@ -9,6 +9,7 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
@@ -17,8 +18,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         public delegate void GUIDelegate(Rect position,
             Rect dropRect,
             int id,
-            UnityEngine.Object obj,
-            UnityEngine.Object objBeingEdited,
+            Object obj,
+            Object objBeingEdited,
             Type objType,
             Type additionalType,
             SerializedProperty property,
@@ -48,8 +49,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                         typeof(Rect),
                         typeof(Rect),
                         typeof(int),
-                        typeof(UnityEngine.Object),
-                        typeof(UnityEngine.Object),
+                        typeof(Object),
+                        typeof(Object),
                         typeof(Type),
 #if DECM2
                         typeof(Type),
@@ -60,6 +61,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                         typeof(GUIStyle)
 #if UNITY_2022_1_OR_NEWER
                         , typeof(GUIStyle)
+#endif
+#if UNITY_2022_2_OR_NEWER
+                        , typeof(Action<Object>)
+                        , typeof(Action<Object>)
 #endif
                     };
 
@@ -93,8 +98,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             Rect position,
             Rect dropRect,
             int id,
-            UnityEngine.Object obj,
-            UnityEngine.Object objBeingEdited,
+            Object obj,
+            Object objBeingEdited,
             Type objType,
 #if DECM2
             Type additionalType,

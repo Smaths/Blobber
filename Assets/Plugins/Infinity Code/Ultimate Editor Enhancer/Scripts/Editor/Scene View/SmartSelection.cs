@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
+using InfinityCode.UltimateEditorEnhancer.EditorMenus;
 using InfinityCode.UltimateEditorEnhancer.Tools;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
@@ -71,24 +73,49 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             r.xMin += r2.width;
 
-            ButtonEvent e = GUILayoutUtils.Button(r2, content, style);
+            ButtonEvent buttonEvent = GUILayoutUtils.Button(r2, content, style);
+            Event e = Event.current;
 
-            if (e == ButtonEvent.click)
+            if (buttonEvent == ButtonEvent.click)
             {
-                if (Event.current.control || Event.current.shift) SelectionRef.Add(t.gameObject);
-                else Selection.activeGameObject = t.gameObject;
-                state = true;
+                EditorMenu.OnValidateOpen -= OnValidateOpenEditorMenu;
+                
+                if (e.button == 0)
+                {
+                    if (e.control || e.shift) SelectionRef.Add(t.gameObject);
+                    else Selection.activeGameObject = t.gameObject;
+                    state = true;
+                }
+                else if (e.button == 1)
+                {
+                    GameObjectUtils.ShowContextMenu(false, t.gameObject);
+                    e.Use();
+                }
+                else if (e.button == 2)
+                {
+                    Undo.RecordObject(t.gameObject, "Toggle Active");
+                    t.gameObject.SetActive(!t.gameObject.activeSelf);
+                    e.Use();
+                }
             }
-            else if (e == ButtonEvent.drag)
+            else if (buttonEvent == ButtonEvent.press)
+            {
+                if (e.button == 1)
+                {
+                    EditorMenu.OnValidateOpen -= OnValidateOpenEditorMenu;
+                    EditorMenu.OnValidateOpen += OnValidateOpenEditorMenu;
+                }
+            }
+            else if (buttonEvent == ButtonEvent.drag)
             {
                 DragAndDrop.PrepareStartDrag();
                 DragAndDrop.objectReferences = new[] { t.gameObject };
                 DragAndDrop.StartDrag("Drag " + t.gameObject.name);
-                Event.current.Use();
+                e.Use();
                 state = true;
             }
 
-            if (r2.Contains(Event.current.mousePosition))
+            if (r2.Contains(e.mousePosition))
             {
                 highlightGO = t.gameObject;
             }
@@ -165,8 +192,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
                 if (type == EventType.MouseUp)
                 {
-                    sceneViewItem.mode = 0;
-                    UnityEditor.Tools.hidden = false;
+                    if (e.button == 0)
+                    {
+                        sceneViewItem.mode = 0;
+                        UnityEditor.Tools.hidden = false;    
+                    }
                 }
                 else if (type == EventType.KeyDown)
                 {
@@ -191,6 +221,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnClose()
         {
+            EditorMenu.OnValidateOpen -= OnValidateOpenEditorMenu;
+            
             Waila.Highlight(null);
             if (binding != null)
             {
@@ -221,7 +253,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (e.keyCode == Prefs.wailaSmartSelectionKeyCode &&
                 e.modifiers == Prefs.wailaSmartSelectionModifiers)
             {
-                ShowSmartSelection(sceneViewItem);
+                SceneViewManager.OnNextGUI += () =>
+                {
+                    ShowSmartSelection(sceneViewItem);
+                };
                 e.Use();
             }
         }
@@ -234,6 +269,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 return true;
             }
 
+            return false;
+        }
+
+        private static bool OnValidateOpenEditorMenu()
+        {
             return false;
         }
 
@@ -277,9 +317,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             Vector2 size = new Vector2(width + 12, height + 32);
             Vector2 position = Event.current.mousePosition - new Vector2(size.x / 2, size.y * 1.5f);
-            SceneView view = EditorWindow.mouseOverWindow as SceneView;
-            position += EditorWindow.focusedWindow.position.position;
-            position -= view.position.position;
+            SceneView view = SceneView.lastActiveSceneView;
 
             if (position.x < 5) position.x = 5;
             else if (position.x + size.x > view.position.width - 5) position.x = view.position.width - size.x - 5;
@@ -344,7 +382,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             int count = 0;
 
-            StaticStringBuilder.Clear();
+            StringBuilder builder = StaticStringBuilder.Start();
 
             sceneViewItem.targets.Clear();
 
@@ -354,15 +392,15 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 if (go == null) break;
 
                 sceneViewItem.targets.Add(go);
-                if (count > 0) StaticStringBuilder.Append("\n");
-                int length = StaticStringBuilder.Length;
+                if (count > 0) builder.Append("\n");
+                int length = builder.Length;
                 Transform t = go.transform;
-                StaticStringBuilder.Append(t.gameObject.name);
+                builder.Append(t.gameObject.name);
                 while (t.parent != null)
                 {
                     t = t.parent;
-                    StaticStringBuilder.Insert(length, " / ");
-                    StaticStringBuilder.Insert(length, t.gameObject.name);
+                    builder.Insert(length, " / ");
+                    builder.Insert(length, t.gameObject.name);
                 }
 
                 count++;
@@ -371,7 +409,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (sceneViewItem.targets.Count > 0) Waila.Highlight(sceneViewItem.targets[0]);
             else Waila.Highlight(null);
 
-            if (count > 0) sceneViewItem.tooltip = new GUIContent(StaticStringBuilder.GetString(true));
+            if (count > 0) sceneViewItem.tooltip = new GUIContent(builder.ToString());
         }
     }
 }
