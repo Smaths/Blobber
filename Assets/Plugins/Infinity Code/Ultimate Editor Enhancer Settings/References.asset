@@ -18,6 +18,8 @@ MonoBehaviour:
   _headerRules: []
   _quickAccessItems: []
   _sceneHistory:
+  - name: Car - Scene - Set2
+    path: Assets/Plugins/FlatKit/Demos/[Demo] Car/Car - Scene - Set2.unity
   - name: Start
     path: Assets/Scenes/Start.unity
   _notes: []
