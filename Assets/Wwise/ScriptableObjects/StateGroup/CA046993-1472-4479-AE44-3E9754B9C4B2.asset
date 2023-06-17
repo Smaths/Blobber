@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d1d915d7df04a29b1324c3fd5ab51b, type: 3}
+  m_Name: CA046993-1472-4479-AE44-3E9754B9C4B2
+  m_EditorClassIdentifier: 
+  objectName: Player_Movin
+  id: 3803121560
+  guid: CA046993-1472-4479-AE44-3E9754B9C4B2
