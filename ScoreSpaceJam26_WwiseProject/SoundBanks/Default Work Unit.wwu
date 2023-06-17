@@ -5,6 +5,7 @@
 			<ChildrenList>
 				<SoundBank Name="Main" ID="{E271BF68-4695-4B90-AA21-F502F9888299}">
 					<ObjectInclusionList>
+						<ObjectRef Name="Blob_Player" ID="{AC4E05F1-AE83-4206-8A2C-068A114DDA03}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="COMEON" ID="{5E024679-BD3B-4CAD-952D-1A147C2B344E}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
