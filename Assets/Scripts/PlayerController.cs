@@ -8,9 +8,20 @@ public class PlayerController : MonoBehaviour
     [BoxGroup("Dependencies")]
     [SerializeField] private CharacterController _characterController;
 
+    [Title("Player Settings")]
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _rotationSpeed = 0.15f;
+    [Header("Info")]
+    [SerializeField] [DisplayAsString] private bool _isMoving;
     [SerializeField] [DisplayAsString] private bool _isGrounded;
+
+    [Header("WWise Events")]
+    public AK.Wwise.Event IsMoving;
+    public AK.Wwise.Event IsStopped;
+    public AK.Wwise.Event IsDead;
+
+    public AK.Wwise.Event ScoreDecrease;
+    public AK.Wwise.Event ScoreIncrease;
 
     // Private fields
     private Vector2 _moveDirection;
@@ -26,6 +37,23 @@ public class PlayerController : MonoBehaviour
         _isGrounded = _characterController.isGrounded;
 
         MovePlayer();
+
+        CheckMovement();
+    }
+
+    private void CheckMovement()
+    {
+        if (_moveDirection == Vector2.zero)
+        {
+            _isMoving = false;
+            IsStopped.Post(gameObject);
+        }
+
+        if (_moveDirection != Vector2.zero)
+        {
+            _isMoving = true;
+            IsMoving.Post(gameObject);
+        }
     }
     #endregion
 
