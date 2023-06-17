@@ -29,6 +29,69 @@
 						</Sound>
 					</ChildrenList>
 				</Folder>
+				<RandomSequenceContainer Name="Key" ID="{77E1EBD5-E671-4F60-B8D8-B9719CB97E0F}" ShortID="378373977">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{EB35971E-D67A-495F-8702-940D2CA5B67D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{A37854BA-6094-4D95-9D1B-4941EAA876DD}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="Key_Loop" ID="{02BB5833-4F3B-4D75-8CA6-7DB463C62846}" ShortID="969346968">
+							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-54</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{EB35971E-D67A-495F-8702-940D2CA5B67D}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{A37854BA-6094-4D95-9D1B-4941EAA876DD}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Key_Pickup_Weapon_Loop" ID="{1EA2CAAC-5336-4C58-982D-9E7F4ED19015}">
+									<Language>SFX</Language>
+									<AudioFile>Key_Pickup_Weapon_Loop.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="721416143"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Key_Pickup_Weapon_Loop" ID="{1EA2CAAC-5336-4C58-982D-9E7F4ED19015}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<StateInfo>
+						<StateGroupList>
+							<StateGroupInfo>
+								<StateGroupRef Name="Player_Movin" ID="{CA046993-1472-4479-AE44-3E9754B9C4B2}"/>
+							</StateGroupInfo>
+						</StateGroupList>
+						<CustomStateList>
+							<CustomState>
+								<StateRef Name="Not_Moving" ID="{0DE02037-CFC4-47C5-8EC8-11A42A598C4A}"/>
+								<CustomState Name="" ID="{58F8E4EE-933F-483A-8CBA-6480ADD8FD88}" ShortID="266574094">
+									<PropertyList>
+										<Property Name="Volume" Type="Real64" Value="-108"/>
+									</PropertyList>
+								</CustomState>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Moving" ID="{077CA14F-B363-4D9C-8562-EAD3D3814900}"/>
+								<CustomState Name="" ID="{24459CFC-DA94-4B89-93D1-1140C9198B74}" ShortID="874004971"/>
+							</CustomState>
+						</CustomStateList>
+					</StateInfo>
+				</RandomSequenceContainer>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

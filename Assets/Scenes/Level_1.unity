@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028353, g: 0.22571383, b: 0.30692253, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1101,6 +1101,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1638101133767632480, guid: 8a868b1224b024fd892d3f94c9366855,
+        type: 3}
+      propertyPath: IsMoving.WwiseObjectReference
+      value: 
+      objectReference: {fileID: 11400000, guid: 9470c240cb4ae4b4c97389614b7c5f86,
+        type: 2}
+    - target: {fileID: 1638101133767632480, guid: 8a868b1224b024fd892d3f94c9366855,
+        type: 3}
+      propertyPath: IsStopped.WwiseObjectReference
+      value: 
+      objectReference: {fileID: 11400000, guid: b4e6ba9cf62e84c56b1efaed52709447,
+        type: 2}
     - target: {fileID: 1638101133767632482, guid: 8a868b1224b024fd892d3f94c9366855,
         type: 3}
       propertyPath: m_RootOrder
@@ -1173,6 +1185,7 @@ GameObject:
   m_Component:
   - component: {fileID: 330780885}
   - component: {fileID: 330780884}
+  - component: {fileID: 330780886}
   m_Layer: 0
   m_Name: WwiseGlobal
   m_TagString: Untagged
@@ -1221,6 +1234,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &330780886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330780883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025293aa687be43a2b5d6c3038148e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  data:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: a81febf3e5480404784d479733555dd0,
+      type: 2}
+  decodeBank: 0
+  loadAsynchronous: 0
+  saveDecodedBank: 0
+  unloadTriggerList: 958ca0ea
+  bankNameInternal: 
+  valueGuidInternal: 
 --- !u!1001 &476507624
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5429,7 +5467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667947872}
   m_LocalRotation: {x: 0.3006394, y: -0.000000016410377, z: 0.000000005172915, w: 0.9537379}
-  m_LocalPosition: {x: 0.00000028192034, y: 5.734624, z: -8.192319}
+  m_LocalPosition: {x: 0.00000028192036, y: 5.734624, z: -8.192319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6843,7 +6881,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949592344}
   m_LocalRotation: {x: 0.3006394, y: -0.000000016410377, z: 0.000000005172915, w: 0.9537379}
-  m_LocalPosition: {x: 0.00000028192034, y: 5.734624, z: -8.192319}
+  m_LocalPosition: {x: 0.00000028192036, y: 5.734624, z: -8.192319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
