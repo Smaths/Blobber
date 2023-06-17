@@ -307,9 +307,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterController: {fileID: 5362628750106809644}
-  _moveSpeed: 5
+  _moveSpeed: 6
   _rotationSpeed: 0.15
   _isGrounded: 0
+  IsMoving:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  IsStopped:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
 --- !u!143 &5362628750106809644
 CharacterController:
   m_ObjectHideFlags: 0
