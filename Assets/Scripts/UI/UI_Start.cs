@@ -33,7 +33,7 @@ namespace UI
 
         public void Close()
         {
-            _canvasGroup.DOFade(0, 1.0f);
+            //_canvasGroup.DOFade(0, 1.0f);
         }
 
         #region Buttons Events
