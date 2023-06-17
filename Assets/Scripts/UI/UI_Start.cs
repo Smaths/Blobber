@@ -42,7 +42,7 @@ namespace UI
             if (_showDebug) print($"{gameObject.name} - Start Tapped");
 
             Close();
-            SceneFader.instance.FadeToOther();
+            SceneFader.instance.FadeToLevel1();
 
             OnStartTapped?.Invoke();
         }

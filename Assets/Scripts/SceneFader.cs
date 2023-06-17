@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,6 +9,9 @@ public class SceneFader : MonoBehaviour
     public static SceneFader instance;
 
     // Editor Fields
+    [SerializeField] private Canvas _canvas;
+    [SerializeField] private CanvasGroup _canvasGroup;
+
     [MinValue(0)] [SuffixLabel("s")]
     [Title("Settings")]
     [SerializeField] private float _fadeInTime = 2.0f;
@@ -18,7 +20,7 @@ public class SceneFader : MonoBehaviour
 
     [Title("Scene Names")]
     [SerializeField] private string _startSceneName = "Start";
-    [SerializeField] private string _otherSceneName = "Other";
+    [SerializeField] private string _level1SceneName = "Level_1";
 
     [FoldoutGroup("Public Events", false)]
     public UnityEvent OnFadeInStarted;
@@ -31,10 +33,7 @@ public class SceneFader : MonoBehaviour
     [FoldoutGroup("Public Events")]
     public UnityEvent OnFadeToStart;
     [FoldoutGroup("Public Events")]
-    public UnityEvent OnFadeToOther;
-
-    // Private fields
-    private CanvasGroup _canvasGroup;
+    public UnityEvent OnFadeToLevel;
 
     #region Lifecycle
     private void Awake()
@@ -42,13 +41,11 @@ public class SceneFader : MonoBehaviour
         // Singleton setup
         if (instance != null) return;
         instance = this;
-
-        _canvasGroup = GetComponentInChildren<CanvasGroup>();
     }
 
     private void Start()
     {
-        _canvasGroup.alpha = 0;
+        _canvas.enabled = false;
     }
     #endregion
 
@@ -59,11 +56,10 @@ public class SceneFader : MonoBehaviour
         instance.FadeTo(_startSceneName);
     }
 
-    // Example for new scene
-    public void FadeToOther()
+    public void FadeToLevel1()
     {
-        OnFadeToOther?.Invoke();
-        instance.FadeTo(_otherSceneName);
+        OnFadeToLevel?.Invoke();
+        FadeTo(_level1SceneName);
     }
 
     public void FadeTo(string sceneName)
@@ -75,17 +71,21 @@ public class SceneFader : MonoBehaviour
     #region Private Methods
     private void FadeIn()
     {
-        Time.timeScale = 1f; // Reset the timeScale
+        _canvas.enabled = true;
 
         _canvasGroup.alpha = 1f;
         _canvasGroup.DOFade(0f, _fadeInTime)
             .OnStart(() => OnFadeInStarted?.Invoke())
-            .OnComplete(() => OnFadeInCompleted?.Invoke());
+            .OnComplete(() =>
+            {
+                _canvas.enabled = false;
+                OnFadeInCompleted?.Invoke();
+            });
     }
 
     private void FadeOut(string sceneName)
     {
-        Time.timeScale = 1f; // Reset the timeScale
+        _canvas.enabled = true;
 
         _canvasGroup.alpha = 0f;
         _canvasGroup.DOFade(1f, _fadeOutTime)
