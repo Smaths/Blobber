@@ -23,6 +23,7 @@ Material:
   m_Name: Hat
   m_Shader: {fileID: 4800000, guid: bee44b4a58655ee4cbff107302a3e131, type: 3}
   m_ValidKeywords:
+  - DR_OUTLINE_ON
   - _CELPRIMARYMODE_SINGLE
   - _TEXTUREBLENDINGMODE_MULTIPLY
   m_InvalidKeywords:
@@ -32,8 +33,7 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses:
-  - Outline
+  disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -170,8 +170,8 @@ Material:
     - _MinLight: 0
     - _OcclusionStrength: 1
     - _Offset: 0
-    - _OutlineDepthOffset: 0
-    - _OutlineEnabled: 0
+    - _OutlineDepthOffset: 0.1
+    - _OutlineEnabled: 1
     - _OutlineScale: 1
     - _OutlineWidth: 1
     - _OverrideLightmapDir: 0
@@ -222,7 +222,7 @@ Material:
     - _FlatRimColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _FlatSpecularColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _LightmapDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
     - _RimColor: {r: 0, g: 1, b: 0.8758622, a: 0}
     - _ShadowColor: {r: 0.8, g: 0.8, b: 1, a: 1}
     - _ShnColor: {r: 1, g: 1, b: 0, a: 1}
