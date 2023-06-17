@@ -34,11 +34,9 @@ public class PlayerController : MonoBehaviour
             switch (value)
             {
                 case true:
-                    print($"{gameObject.name} - Is Moving POST");
                     IsMovingState.SetValue();
                     break;
                 case false:
-                    print($"{gameObject.name} - Is Stopped POST");
                     IsStoppedState.SetValue();
                     break;
             }
