@@ -16,20 +16,45 @@ public class PlayerController : MonoBehaviour
     [SerializeField] [DisplayAsString] private bool _isGrounded;
 
     [Header("WWise Events")]
-    public AK.Wwise.Event IsMoving;
-    public AK.Wwise.Event IsStopped;
-    public AK.Wwise.Event IsDead;
+    public AK.Wwise.State IsStoppedState;
+    public AK.Wwise.State IsMovingState;
 
-    public AK.Wwise.Event ScoreDecrease;
-    public AK.Wwise.Event ScoreIncrease;
+    public AK.Wwise.Event IsDeadEvent;
+    public AK.Wwise.Event ScoreDecreaseEvent;
+    public AK.Wwise.Event ScoreIncreaseEvent;
 
     // Private fields
     private Vector2 _moveDirection;
+    public bool IsMoving
+    {
+        get => _isMoving;
+        set
+        {
+            if (_isMoving == value) return; // Ignore if value is unchanged.
+            switch (value)
+            {
+                case true:
+                    print($"{gameObject.name} - Is Moving POST");
+                    IsMovingState.SetValue();
+                    break;
+                case false:
+                    print($"{gameObject.name} - Is Stopped POST");
+                    IsStoppedState.SetValue();
+                    break;
+            }
+            _isMoving = value;
+        }
+    }
 
     #region Lifecycle
     private void OnValidate()
     {
         _characterController ??= GetComponentInChildren<CharacterController>();
+    }
+
+    private void Start()
+    {
+        IsStoppedState.SetValue();
     }
 
     private void Update()
@@ -45,14 +70,11 @@ public class PlayerController : MonoBehaviour
     {
         if (_moveDirection == Vector2.zero)
         {
-            _isMoving = false;
-            IsStopped.Post(gameObject);
+            IsMoving = false;
         }
-
-        if (_moveDirection != Vector2.zero)
+        else
         {
-            _isMoving = true;
-            IsMoving.Post(gameObject);
+            IsMoving = true;
         }
     }
     #endregion
