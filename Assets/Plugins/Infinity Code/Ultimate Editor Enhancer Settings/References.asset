@@ -535,12 +535,14 @@ MonoBehaviour:
     icon: VideoPlayer Icon
     color: {r: 0.5764706, g: 0.43921572, b: 0.8588236, a: 1}
   _sceneHistory:
+  - name: Level_1
+    path: Assets/Scenes/Level_1.unity
+  - name: Start
+    path: Assets/Scenes/Start.unity
+  - name: Other
+    path: Assets/Scenes/Other.unity
   - name: AllSlime
     path: Assets/Plugins/Kawaii Slimes/AllSlime.unity
   - name: Animated
     path: Assets/Plugins/Kawaii Slimes/Animated.unity
-  - name: Other
-    path: Assets/Scenes/Other.unity
-  - name: Start
-    path: Assets/Scenes/Start.unity
   _notes: []
