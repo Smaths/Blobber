@@ -5,6 +5,8 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    // Editor fields
+    [SerializeField] private int _points;
     [SerializeField] private bool _gameIsOver;
 
     // Events
@@ -12,8 +14,6 @@ public class LevelManager : MonoBehaviour
     public UnityEvent OnGameOver;
 
     #region Public Properties
-    private int _points;
-
     public int Points => _points;
     public bool GameIsOver => _gameIsOver;
     #endregion

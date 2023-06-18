@@ -3,20 +3,13 @@ using UnityEngine;
 
 namespace UI
 {
-    public enum GameScreenType
-    {
-        Pause,
-        GameOver
-    }
-
     public class UI_GameOver : MonoBehaviour
     {
+        [SerializeField] private GameObject _player;
+
         [Header("UI Elements")]
         [SerializeField] private Canvas _canvas;
         [SerializeField] private CanvasGroup _canvasGroup;
-
-        [Header("Settings")]
-        [SerializeField] private GameScreenType _type;
 
         [Header("Fade Time")]
         [SerializeField] private float _fadeInTime = 0.3f;
@@ -30,7 +23,7 @@ namespace UI
         private void OnEnable()
         {
             _canvasGroup.alpha = 0;
-            _canvasGroup.DOFade(1f, 0.3f);
+            _canvasGroup.DOFade(1f, _fadeInTime);
         }
 
         #region Button Events
@@ -59,13 +52,7 @@ namespace UI
         public void Toggle()
         {
             // Prevent pause menu when game is over.
-            if (_type == GameScreenType.Pause)
-            {
-                if (LevelManager.instance && LevelManager.instance.GameIsOver)
-                {
-                    return;
-                }
-            }
+            if (LevelManager.instance.GameIsOver) return;
 
             gameObject.SetActive(!gameObject.activeSelf);
         }
