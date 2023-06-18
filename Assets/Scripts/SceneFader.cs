@@ -9,16 +9,19 @@ public class SceneFader : MonoBehaviour
     public static SceneFader instance;
 
     // Editor Fields
+    [Header("UI Elements")]
     [SerializeField] private Canvas _canvas;
     [SerializeField] private CanvasGroup _canvasGroup;
 
+
+    [Header("Fade Times")]
     [MinValue(0)] [SuffixLabel("s")]
     [Title("Settings")]
     [SerializeField] private float _fadeInTime = 2.0f;
     [MinValue(0)] [SuffixLabel("s")]
     [SerializeField] private float _fadeOutTime = 3.0f;
 
-    [Title("Scene Names")]
+    [Header("Scene Names")]
     [SerializeField] private string _startSceneName = "Start";
     [SerializeField] private string _level1SceneName = "Level_1";
 
@@ -46,6 +49,11 @@ public class SceneFader : MonoBehaviour
     private void Start()
     {
         _canvas.enabled = false;
+    }
+
+    private void OnEnable()
+    {
+        FadeIn();
     }
     #endregion
 
