@@ -29,9 +29,9 @@ namespace UI
         // Private methods
         private void SetScoreLabel()
         {
-            if (ScoreManager.instance)
+            if (LevelManager.instance)
             {
-                _label.text = ScoreManager.instance.Points.ToString(CultureInfo.InvariantCulture);
+                _label.text = LevelManager.instance.Points.ToString(CultureInfo.InvariantCulture);
             }
         }
     }

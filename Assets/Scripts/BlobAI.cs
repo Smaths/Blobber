@@ -7,15 +7,21 @@ public class BlobAI : MonoBehaviour
 
     private bool _isDestroying;
 
+    private void OnCollisionEnter(Collision other)
+    {
+        print($"{gameObject.name} - {other.gameObject.name}");
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (_isDestroying) return;  // guard statement
+
 
         print(_pointValue > 0
             ? $"{gameObject.name} Collision - Add {_pointValue}"
             : $"{gameObject.name} Collision - Subtract {_pointValue}");
 
-        ScoreManager.instance.AddPoints(_pointValue);
+        LevelManager.instance.AddPoints(_pointValue);
 
         // Animation
         Sequence sequence = DOTween.Sequence();

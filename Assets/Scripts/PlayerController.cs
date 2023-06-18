@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController _characterController;
 
     [Title("Player Settings")]
-    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _moveSpeed = 6f;
     [SerializeField] private float _rotationSpeed = 0.15f;
     [Header("Info")]
     [SerializeField] [DisplayAsString] private bool _isMoving;
@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
 
     // Private fields
     private Vector2 _moveDirection;
+    private bool _isInputDisabled;
+
     public bool IsMoving
     {
         get => _isMoving;
@@ -84,6 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
+        if (_isInputDisabled) return;
         if (_moveDirection == Vector2.zero) return;
 
         // Movement
@@ -98,5 +101,10 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), _rotationSpeed);
 
         _characterController.Move(movement);
+    }
+
+    public void DisableInput()
+    {
+        _isInputDisabled = true;
     }
 }
