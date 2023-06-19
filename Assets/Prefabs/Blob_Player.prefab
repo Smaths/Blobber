@@ -311,6 +311,7 @@ MonoBehaviour:
   _characterController: {fileID: 5362628750106809644}
   _moveSpeed: 6
   _rotationSpeed: 0.15
+  _scoreScaleFactor: 0.1
   _isMoving: 0
   _isGrounded: 0
   IsStoppedState:
@@ -352,11 +353,11 @@ CharacterController:
   serializedVersion: 2
   m_Height: 0.25
   m_Radius: 0.28
-  m_SlopeLimit: 45
+  m_SlopeLimit: 0
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Center: {x: 0, y: 0.28, z: 0}
 --- !u!114 &4358553737103939009
 MonoBehaviour:
   m_ObjectHideFlags: 0

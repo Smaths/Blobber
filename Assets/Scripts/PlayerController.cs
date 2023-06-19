@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,6 +12,9 @@ public class PlayerController : MonoBehaviour
     [Title("Player Settings")]
     [SerializeField] private float _moveSpeed = 6f;
     [SerializeField] private float _rotationSpeed = 0.15f;
+    [Tooltip("Increase or decrease amount when player blob score changes.")]
+    [SerializeField] private float _scoreScaleFactor = 0.1f;
+    
     [Header("Info")]
     [SerializeField] [DisplayAsString] private bool _isMoving;
     [SerializeField] [DisplayAsString] private bool _isGrounded;
@@ -25,7 +29,6 @@ public class PlayerController : MonoBehaviour
 
     // Private fields
     private Vector2 _moveDirection;
-    private bool _isInputDisabled;
 
     public bool IsMoving
     {
@@ -64,8 +67,28 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
 
         CheckMovement();
+
+        // CheckScoreForSize();
     }
 
+    private void OnEnable()
+    {
+        if (LevelManager.instance)
+        {
+            LevelManager.instance.ScoreChanged.AddListener(ScoreDidChange);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (LevelManager.instance)
+        {
+            LevelManager.instance.ScoreChanged.RemoveListener(ScoreDidChange);
+        }
+    }
+    #endregion
+
+    #region Movement
     private void CheckMovement()
     {
         if (_moveDirection == Vector2.zero)
@@ -77,7 +100,6 @@ public class PlayerController : MonoBehaviour
             IsMoving = true;
         }
     }
-    #endregion
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -86,7 +108,6 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (_isInputDisabled) return;
         if (_moveDirection == Vector2.zero) return;
 
         // Movement
@@ -102,9 +123,45 @@ public class PlayerController : MonoBehaviour
 
         _characterController.Move(movement);
     }
+    #endregion
 
-    public void DisableInput()
+    private void ScoreDidChange(int amountChanged, int newScore)
     {
-        _isInputDisabled = true;
+        Vector3 currentScale = gameObject.transform.localScale;
+        Vector3 newScale = amountChanged > 0
+            ?
+            // Increase size
+            new Vector3(currentScale.x + _scoreScaleFactor, currentScale.y + _scoreScaleFactor, currentScale.z + _scoreScaleFactor)
+            :
+            // Decrease size
+            new Vector3(currentScale.x - _scoreScaleFactor, currentScale.y - _scoreScaleFactor, currentScale.z - _scoreScaleFactor);
+
+        gameObject.transform.DOScale(newScale, 0.25f);
+
+        // Increase character controller properties
+        float ccSizeScaleAmount = (_scoreScaleFactor / 100f) / 2.0f;
+        Vector3 center = _characterController.center;
+        if (amountChanged <= 0)
+        {
+            center = new Vector3(
+                center.x,
+                center.y - ccSizeScaleAmount,
+                center.z);
+            _characterController.center = center;
+
+            _characterController.radius -= ccSizeScaleAmount;
+        }
+        else
+        {
+            center = new Vector3(
+                center.x,
+                center.y + ccSizeScaleAmount,
+                center.z);
+            _characterController.center = center;
+
+            _characterController.radius += ccSizeScaleAmount;
+        }
+
+
     }
 }
