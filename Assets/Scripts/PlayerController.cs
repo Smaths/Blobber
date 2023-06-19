@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
 
     // Private fields
     private Vector2 _moveDirection;
-    private bool _isInputDisabled;
 
     public bool IsMoving
     {
@@ -109,7 +108,6 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (_isInputDisabled) return;
         if (_moveDirection == Vector2.zero) return;
 
         // Movement
@@ -124,15 +122,5 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), _rotationSpeed);
 
         _characterController.Move(movement);
-    }
-
-    public void DisableInput()
-    {
-        _isInputDisabled = true;
-    }
-
-    public void EnableInput()
-    {
-        _isInputDisabled = false;
     }
 }

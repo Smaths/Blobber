@@ -10,17 +10,21 @@ public class GameTimer : MonoBehaviour
     // Editor fields
     [Header("Time Settings")]
     [SuffixLabel("seconds"), MinValue(1)]
-    [SerializeField] private float _timerDuration = 120f;
+    [SerializeField] private float _countdownTimerDuration = 120f;
     [SerializeField, ReadOnly] private float _currentTime; // Current time remaining
     [SerializeField, ReadOnly] private bool _isPaused;
 
     // Events
-    [Header("Events")]
+    [FoldoutGroup("Events", false)]
     public UnityEvent OnCountdownCompleted;
+    [FoldoutGroup("Events")]
     public UnityEvent<string> OnTimeChanged;
-    public UnityEvent OnLevelPause;
-    public UnityEvent OnLevelResume;
+    [FoldoutGroup("Events")]
+    public UnityEvent OnPause;
+    [FoldoutGroup("Events")]
+    public UnityEvent OnResume;
 
+    // Public properties
     public string CurrentTime
     {
         get
@@ -37,7 +41,7 @@ public class GameTimer : MonoBehaviour
     {
         if (Application.isEditor)
         {
-            TimeSpan t = TimeSpan.FromSeconds(_timerDuration);
+            TimeSpan t = TimeSpan.FromSeconds(_countdownTimerDuration);
             string timeString = $"{t.Minutes}m{t.Seconds}s";
             OnTimeChanged?.Invoke(timeString);
         }
@@ -52,7 +56,7 @@ public class GameTimer : MonoBehaviour
 
     private void Start()
     {
-        _currentTime = _timerDuration;
+        _currentTime = _countdownTimerDuration;
     }
 
     private void Update()
@@ -60,14 +64,16 @@ public class GameTimer : MonoBehaviour
         if (_isPaused) return;
         if (_currentTime <= 0f) return;  // Time ended
 
-        _currentTime -= Time.deltaTime;
+        // Decrement time (ignore application timescale).
+        _currentTime -= Time.fixedDeltaTime;
 
-        TimeSpan t = TimeSpan.FromSeconds(_currentTime);
-        string timeString = $"{t.Minutes}m{t.Seconds}s";
+        TimeSpan current = TimeSpan.FromSeconds(_currentTime);
+        string timeString = $"{current.Minutes}m{current.Seconds}s";
         print($"{gameObject.name} - OnTimeChanged:{timeString}");
         OnTimeChanged?.Invoke(timeString);
 
-        if (_currentTime <= 0f) // Check if the countdown has reached zero
+        // Check if the countdown has reached zero
+        if (_currentTime <= 0f)
         {
             _currentTime = 0f;
             OnTimerFinished();
@@ -75,14 +81,14 @@ public class GameTimer : MonoBehaviour
     }
     #endregion
 
-    public void Pause()
+    public void TogglePause()
     {
         _isPaused = !_isPaused;
 
         print($"{gameObject.name} - Paused: {_isPaused}");
 
-        if (_isPaused) OnLevelPause?.Invoke();
-        else OnLevelResume?.Invoke();
+        if (_isPaused) OnPause?.Invoke();
+        else OnResume?.Invoke();
     }
 
     private void OnTimerFinished()

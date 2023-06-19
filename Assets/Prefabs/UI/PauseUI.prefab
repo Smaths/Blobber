@@ -583,7 +583,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -300, y: 600}
+  m_SizeDelta: {x: -200, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4467934415214608277
 CanvasRenderer:
@@ -1308,7 +1308,21 @@ MonoBehaviour:
   _canvasGroup: {fileID: 4467934416039635262}
   _timeLabel: {fileID: 5436066756981405784}
   _descriptionLabel: {fileID: 0}
+  _BelowZeroPointsGameOverText: Your points went below 0
+  _TimeUpGameOverText: Time's Up!
   _fadeInTime: 0.3
+  OnResumeTapped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRetryTapped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaderBoardTapped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQuitTapped:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4467934416308419761
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,6 @@ namespace UI
         {
             if (GameTimer.instance)
             {
-                print($"{gameObject.name} - OnEnable");
                 GameTimer.instance.OnTimeChanged.AddListener(SetTimeLabel);
             }
         }
@@ -21,7 +20,6 @@ namespace UI
         {
             if (GameTimer.instance)
             {
-                print($"{gameObject.name} - OnDisable");
                 GameTimer.instance.OnTimeChanged.RemoveListener(SetTimeLabel);
             }
         }

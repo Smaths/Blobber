@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,12 +7,14 @@ public class LevelManager : MonoBehaviour
     public static LevelManager instance;
 
     // Editor fields
+    [Tooltip("Current points of the player, game over if points go below 0.")]
     [SerializeField] private int _points;
-    [SerializeField] private bool _gameIsOver;
+    [SerializeField, ReadOnly] private bool _gameIsOver;
 
     // Events
-    [Header("Events")]
+    [FoldoutGroup("Events", false)]
     public UnityEvent<int> ScoreChanged;
+    [FoldoutGroup("Events")]
     public UnityEvent OnGameOver;
 
     #region Public Properties
@@ -37,19 +40,6 @@ public class LevelManager : MonoBehaviour
     public void AddPoints(int value)
     {
         _points += value;
-
-        ScoreChanged?.Invoke(value);
-
-        if (_points <= 0)
-        {
-            _points = 0;
-            EndGame();
-        }
-    }
-
-    public void SubtractPoints(int value)
-    {
-        _points -= value;
 
         ScoreChanged?.Invoke(value);
 

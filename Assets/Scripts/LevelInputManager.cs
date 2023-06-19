@@ -63,11 +63,6 @@ public class LevelInputManager : MonoBehaviour
     // Actions
     private void OnPausePerformed(InputAction.CallbackContext context)
     {
-        _gameTimer.Pause();
-
-        if (_gameTimer.IsPaused)
-            _playerController.DisableInput();
-        else
-            _playerController.EnableInput();
+        _gameTimer.TogglePause();
     }
 }
