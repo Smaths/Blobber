@@ -310,7 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characterController: {fileID: 5362628750106809644}
   _moveSpeed: 6
-  _rotationSpeed: 0.15
+  _rotationSpeed: 0.25
   _isMoving: 0
   _isGrounded: 0
   IsStoppedState:

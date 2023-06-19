@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2060359422788256559}
   - component: {fileID: 2060359422788256560}
   - component: {fileID: 2060359422788256561}
+  - component: {fileID: 2200247352480980934}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -103,6 +104,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 55
+--- !u!114 &2200247352480980934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060359422788256562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a817ac6b4d624afbbe0f192c6839c7d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2060359423476596151
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,11 +199,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2060359422788256558}
     m_Modifications:
-    - target: {fileID: 2599069758289922461, guid: 4b6a84c8eea6a46f686da136929bc411,
-        type: 3}
-      propertyPath: m_text
-      value: 2m00s
-      objectReference: {fileID: 0}
     - target: {fileID: 2599069758496192458, guid: 4b6a84c8eea6a46f686da136929bc411,
         type: 3}
       propertyPath: m_Pivot.x

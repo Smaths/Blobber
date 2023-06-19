@@ -64,6 +64,29 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
 
         CheckMovement();
+
+        // CheckScoreForSize();
+    }
+
+    private void OnEnable()
+    {
+        if (LevelManager.instance)
+        {
+            LevelManager.instance.ScoreChanged.AddListener(CheckScoreForSize);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (LevelManager.instance)
+        {
+            LevelManager.instance.ScoreChanged.RemoveListener(CheckScoreForSize);
+        }
+    }
+
+    private void CheckScoreForSize(int newScore)
+    {
+
     }
 
     private void CheckMovement()
@@ -106,5 +129,10 @@ public class PlayerController : MonoBehaviour
     public void DisableInput()
     {
         _isInputDisabled = true;
+    }
+
+    public void EnableInput()
+    {
+        _isInputDisabled = false;
     }
 }

@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
 
     // Events
     [Header("Events")]
+    public UnityEvent<int> ScoreChanged;
     public UnityEvent OnGameOver;
 
     #region Public Properties
@@ -37,6 +38,8 @@ public class LevelManager : MonoBehaviour
     {
         _points += value;
 
+        ScoreChanged?.Invoke(value);
+
         if (_points <= 0)
         {
             _points = 0;
@@ -47,6 +50,14 @@ public class LevelManager : MonoBehaviour
     public void SubtractPoints(int value)
     {
         _points -= value;
+
+        ScoreChanged?.Invoke(value);
+
+        if (_points <= 0)
+        {
+            _points = 0;
+            EndGame();
+        }
     }
 
     public void EndGame()

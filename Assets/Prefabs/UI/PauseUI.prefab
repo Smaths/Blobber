@@ -1303,8 +1303,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77db644f723416891b42f418e01a90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   _canvas: {fileID: 4467934416039635265}
   _canvasGroup: {fileID: 4467934416039635262}
+  _timeLabel: {fileID: 5436066756981405784}
+  _descriptionLabel: {fileID: 0}
   _fadeInTime: 0.3
 --- !u!1 &4467934416308419761
 GameObject:

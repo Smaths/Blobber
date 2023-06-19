@@ -1,4 +1,5 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 namespace UI
@@ -10,6 +11,9 @@ namespace UI
         [Header("UI Elements")]
         [SerializeField] private Canvas _canvas;
         [SerializeField] private CanvasGroup _canvasGroup;
+
+        [SerializeField] private TMP_Text _timeLabel;
+        [SerializeField] private TMP_Text _descriptionLabel;
 
         [Header("Fade Time")]
         [SerializeField] private float _fadeInTime = 0.3f;
@@ -24,6 +28,11 @@ namespace UI
         {
             _canvasGroup.alpha = 0;
             _canvasGroup.DOFade(1f, _fadeInTime);
+
+            if (GameTimer.instance)
+            {
+                _timeLabel.text = GameTimer.instance.CurrentTime;
+            }
         }
 
         #region Button Events
@@ -48,13 +57,5 @@ namespace UI
             SceneFader.instance.FadeToStart();
         }
         #endregion
-
-        public void Toggle()
-        {
-            // Prevent pause menu when game is over.
-            if (LevelManager.instance.GameIsOver) return;
-
-            gameObject.SetActive(!gameObject.activeSelf);
-        }
     }
 }

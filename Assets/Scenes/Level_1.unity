@@ -2168,6 +2168,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 360131722}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &362481089 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4467934416039635260, guid: a729e22ee50fa43a0931a24c5d7235a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4467934415805079808}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &364092174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3158,7 +3164,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &645142068
 MonoBehaviour:
@@ -3174,6 +3180,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _points: 0
   _gameIsOver: 0
+  ScoreChanged:
+    m_PersistentCalls:
+      m_Calls: []
   OnGameOver:
     m_PersistentCalls:
       m_Calls:
@@ -4131,7 +4140,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &777094564
 MonoBehaviour:
@@ -4166,6 +4175,36 @@ MonoBehaviour:
   OnTimeChanged:
     m_PersistentCalls:
       m_Calls: []
+  OnLevelPause:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 362481089}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnLevelResume:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 362481089}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &825059213
 GameObject:
   m_ObjectHideFlags: 0
@@ -4518,18 +4557,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 899538045}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &906299453 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4467934416039635261, guid: a729e22ee50fa43a0931a24c5d7235a0,
-    type: 3}
-  m_PrefabInstance: {fileID: 4467934415805079808}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d77db644f723416891b42f418e01a90e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &922947751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9387,6 +9414,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1736951157}
   - component: {fileID: 1736951158}
+  - component: {fileID: 1736951159}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -9407,7 +9435,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1736951158
 MonoBehaviour:
@@ -9423,7 +9451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: e03f4f28690534cf6b4917068c130e20,
     type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -9452,18 +9480,6 @@ MonoBehaviour:
       - m_Target: {fileID: 777094564}
         m_TargetAssemblyTypeName: GameTimer, Assembly-CSharp
         m_MethodName: Pause
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 906299453}
-        m_TargetAssemblyTypeName: UI.UI_GameOver, Assembly-CSharp
-        m_MethodName: Toggle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9520,6 +9536,28 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1736951159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736951156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9505fcee58554b53a61b9dcd474e5bbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelManager: {fileID: 645142068}
+  _gameTimer: {fileID: 777094564}
+  _playerController: {fileID: 1939840379}
+  _currentPointerPosition: {x: 0, y: 0}
+  _areControlsEnabled: 0
+  _clickLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _isOverUIObject: 0
+  _showDebugMessages: 0
 --- !u!1001 &1739414067
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10833,6 +10871,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1939840379 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1638101133767632480, guid: 8a868b1224b024fd892d3f94c9366855,
+    type: 3}
+  m_PrefabInstance: {fileID: 185425770}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926640993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1843abb40b0ab4c848b9dfb55ad27a85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1949592344
@@ -12435,15 +12485,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2060359424175105503, guid: 8bb484e20577a476f8a55deb3641b505,
-        type: 3}
-      propertyPath: m_text
-      value: 1m00s
-      objectReference: {fileID: 0}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
@@ -12459,7 +12504,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 906299453}
+      objectReference: {fileID: 777094564}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -12478,7 +12523,7 @@ PrefabInstance:
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Toggle
+      value: Pause
       objectReference: {fileID: 0}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
@@ -12488,7 +12533,7 @@ PrefabInstance:
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UI.UI_GameOver, Assembly-CSharp
+      value: GameTimer, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}

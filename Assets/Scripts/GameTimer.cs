@@ -18,6 +18,19 @@ public class GameTimer : MonoBehaviour
     [Header("Events")]
     public UnityEvent OnCountdownCompleted;
     public UnityEvent<string> OnTimeChanged;
+    public UnityEvent OnLevelPause;
+    public UnityEvent OnLevelResume;
+
+    public string CurrentTime
+    {
+        get
+        {
+            TimeSpan t = TimeSpan.FromSeconds(_currentTime);
+            return $"{t.Minutes}m{t.Seconds}s";
+        }
+    }
+
+    public bool IsPaused => _isPaused;
 
     #region Lifecycle
     private void OnValidate()
@@ -51,6 +64,7 @@ public class GameTimer : MonoBehaviour
 
         TimeSpan t = TimeSpan.FromSeconds(_currentTime);
         string timeString = $"{t.Minutes}m{t.Seconds}s";
+        print($"{gameObject.name} - OnTimeChanged:{timeString}");
         OnTimeChanged?.Invoke(timeString);
 
         if (_currentTime <= 0f) // Check if the countdown has reached zero
@@ -64,6 +78,11 @@ public class GameTimer : MonoBehaviour
     public void Pause()
     {
         _isPaused = !_isPaused;
+
+        print($"{gameObject.name} - Paused: {_isPaused}");
+
+        if (_isPaused) OnLevelPause?.Invoke();
+        else OnLevelResume?.Invoke();
     }
 
     private void OnTimerFinished()
