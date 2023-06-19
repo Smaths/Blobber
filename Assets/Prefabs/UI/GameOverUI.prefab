@@ -294,7 +294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over
+  m_text: Time's Up
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c45eb6ded7b14905812b4e9a2a50318, type: 2}
   m_sharedMaterial: {fileID: 6154284786544456080, guid: 5c45eb6ded7b14905812b4e9a2a50318,
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 4096
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1310,7 +1310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77db644f723416891b42f418e01a90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
   _canvas: {fileID: 3282589033290326708}
   _canvasGroup: {fileID: 3282589033290326714}
   _timeLabel: {fileID: 4039312272343609719}
@@ -1318,6 +1317,18 @@ MonoBehaviour:
   _BelowZeroPointsGameOverText: Your points went below 0
   _TimeUpGameOverText: Time's Up!
   _fadeInTime: 0.3
+  OnResumeTapped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRetryTapped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaderBoardTapped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQuitTapped:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3282589033406804309
 GameObject:
   m_ObjectHideFlags: 0
@@ -1577,7 +1588,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Your points went below 0
+  m_text: What wonderful blobbing.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c45eb6ded7b14905812b4e9a2a50318, type: 2}
   m_sharedMaterial: {fileID: 6154284786544456080, guid: 5c45eb6ded7b14905812b4e9a2a50318,

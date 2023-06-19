@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class LevelManager : MonoBehaviour
 {
@@ -13,9 +14,10 @@ public class LevelManager : MonoBehaviour
 
     // Events
     [FoldoutGroup("Events", false)]
-    public UnityEvent<int> ScoreChanged;
+    public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
+    [FormerlySerializedAs("OnGameOver_PlayerDead")]
     [FoldoutGroup("Events")]
-    public UnityEvent OnGameOver;
+    public UnityEvent OnPlayerPointsDepleted;
 
     #region Public Properties
     public int Points => _points;
@@ -41,7 +43,7 @@ public class LevelManager : MonoBehaviour
     {
         _points += value;
 
-        ScoreChanged?.Invoke(value);
+        ScoreChanged?.Invoke(value, _points);
 
         if (_points <= 0)
         {
@@ -53,7 +55,7 @@ public class LevelManager : MonoBehaviour
     public void EndGame()
     {
         _gameIsOver = true;
-        OnGameOver?.Invoke();
+        OnPlayerPointsDepleted?.Invoke();
     }
     #endregion
 }

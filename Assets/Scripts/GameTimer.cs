@@ -29,8 +29,11 @@ public class GameTimer : MonoBehaviour
     {
         get
         {
-            TimeSpan t = TimeSpan.FromSeconds(_currentTime);
-            return $"{t.Minutes}m{t.Seconds}s";
+            TimeSpan current = TimeSpan.FromSeconds(_currentTime);
+            string timeString = current.Minutes <= 0
+                ? $"{current.Seconds}s"
+                : $"{current.Minutes}m{current.Seconds}s";
+            return timeString;
         }
     }
 
@@ -65,11 +68,15 @@ public class GameTimer : MonoBehaviour
         if (_currentTime <= 0f) return;  // Time ended
 
         // Decrement time (ignore application timescale).
-        _currentTime -= Time.fixedDeltaTime;
+        _currentTime -= Time.deltaTime;
 
         TimeSpan current = TimeSpan.FromSeconds(_currentTime);
-        string timeString = $"{current.Minutes}m{current.Seconds}s";
-        print($"{gameObject.name} - OnTimeChanged:{timeString}");
+
+        string timeString = current.Minutes <= 0
+            ? $"{current.Seconds}s"
+            : $"{current.Minutes}m{current.Seconds}s";
+
+        // print($"{gameObject.name} - OnTimeChanged:{timeString}");
         OnTimeChanged?.Invoke(timeString);
 
         // Check if the countdown has reached zero

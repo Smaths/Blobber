@@ -63,6 +63,7 @@ public class LevelInputManager : MonoBehaviour
     // Actions
     private void OnPausePerformed(InputAction.CallbackContext context)
     {
+        if (LevelManager.instance.GameIsOver) return;
         _gameTimer.TogglePause();
     }
 }
