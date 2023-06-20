@@ -1,23 +1,23 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TriggerTween : MonoBehaviour
+public class ColliderTriggerEvents : MonoBehaviour
 {
-    private bool _isAnimating;
-
     public UnityEvent OnTriggerEnterEvent;
     public UnityEvent OnTriggerExitEvent;
+    [SerializeField] private bool _showDebug;
+
     // public UnityEvent OnTriggerStayEvent;
 
     private void OnTriggerEnter(Collider other)
     {
-        print($"{gameObject.name} - Trigger Enter: {other.name}");
+        if (_showDebug) print($"{gameObject.name} - Trigger Enter: {other.name}");
         OnTriggerEnterEvent?.Invoke();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        print($"{gameObject.name} - Trigger Exit: {other.name}");
+        if (_showDebug) print($"{gameObject.name} - Trigger Exit: {other.name}");
         OnTriggerExitEvent?.Invoke();
     }
 

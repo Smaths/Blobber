@@ -466,7 +466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
+  m_Actions: {fileID: -944628639613478452, guid: e03f4f28690534cf6b4917068c130e20,
     type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
@@ -544,6 +544,26 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7cccf0fe-45ac-438c-bea6-dab04117d02e
+    m_ActionName: Player/Pause[/Keyboard/escape,/Keyboard/p]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1638101133767632480}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnBoost
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 62f39897-069c-494f-84d6-480095005d8d
+    m_ActionName: Player/Boost[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -561,10 +581,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1843abb40b0ab4c848b9dfb55ad27a85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterController: {fileID: 5362628750106809644}
+  _controller: {fileID: 5362628750106809644}
+  _blobRenderer: {fileID: 2230034061835868529}
   _moveSpeed: 6
   _rotationSpeed: 0.15
   _scoreScaleFactor: 0.1
+  _colorFadeTime: 0.2
+  boostForce: 10
+  boostDuration: 1
   _isMoving: 0
   _isGrounded: 0
   IsStoppedState:

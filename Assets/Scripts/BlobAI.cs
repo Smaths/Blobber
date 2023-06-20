@@ -6,12 +6,15 @@ using UnityEngine.AI;
 
 public class BlobAI : MonoBehaviour
 {
-    [SerializeField] private int _pointValue = 5;
+    [BoxGroup("Dependencies")]
     [SerializeField] private NavMeshAgent _navMeshAgent;
+    [Title("Blob Setting")]
+    [SerializeField] private int _pointValue = 5;
     [SerializeField] private GameObject _playerBlob;
     [Tooltip("How far the blob can see.")]
-    [SuffixLabel("seconds")]
+    [SuffixLabel("second(s)")]
     [SerializeField] private float _searchRate = 0.25f;
+    [SuffixLabel("meter(s)")]
     [SerializeField] private float _searchRadius;
     [SerializeField] private LayerMask _searchMask;
 
