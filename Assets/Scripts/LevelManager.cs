@@ -1,5 +1,7 @@
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
@@ -12,10 +14,16 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int _points;
     [SerializeField, ReadOnly] private bool _gameIsOver;
 
+    [Header("Bad Blob AI")]
+    [SerializeField] private NavMeshAgent[] _badBlobAgents;
+
     // Events
     [FoldoutGroup("Events", false)]
     public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
-    [FormerlySerializedAs("OnGameOver_PlayerDead")]
+    [FoldoutGroup("Events")]
+    public UnityEvent OnPointsAdd;
+    [FoldoutGroup("Events")]
+    public UnityEvent OnPointsSubtract;
     [FoldoutGroup("Events")]
     public UnityEvent OnPlayerPointsDepleted;
 
@@ -43,6 +51,14 @@ public class LevelManager : MonoBehaviour
     {
         _points += value;
 
+        if (value > 0)
+        {
+            OnPointsAdd?.Invoke();
+        }
+        else if (value < 0)
+        {
+            OnPointsSubtract?.Invoke();
+        }
         ScoreChanged?.Invoke(value, _points);
 
         if (_points <= 0)
@@ -55,7 +71,28 @@ public class LevelManager : MonoBehaviour
     public void EndGame()
     {
         _gameIsOver = true;
+
+        DisableEnemies();
+
         OnPlayerPointsDepleted?.Invoke();
     }
+
+    public void DisableEnemies()
+    {
+        if (_badBlobAgents.IsNullOrEmpty() == false)
+        {
+            foreach (var navMeshAgent in _badBlobAgents)
+            {
+                if (navMeshAgent == null) continue;
+                navMeshAgent.speed = 0;
+            }
+        }
+    }
     #endregion
+
+    [Button]
+    private void FindNavMeshAgents()
+    {
+        _badBlobAgents = FindObjectsOfType<NavMeshAgent>();
+    }
 }

@@ -78,13 +78,9 @@ public class BlobAI : MonoBehaviour
 
             foreach (Collider col in colliders)
             {
-                // Perform actions on the found object(s)
-                print($"{gameObject.name} - Found object: {col.gameObject.name}");
+                // Hacky
                 _navMeshAgent.SetDestination(col.transform.position);
             }
-
-            _navMeshAgent.SetDestination(_playerBlob.transform.position);
-
             yield return new WaitForSeconds(_searchRate);
         }
     }
