@@ -3,7 +3,6 @@ using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 public class LevelManager : MonoBehaviour
 {

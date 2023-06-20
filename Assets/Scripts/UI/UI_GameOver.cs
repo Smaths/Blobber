@@ -63,7 +63,7 @@ namespace UI
         {
             _canvasGroup.interactable = false;
             OnRetryTapped?.Invoke();
-            SceneFader.instance.FadeToLevel1();
+            SceneFader.instance.FadeToCurrentScene();
         }
 
         public void Leaderboard_Tapped()
