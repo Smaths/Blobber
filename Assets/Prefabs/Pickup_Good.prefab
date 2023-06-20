@@ -112,6 +112,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pointValue: 5
+  _navMeshAgent: {fileID: 0}
+  _playerBlob: {fileID: 0}
+  _searchRate: 0.25
+  _searchRadius: 0
+  _searchMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &7464903911896276348
 MonoBehaviour:
   m_ObjectHideFlags: 0
