@@ -35,49 +35,7 @@ public class RandomMeshRack : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        if (!_models.IsNullOrEmpty())
-        {
-            // Randomize model
-            if (_randomObjectFlag)
-            {
-                // Disable all game objects
-                foreach (var model in _models)
-                {
-                    model.gameObject.SetActive(false);
-                }
-
-                // Enable random model
-                int randomIndex = Random.Range(0, _models.Count - 1);
-                _selectedObject = _models[randomIndex];
-            }
-
-            if (_selectedObject)
-            {
-                _selectedObject.SetActive(true);   
-            }
-            else
-            {
-                print($"{gameObject.name} - No selected object, nothing will show!");
-            }
-
-            // Randomize Scale
-            if (_randomScaleFlag)
-            {
-                Vector3 localScale = transform.localScale;
-                float randomScaleAmount = Random.Range(localScale.x - _randomScaleAmount, localScale.x + _randomScaleAmount);
-                transform.localScale = new Vector3(randomScaleAmount, randomScaleAmount, randomScaleAmount);
-            }
-
-
-            // Randomize rotation
-            if (_randomRotationFlag)
-            {
-                // Rotate randomly in 90° increments
-                float[] rotationOptions = { 0f, 90f, 180f, 270f };
-                int randomRotation = Random.Range(0, rotationOptions.Length - 1);
-                transform.rotation = Quaternion.Euler(0, rotationOptions[randomRotation], 0);
-            }
-        }
+        RandomizeAll();
     }
 
     [Button("Find Models")]
@@ -96,9 +54,52 @@ public class RandomMeshRack : MonoBehaviour
     {
         if (_models.IsNullOrEmpty()) return;
 
-        foreach (GameObject model in _models.Where(model => model.activeInHierarchy))
+        // Search for first model that is active in hierarchy.
+        foreach (GameObject model in _models.Where(m => m.activeInHierarchy))
         {
             _selectedObject = model;
         }
     }
+
+    #region Randomization
+    public void RandomizeAll()
+    {
+        if (!_models.IsNullOrEmpty())
+        {
+            // Randomize model
+            if (_randomObjectFlag) RandomizeModel();
+            // Randomize scale
+            if (_randomScaleFlag) RandomizeScale();
+            // Randomize rotation
+            if (_randomRotationFlag) RandomizeRotation();
+        }
+    }
+
+    public void RandomizeModel()
+    {
+        // Disable all game objects
+        foreach (GameObject model in _models)
+            model.SetActive(false);
+
+        // Enable random model
+        int randomIndex = Random.Range(0, _models.Count - 1);
+        _selectedObject = _models[randomIndex];
+        _selectedObject.SetActive(true);
+    }
+
+    public void RandomizeScale()
+    {
+        Vector3 localScale = transform.localScale;
+        float randomScaleAmount = Random.Range(localScale.x - _randomScaleAmount, localScale.x + _randomScaleAmount);
+        transform.localScale = new Vector3(randomScaleAmount, randomScaleAmount, randomScaleAmount);
+    }
+
+    public void RandomizeRotation()
+    {
+        // Rotate randomly in 90° increments
+        float[] rotationOptions = {0f, 90f, 180f, 270f};
+        int randomRotation = Random.Range(0, rotationOptions.Length - 1);
+        transform.rotation = Quaternion.Euler(0, rotationOptions[randomRotation], 0);
+    }
+    #endregion
 }

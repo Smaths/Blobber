@@ -5398,6 +5398,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _controller: {fileID: 5362628750106809644}
   _blobRenderer: {fileID: 2230034061835868529}
+  _playerCamera: {fileID: 0}
+  _playerState: 0
   _moveSpeed: 6
   _rotationSpeed: 0.15
   _scoreScaleFactor: 0.1
@@ -5405,7 +5407,10 @@ MonoBehaviour:
   boostForce: 8
   boostDuration: 0.3
   _isMoving: 0
+  _isBoosting: 0
   _isGrounded: 0
+  _faceData: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
+  _faceMaterial: {fileID: 2100000, guid: f5c4e8744f97ef4468f92d8b6072bc15, type: 2}
   OnScoreDidChange:
     m_PersistentCalls:
       m_Calls: []

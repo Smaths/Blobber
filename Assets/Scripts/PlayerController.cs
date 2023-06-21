@@ -1,11 +1,16 @@
+using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+
+public enum PlayerState { Idle, Moving, Boosting, Attacked, Dead }
+
 public class PlayerController : MonoBehaviour
 {
+
     // Editor fields
     [BoxGroup("Dependencies")]
     [SerializeField] private CharacterController _controller;
@@ -15,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera _playerCamera;
 
     [Title("Player Settings")]
+    [SerializeField] private PlayerState _playerState;
     [SerializeField] private float _moveSpeed = 6f;
     [SerializeField] private float _rotationSpeed = 0.15f;
     [Tooltip("Increase or decrease amount when player blob score changes.")]
@@ -30,6 +36,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] [DisplayAsString] private bool _isMoving;
     [SerializeField] [DisplayAsString] private bool _isBoosting;
     [SerializeField] [DisplayAsString] private bool _isGrounded;
+
+    [Header("Faces :D")]
+    [SerializeField] private Face _faceData;
+    [SerializeField] private Material _faceMaterial;
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
     [FoldoutGroup("Unity Events", false)]
     public UnityEvent OnScoreDidChange;
@@ -65,12 +76,27 @@ public class PlayerController : MonoBehaviour
             {
                 case true:
                     IsMovingState.SetValue();
+                    State = PlayerState.Moving;
                     break;
                 case false:
+                    State = PlayerState.Idle;
                     IsStoppedState.SetValue();
                     break;
             }
             _isMoving = value;
+        }
+    }
+
+    public PlayerState State
+    {
+        get => _playerState;
+        set
+        {
+            if (_faceMaterial & _faceData)
+            {
+                UpdateFace(value);
+            }
+            _playerState = value;
         }
     }
 
@@ -79,6 +105,15 @@ public class PlayerController : MonoBehaviour
     {
         _controller ??= GetComponentInChildren<CharacterController>();
         _playerCamera ??= Camera.main;
+
+        if (_blobRenderer)
+        {
+            if (_faceData != null)
+            {
+                if (_faceMaterial)
+                    State = _playerState;
+            }
+        }
     }
 
     private void Start()
@@ -147,7 +182,6 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region Movement
     #region Player Input
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -165,7 +199,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    // Move
+    #region Movement
     private void MovePlayer()
     {
         if (_moveDirection == Vector2.zero) return;
@@ -181,6 +215,50 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region Boost
+    private void StartBoost()
+    {
+        _isBoosting = true;
+        _boostTimer = 0f;
+
+        State = PlayerState.Boosting;
+        OnBoost?.Invoke();
+    }
+
+    private void EndBoost()
+    {
+        _isBoosting = false;
+        // Perform any necessary actions after the boost has ended
+    }
+    #endregion
+
+    #region Face
+    private void UpdateFace(PlayerState state)
+    {
+        switch (state)
+        {
+            case PlayerState.Idle:
+                SetFace(_faceData.Idleface);
+                break;
+            case PlayerState.Moving:
+                SetFace(_faceData.WalkFace);
+                break;
+            case PlayerState.Boosting:
+                SetFace(_faceData.attackFace);
+                break;
+            case PlayerState.Attacked:
+            case PlayerState.Dead:
+                SetFace(_faceData.damageFace);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+    }
+    private void SetFace(Texture tex)
+    {
+        _faceMaterial.SetTexture(MainTex, tex);
+    }
+    #endregion
 
     #region Subscribed Event Handlers
     public void OnScoreDidIncrease(int amount)
@@ -258,19 +336,4 @@ public class PlayerController : MonoBehaviour
         OnScoreDidChange?.Invoke();
     }
     #endregion
-
-    // Boost
-    private void StartBoost()
-    {
-        _isBoosting = true;
-        _boostTimer = 0f;
-
-        OnBoost?.Invoke();
-    }
-
-    private void EndBoost()
-    {
-        _isBoosting = false;
-        // Perform any necessary actions after the boost has ended
-    }
 }

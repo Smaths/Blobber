@@ -99,7 +99,7 @@ public class BlobAI : MonoBehaviour
 
             if (_faceMaterial & _faceData)
             {
-                UpdateFade(value);
+                UpdateFace(value);
             }
 
             OnBlobStateChange?.Invoke(value);
@@ -150,7 +150,10 @@ public class BlobAI : MonoBehaviour
     {
         if (_agent)
         {
-            StartCoroutine(SearchForPlayerCoroutine());
+            if (_blobType == BlobType.Bad)
+            {
+                StartCoroutine(SearchForPlayerCoroutine());
+            }
         }
 
         CurrentState = BlobAIState.Idle;
@@ -298,7 +301,7 @@ public class BlobAI : MonoBehaviour
     #endregion
 
     #region Face
-    private void UpdateFade(BlobAIState state)
+    private void UpdateFace(BlobAIState state)
     {
         switch (state)
         {
