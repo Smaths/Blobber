@@ -119,7 +119,7 @@ MonoBehaviour:
   _blobType: 1
   _pointValue: -10
   _currentState: 0
-  _searchRate: 0.25
+  _searchRate: 0.2
   _sightRange: 4
   _sightMask:
     serializedVersion: 2
@@ -132,7 +132,7 @@ MonoBehaviour:
     m_Bits: 256
   _avoidMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 576
   _faceData: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
   _faceMaterial: {fileID: 2100000, guid: c12dba4db4b10a34ea85b03c5b9263e6, type: 2}
   _showDebug: 0

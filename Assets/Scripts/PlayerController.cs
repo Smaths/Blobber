@@ -9,7 +9,10 @@ public class PlayerController : MonoBehaviour
     // Editor fields
     [BoxGroup("Dependencies")]
     [SerializeField] private CharacterController _controller;
+    [BoxGroup("Dependencies")]
     [SerializeField] private Renderer _blobRenderer;
+    [BoxGroup("Dependencies")]
+    [SerializeField] private Camera _playerCamera;
 
     [Title("Player Settings")]
     [SerializeField] private float _moveSpeed = 6f;
@@ -21,11 +24,11 @@ public class PlayerController : MonoBehaviour
     [Header("Boost")]
     [SerializeField] private  float boostForce = 10f;          // The force to apply during the boost
     [SerializeField] private  float boostDuration = 1f;        // The duration of the boost
-    private bool _isBoosting;
     private float _boostTimer;
 
     [Header("Info")]
     [SerializeField] [DisplayAsString] private bool _isMoving;
+    [SerializeField] [DisplayAsString] private bool _isBoosting;
     [SerializeField] [DisplayAsString] private bool _isGrounded;
 
     [FoldoutGroup("Unity Events", false)]
@@ -75,10 +78,14 @@ public class PlayerController : MonoBehaviour
     private void OnValidate()
     {
         _controller ??= GetComponentInChildren<CharacterController>();
+        _playerCamera ??= Camera.main;
     }
 
     private void Start()
     {
+        _controller ??= GetComponentInChildren<CharacterController>();
+        _playerCamera ??= Camera.main;
+
         IsStoppedState.SetValue();
 
         _cachedColor = _blobRenderer.material.color;
@@ -144,7 +151,12 @@ public class PlayerController : MonoBehaviour
     #region Player Input
     public void OnMoveInput(InputAction.CallbackContext context)
     {
-        _moveDirection = context.ReadValue<Vector2>();
+
+        // Convert input to world space relative to the camera orientation
+        Vector3 cameraForward = Vector3.Scale(_playerCamera.transform.forward, new Vector3(1, 1, 0)).normalized;
+        var moveInput = context.ReadValue<Vector2>();
+        _moveDirection = (cameraForward * moveInput.y + _playerCamera.transform.right * moveInput.x).normalized;
+
     }
 
     public void OnBoostInput(InputAction.CallbackContext context)

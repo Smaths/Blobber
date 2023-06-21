@@ -5,8 +5,6 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using Utility;
 using Random = UnityEngine.Random;
 
 public enum BlobType { Good, Bad }
@@ -21,25 +19,24 @@ public class BlobAI : MonoBehaviour
     [BoxGroup("Dependencies")]
     [SerializeField] private GameObject _blobMesh;
 
-    [Title("Blob AI", "Brains for blobs characters good and bad." )]
+    [Title("Blob AI", "Brains for blobs characters good and bad.", TitleAlignments.Centered)]
     [SerializeField] private BlobType _blobType;
     [SerializeField] private int _pointValue = 5;
     [SerializeField] private BlobAIState _currentState;
     [Header("Sight")]
     [Tooltip("Rate in seconds that the character will scan for targets that are on the 'Sight Mask' layer.")]
-    [SuffixLabel("second(s)")]
+    [SuffixLabel("second(s)")] [MinValue(0.01f)]
     [SerializeField] private float _searchRate = 0.1f;
     [Tooltip("How far the blob can see.")]
-    [SuffixLabel("meter(s)")]
+    [SuffixLabel("meter(s)")] [MinValue(0.01f)]
     [SerializeField] private float _sightRange = 4f;
     [SerializeField] private LayerMask _sightMask;
 
     [Header("Patrol")]
-    [SuffixLabel("meter(s)")]
+    [SuffixLabel("meter(s)")] [MinValue(0)]
     [SerializeField] private float _patrolRange = 4f;
-    [LabelText("Distance Threshold")]
-    [Tooltip("Range the character can be from random patrol position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
-    [SuffixLabel("meter(s)")]
+    [LabelText("Distance Threshold")] [Tooltip("Range the character can be from random patrol position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
+    [SuffixLabel("meter(s)")] [MinValue(0.01f)]
     [SerializeField] private float _patrolDistanceThreshold = 0.25f;
     [Tooltip("How long the character will wait before finding a new patrol position.")]
     [SuffixLabel("second(s)")] [MinMaxSlider(0f, 10f, true)]
@@ -265,11 +262,8 @@ public class BlobAI : MonoBehaviour
 
     private IEnumerator ResetPatrolAfterDelay(float delayTime)
     {
-        print($"{gameObject.name} - start wait");
-
         yield return new WaitForSeconds(delayTime);
 
-        print($"{gameObject.name} - end wait");
         _isWaitingAtPatrolPoint = false;
         _hasPatrolPoint = false;
     }
