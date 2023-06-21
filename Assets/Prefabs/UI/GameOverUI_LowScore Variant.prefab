@@ -290,7 +290,7 @@ PrefabInstance:
     - target: {fileID: 3563264983892604919, guid: 17d5e7be97a854db3901d86c0f92f6be,
         type: 3}
       propertyPath: m_text
-      value: Your score hit zero, avoid those red blobs.
+      value: Try avoiding those red blobs.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17d5e7be97a854db3901d86c0f92f6be, type: 3}

@@ -1,13 +1,12 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
     // Editor fields
-    [FormerlySerializedAs("_characterController")]
     [BoxGroup("Dependencies")]
     [SerializeField] private CharacterController _controller;
     [SerializeField] private Renderer _blobRenderer;
@@ -29,16 +28,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField] [DisplayAsString] private bool _isMoving;
     [SerializeField] [DisplayAsString] private bool _isGrounded;
 
-    [Header("WWise Events")]
+    [FoldoutGroup("Unity Events", false)]
+    public UnityEvent OnScoreDidChange;
+    [FoldoutGroup("Unity Events")]
+    public UnityEvent OnScoreIncrease;
+    [FoldoutGroup("Unity Events")]
+    public UnityEvent OnScoreDecrease;
+    [FoldoutGroup("Unity Events")]
+    public UnityEvent OnDeath;
+    [FoldoutGroup("Unity Events")]
+    public UnityEvent OnBirth;
+    [FoldoutGroup("Unity Events")]
+    public UnityEvent OnBoost;
+
+    [Title("WWise Events", "For hooking up player events and stuff to WWise", TitleAlignments.Split)]
     public AK.Wwise.State IsStoppedState;
     public AK.Wwise.State IsMovingState;
-
     public AK.Wwise.Event IsDeadEvent;
     public AK.Wwise.Event ScoreDecreaseEvent;
     public AK.Wwise.Event ScoreIncreaseEvent;
 
     // Private fields
     private Vector2 _moveDirection;
+    private Color _cachedColor;
 
     public bool IsMoving
     {
@@ -69,8 +81,12 @@ public class PlayerController : MonoBehaviour
     {
         IsStoppedState.SetValue();
 
+        _cachedColor = _blobRenderer.material.color;
+
         _isBoosting = false;
         _boostTimer = 0f;
+
+        OnBirth?.Invoke();
     }
 
     private void Update()
@@ -79,30 +95,25 @@ public class PlayerController : MonoBehaviour
 
         MovePlayer();
 
-        if (_isBoosting)
-        {
-            CheckBoost();
-        }
-        else
-        {
-            CheckMovement();
-        }
+        if (_isBoosting) BoostPlayer();
+
+        // Check movement for events
+        IsMoving = _moveDirection != Vector2.zero;
     }
 
-    private void CheckBoost()
+    private void BoostPlayer()
     {
-        // If the character is boosting, apply the boost force
-        if (_isBoosting)
-        {
-            Vector3 boostVelocity = transform.forward * boostForce;
-            _controller.Move(boostVelocity * Time.deltaTime);
+        if (!_isBoosting) return;   // Guard
 
-            // Update the boost timer and check if the boost duration has expired
-            _boostTimer += Time.deltaTime;
-            if (_boostTimer >= boostDuration)
-            {
-                EndBoost();
-            }
+        // If the character is boosting, apply the boost force
+        Vector3 boostVelocity = transform.forward * boostForce;
+        _controller.Move(boostVelocity * Time.deltaTime);
+
+        // Update the boost timer and check if the boost duration has expired
+        _boostTimer += Time.deltaTime;
+        if (_boostTimer >= boostDuration)
+        {
+            EndBoost();
         }
     }
 
@@ -111,6 +122,9 @@ public class PlayerController : MonoBehaviour
         if (LevelManager.instance)
         {
             LevelManager.instance.ScoreChanged.AddListener(ResizeOnScoreDidChange);
+            LevelManager.instance.OnScoreIncrease.AddListener(OnScoreDidIncrease);
+            LevelManager.instance.OnScoreDecrease.AddListener(OnScoreDidDecrease);
+            LevelManager.instance.OnPlayerPointsDepleted.AddListener(OnDidDie);
         }
     }
 
@@ -119,32 +133,22 @@ public class PlayerController : MonoBehaviour
         if (LevelManager.instance)
         {
             LevelManager.instance.ScoreChanged.RemoveListener(ResizeOnScoreDidChange);
+            LevelManager.instance.OnScoreIncrease.RemoveListener(OnScoreDidIncrease);
+            LevelManager.instance.OnScoreDecrease.RemoveListener(OnScoreDidDecrease);
+            LevelManager.instance.OnPlayerPointsDepleted.RemoveListener(OnDidDie);
         }
     }
     #endregion
 
     #region Movement
-    private void CheckMovement()
-    {
-        if (_moveDirection == Vector2.zero)
-        {
-            IsMoving = false;
-        }
-        else
-        {
-            IsMoving = true;
-        }
-    }
-
     #region Player Input
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnMoveInput(InputAction.CallbackContext context)
     {
         _moveDirection = context.ReadValue<Vector2>();
     }
 
-    public void OnBoost(InputAction.CallbackContext context)
+    public void OnBoostInput(InputAction.CallbackContext context)
     {
-        print($"{gameObject.name} - Boost!");
         StartBoost();
     }
     #endregion
@@ -165,31 +169,38 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    public void OnScoreDidIncrease()
+
+    #region Subscribed Event Handlers
+    public void OnScoreDidIncrease(int amount)
     {
-        Color cachedColor = _blobRenderer.material.color;
-        _blobRenderer.material.DOBlendableColor(Color.yellow, _colorFadeTime).OnComplete(() =>
+        // Flash color
+        _blobRenderer.material.DOColor(Color.yellow, _colorFadeTime).OnComplete(() =>
         {
-            _blobRenderer.material.DOBlendableColor(cachedColor, _colorFadeTime);
+            _blobRenderer.material.DOBlendableColor(_cachedColor, _colorFadeTime);
         });
 
+        // Events
+        OnScoreIncrease?.Invoke();
         ScoreIncreaseEvent.Post(gameObject);
     }
 
-    public void OnScoreDidDecrease()
+    public void OnScoreDidDecrease(int amount)
     {
-        Color cachedColor = _blobRenderer.material.color;
+        // Flash color
         _blobRenderer.material.DOBlendableColor(Color.red, _colorFadeTime).OnComplete(() =>
         {
-            _blobRenderer.material.DOBlendableColor(cachedColor, _colorFadeTime);
+            _blobRenderer.material.DOBlendableColor(_cachedColor, _colorFadeTime);
         });
 
+        // Events
+        OnScoreDecrease?.Invoke();
         ScoreDecreaseEvent.Post(gameObject);
+    }
 
-        if (LevelManager.instance && LevelManager.instance.Points <= 0)
-        {
-            IsDeadEvent.Post(gameObject);
-        }
+    public void OnDidDie()
+    {
+        OnDeath?.Invoke();
+        IsDeadEvent.Post(gameObject);
     }
 
     // Resize on score change
@@ -230,13 +241,19 @@ public class PlayerController : MonoBehaviour
 
             _controller.radius += ccSizeScaleAmount;
         }
+
+        // Event
+        OnScoreDidChange?.Invoke();
     }
+    #endregion
 
     // Boost
     private void StartBoost()
     {
         _isBoosting = true;
         _boostTimer = 0f;
+
+        OnBoost?.Invoke();
     }
 
     private void EndBoost()

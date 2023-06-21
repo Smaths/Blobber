@@ -1677,7 +1677,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1638101132834359233}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnMove
+        m_MethodName: OnMoveInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

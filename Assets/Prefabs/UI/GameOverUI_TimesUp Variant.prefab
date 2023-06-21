@@ -27,6 +27,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -221.22
       objectReference: {fileID: 0}
+    - target: {fileID: 3282589031996746830, guid: 17d5e7be97a854db3901d86c0f92f6be,
+        type: 3}
+      propertyPath: m_text
+      value: Time's Up!
+      objectReference: {fileID: 0}
     - target: {fileID: 3282589031996746831, guid: 17d5e7be97a854db3901d86c0f92f6be,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -135,7 +140,7 @@ PrefabInstance:
     - target: {fileID: 3282589033290326711, guid: 17d5e7be97a854db3901d86c0f92f6be,
         type: 3}
       propertyPath: m_Name
-      value: GameOverUI_TimesUp
+      value: GameOverUI_TimesUp Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3282589033290326711, guid: 17d5e7be97a854db3901d86c0f92f6be,
         type: 3}
