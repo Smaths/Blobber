@@ -120,17 +120,22 @@ MonoBehaviour:
   _pointValue: -10
   _currentState: 0
   _searchRate: 0.25
-  _sightRadius: 4
+  _sightRange: 4
   _sightMask:
     serializedVersion: 2
     m_Bits: 128
   _patrolRange: 4
-  _patrolWaitTime: 3
+  _patrolDistanceThreshold: 0.25
+  _patrolWaitTime: {x: 2, y: 4}
   _groundMask:
     serializedVersion: 2
     m_Bits: 256
-  _faces: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
+  _avoidMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _faceData: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
   _faceMaterial: {fileID: 2100000, guid: c12dba4db4b10a34ea85b03c5b9263e6, type: 2}
+  _showDebug: 0
   OnBlobStateChange:
     m_PersistentCalls:
       m_Calls: []

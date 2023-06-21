@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
+using Utility;
 using Random = UnityEngine.Random;
 
 public enum BlobType { Good, Bad }
@@ -28,8 +28,7 @@ public class BlobAI : MonoBehaviour
     [Header("Sight")]
     [Tooltip("Rate in seconds that the character will scan for targets that are on the 'Sight Mask' layer.")]
     [SuffixLabel("second(s)")]
-    [SerializeField] private float _searchRate = 0.25f;
-    [FormerlySerializedAs("_sightRadius")]
+    [SerializeField] private float _searchRate = 0.1f;
     [Tooltip("How far the blob can see.")]
     [SuffixLabel("meter(s)")]
     [SerializeField] private float _sightRange = 4f;
@@ -41,16 +40,15 @@ public class BlobAI : MonoBehaviour
     [LabelText("Distance Threshold")]
     [Tooltip("Range the character can be from random patrol position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
     [SuffixLabel("meter(s)")]
-    [SerializeField] private float _patrolDistanceThreshold = 1f;
+    [SerializeField] private float _patrolDistanceThreshold = 0.25f;
     [Tooltip("How long the character will wait before finding a new patrol position.")]
-    [SuffixLabel("second(s)")]
-    [SerializeField] private float _patrolWaitTime = 3f;
+    [SuffixLabel("second(s)")] [MinMaxSlider(0f, 10f, true)]
+    [SerializeField] private Vector2 _patrolWaitTime = new (2f, 4f);
     [Tooltip("Select ground layer to check if random patrol point is on the walkable ground.")]
     [SerializeField] private LayerMask _groundMask;
     [Tooltip("Select layers for the character to avoid when finding a random patrol position.")]
     [SerializeField] private LayerMask _avoidMask;
 
-    [FormerlySerializedAs("_faces")]
     [Header("Faces :D")]
     [SerializeField] private Face _faceData;
     [SerializeField] private Material _faceMaterial;
@@ -63,6 +61,7 @@ public class BlobAI : MonoBehaviour
     private Vector3 _targetDestination;
     private bool _hasTarget;
     private bool _hasPatrolPoint;
+    private bool _isWaitingAtPatrolPoint;
 
     [FoldoutGroup("Events", false)]
     public UnityEvent<BlobAIState> OnBlobStateChange;
@@ -101,7 +100,7 @@ public class BlobAI : MonoBehaviour
                     break;
             }
 
-            if (_faceMaterial)
+            if (_faceMaterial & _faceData)
             {
                 UpdateFade(value);
             }
@@ -154,7 +153,7 @@ public class BlobAI : MonoBehaviour
     {
         if (_agent)
         {
-            // StartCoroutine(SearchForPlayerCoroutine());
+            StartCoroutine(SearchForPlayerCoroutine());
         }
 
         CurrentState = BlobAIState.Idle;
@@ -177,9 +176,12 @@ public class BlobAI : MonoBehaviour
     {
         if (_isDestroying) return;  // guard statement
 
-        print(_pointValue > 0
-            ? $"Player hit {gameObject.name} (+ {_pointValue})"
-            : $"Player hit {gameObject.name} (- {_pointValue})");
+        if (_showDebug)
+        {
+            print(_pointValue > 0
+                ? $"{gameObject.name} hit Player(+ {_pointValue})"
+                : $"{gameObject.name} hit Player({_pointValue})");
+        }
 
         LevelManager.instance.AddPoints(_pointValue);
 
@@ -207,11 +209,10 @@ public class BlobAI : MonoBehaviour
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, _sightRange, _sightMask);
 
-            if (colliders.IsNullOrEmpty())
+            if (colliders.Length == 0)
             {
-                // No Target
+                // No target found
                 _hasTarget = false;
-                _targetDestination = transform.position;
 
                 CurrentState = BlobAIState.Patrol;
                 if (_hadTarget)
@@ -222,16 +223,17 @@ public class BlobAI : MonoBehaviour
             }
             else
             {
-                // Set Target
+                // Target found
                 _hasTarget = true;
                 _hadTarget = true;
                 _targetDestination = colliders[0].transform.position;
 
                 CurrentState = BlobAIState.Attack;
+
+                _agent.SetDestination(_targetDestination);
+
                 OnGainedTarget?.Invoke();
             }
-
-            _agent.SetDestination(_targetDestination);
 
             yield return new WaitForSeconds(_searchRate);
         }
@@ -242,28 +244,34 @@ public class BlobAI : MonoBehaviour
     private void Patrol()
     {
         if (!_hasPatrolPoint)
-        {
-            print($"{gameObject.name} - Search for Patrol");
             SearchForPatrolPoint();
-        }
 
         if (_hasPatrolPoint)
-        {
-            print($"{gameObject.name} - Set Patrol Point {_targetDestination})");
             _agent.SetDestination(_targetDestination);
-        }
 
         Vector3 distanceToPatrolPoint = transform.position - _targetDestination;
+        if (_showDebug) print($"(distance: {distanceToPatrolPoint.magnitude})");
 
-        print($"(distance: {distanceToPatrolPoint.magnitude})");
         // Patrol point reached
-
-        if (distanceToPatrolPoint.magnitude < _patrolDistanceThreshold)
+        if (distanceToPatrolPoint.magnitude < _patrolDistanceThreshold && _isWaitingAtPatrolPoint == false)
         {
-            print($"{gameObject.name} - Patrol location reached (current distance: {distanceToPatrolPoint.magnitude})");
+            _isWaitingAtPatrolPoint = true;
 
-            _hasPatrolPoint = false;
+            float randomWaitTime = Random.Range(_patrolWaitTime.x, _patrolWaitTime.y);
+
+            StartCoroutine(ResetPatrolAfterDelay(randomWaitTime));
         }
+    }
+
+    private IEnumerator ResetPatrolAfterDelay(float delayTime)
+    {
+        print($"{gameObject.name} - start wait");
+
+        yield return new WaitForSeconds(delayTime);
+
+        print($"{gameObject.name} - end wait");
+        _isWaitingAtPatrolPoint = false;
+        _hasPatrolPoint = false;
     }
 
     private void SearchForPatrolPoint()
