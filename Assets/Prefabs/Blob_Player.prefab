@@ -195,7 +195,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1638101133767632482}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9184964979117923972
 MonoBehaviour:
@@ -448,9 +448,9 @@ Transform:
   m_Children:
   - {fileID: 8697223868520614231}
   - {fileID: 7120436464443053640}
-  - {fileID: 8227519138631226820}
   - {fileID: 2310748550335273779}
   - {fileID: 3450884448747643518}
+  - {fileID: 8227519138631226820}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -587,8 +587,8 @@ MonoBehaviour:
   _rotationSpeed: 0.15
   _scoreScaleFactor: 0.1
   _colorFadeTime: 0.2
-  boostForce: 10
-  boostDuration: 1
+  boostForce: 8
+  boostDuration: 0.3
   _isMoving: 0
   _isGrounded: 0
   IsStoppedState:
@@ -793,7 +793,7 @@ GameObject:
   - component: {fileID: 2070422959785971432}
   - component: {fileID: 8043954233033598384}
   m_Layer: 0
-  m_Name: ParticleSystem
+  m_Name: MovementTrailPS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,7 +812,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1638101133767632482}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &2070422959785971432
 ParticleSystem:
@@ -5655,7 +5655,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1638101133767632482}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1329457474728682339
 MonoBehaviour:

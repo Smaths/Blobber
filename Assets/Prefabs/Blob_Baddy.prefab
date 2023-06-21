@@ -80,14 +80,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00a320a2f3c849c5a7f5f58b6597215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pointValue: -10
   _navMeshAgent: {fileID: 3597532536665528444}
+  _pointValue: -10
   _playerBlob: {fileID: 0}
   _searchRate: 0.25
   _searchRadius: 4
   _searchMask:
     serializedVersion: 2
     m_Bits: 128
+  _patrolRange: 4
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _blobMesh: {fileID: 2221890846040173535}
+  faces: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
+  _currentState: 0
+  _faceMaterial: {fileID: 2100000, guid: c12dba4db4b10a34ea85b03c5b9263e6, type: 2}
 --- !u!195 &3597532536665528444
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -303,6 +311,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9981a4f80fb95b04fb9d36e07baa17cb, type: 3}
+--- !u!1 &2221890846040173535 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -809624348202768371, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 7644331511700210642}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7898370912276849721 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9981a4f80fb95b04fb9d36e07baa17cb,

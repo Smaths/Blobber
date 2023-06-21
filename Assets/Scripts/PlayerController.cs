@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour
     [Header("Boost")]
     [SerializeField] private  float boostForce = 10f;          // The force to apply during the boost
     [SerializeField] private  float boostDuration = 1f;        // The duration of the boost
-    private bool isBoosting;
-    private float boostTimer;
+    private bool _isBoosting;
+    private float _boostTimer;
 
     [Header("Info")]
     [SerializeField] [DisplayAsString] private bool _isMoving;
@@ -69,8 +69,8 @@ public class PlayerController : MonoBehaviour
     {
         IsStoppedState.SetValue();
 
-        isBoosting = false;
-        boostTimer = 0f;
+        _isBoosting = false;
+        _boostTimer = 0f;
     }
 
     private void Update()
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
 
         MovePlayer();
 
-        if (isBoosting)
+        if (_isBoosting)
         {
             CheckBoost();
         }
@@ -92,14 +92,14 @@ public class PlayerController : MonoBehaviour
     private void CheckBoost()
     {
         // If the character is boosting, apply the boost force
-        if (isBoosting)
+        if (_isBoosting)
         {
             Vector3 boostVelocity = transform.forward * boostForce;
             _controller.Move(boostVelocity * Time.deltaTime);
 
             // Update the boost timer and check if the boost duration has expired
-            boostTimer += Time.deltaTime;
-            if (boostTimer >= boostDuration)
+            _boostTimer += Time.deltaTime;
+            if (_boostTimer >= boostDuration)
             {
                 EndBoost();
             }
@@ -235,13 +235,13 @@ public class PlayerController : MonoBehaviour
     // Boost
     private void StartBoost()
     {
-        isBoosting = true;
-        boostTimer = 0f;
+        _isBoosting = true;
+        _boostTimer = 0f;
     }
 
     private void EndBoost()
     {
-        isBoosting = false;
+        _isBoosting = false;
         // Perform any necessary actions after the boost has ended
     }
 }
