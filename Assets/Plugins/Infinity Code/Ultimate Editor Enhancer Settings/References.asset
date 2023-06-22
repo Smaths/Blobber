@@ -535,14 +535,26 @@ MonoBehaviour:
     icon: VideoPlayer Icon
     color: {r: 0.5764706, g: 0.43921572, b: 0.8588236, a: 1}
   _sceneHistory:
+  - name: Cartoon_Texture_Presentation
+    path: Assets/Cartoon_Texture_Pack/_MaterialLibrary/Cartoon_Texture_Presentation.unity
+  - name: CFXRF Demo
+    path: Assets/Plugins/JMO Assets/Cartoon FX Remaster/CFXRF Demo.unity
+  - name: Hand Painted Stone Texture
+    path: Assets/Hand Painted Stone Texture/Scene/Hand Painted Stone Texture.unity
+  - name: Animated
+    path: Assets/Plugins/Kawaii Slimes/Animated.unity
+  - name: AllSlime
+    path: Assets/Plugins/Kawaii Slimes/AllSlime.unity
+  - name: Level_2
+    path: Assets/Scenes/Level_2.unity
   - name: Level_1
     path: Assets/Scenes/Level_1.unity
+  - name: Test
+    path: Assets/Scenes/Test.unity
+  - name: scene
+    path: Assets/Turntable_platforms/scene.unity
   - name: Start
     path: Assets/Scenes/Start.unity
   - name: Other
     path: Assets/Scenes/Other.unity
-  - name: AllSlime
-    path: Assets/Plugins/Kawaii Slimes/AllSlime.unity
-  - name: Animated
-    path: Assets/Plugins/Kawaii Slimes/Animated.unity
   _notes: []

@@ -1,29 +1,25 @@
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    [Title("Level Manager", "Main brain for running the game.", TitleAlignments.Split)]
     // Editor fields
     [Tooltip("Current points of the player, game over if points go below 0.")]
     [SerializeField] private int _points;
     [SerializeField, ReadOnly] private bool _gameIsOver;
 
-    [Header("Bad Blob AI")]
-    [SerializeField] private NavMeshAgent[] _badBlobAgents;
-
     // Events
+    [Space]
     [FoldoutGroup("Events", false)]
     public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
     [FoldoutGroup("Events")]
-    public UnityEvent OnPointsAdd;
+    public UnityEvent<int> OnScoreIncrease;
     [FoldoutGroup("Events")]
-    public UnityEvent OnPointsSubtract;
+    public UnityEvent<int> OnScoreDecrease;
     [FoldoutGroup("Events")]
     public UnityEvent OnPlayerPointsDepleted;
 
@@ -35,14 +31,9 @@ public class LevelManager : MonoBehaviour
     #region Lifecycle
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Singleton setup - destroy on scene unload/load
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
     #endregion
 
@@ -53,11 +44,11 @@ public class LevelManager : MonoBehaviour
 
         if (value > 0)
         {
-            OnPointsAdd?.Invoke();
+            OnScoreIncrease?.Invoke(value);
         }
         else if (value < 0)
         {
-            OnPointsSubtract?.Invoke();
+            OnScoreDecrease?.Invoke(value);
         }
         ScoreChanged?.Invoke(value, _points);
 
@@ -72,27 +63,7 @@ public class LevelManager : MonoBehaviour
     {
         _gameIsOver = true;
 
-        DisableEnemies();
-
         OnPlayerPointsDepleted?.Invoke();
     }
-
-    public void DisableEnemies()
-    {
-        if (_badBlobAgents.IsNullOrEmpty() == false)
-        {
-            foreach (var navMeshAgent in _badBlobAgents)
-            {
-                if (navMeshAgent == null) continue;
-                navMeshAgent.speed = 0;
-            }
-        }
-    }
     #endregion
-
-    [Button]
-    private void FindNavMeshAgents()
-    {
-        _badBlobAgents = FindObjectsOfType<NavMeshAgent>();
-    }
 }

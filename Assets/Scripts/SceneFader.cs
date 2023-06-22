@@ -70,6 +70,12 @@ public class SceneFader : MonoBehaviour
         FadeTo(_level1SceneName);
     }
 
+    public void FadeToCurrentScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        FadeOut(scene.name);
+    }
+
     public void FadeTo(string sceneName)
     {
         FadeOut(sceneName);
