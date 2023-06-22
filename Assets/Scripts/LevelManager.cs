@@ -1,9 +1,6 @@
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 public class LevelManager : MonoBehaviour
 {
@@ -15,17 +12,12 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int _points;
     [SerializeField, ReadOnly] private bool _gameIsOver;
 
-    [Header("Bad Blob AI")]
-    [SerializeField] private NavMeshAgent[] _badBlobAgents;
-
     // Events
     [Space]
     [FoldoutGroup("Events", false)]
     public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
-    [FormerlySerializedAs("OnPointsAdd")]
     [FoldoutGroup("Events")]
     public UnityEvent<int> OnScoreIncrease;
-    [FormerlySerializedAs("OnPointsSubtract")]
     [FoldoutGroup("Events")]
     public UnityEvent<int> OnScoreDecrease;
     [FoldoutGroup("Events")]
@@ -71,27 +63,7 @@ public class LevelManager : MonoBehaviour
     {
         _gameIsOver = true;
 
-        DisableEnemies();
-
         OnPlayerPointsDepleted?.Invoke();
     }
-
-    public void DisableEnemies()
-    {
-        if (_badBlobAgents.IsNullOrEmpty() == false)
-        {
-            foreach (var navMeshAgent in _badBlobAgents)
-            {
-                if (navMeshAgent == null) continue;
-                navMeshAgent.speed = 0;
-            }
-        }
-    }
     #endregion
-
-    [Button]
-    private void FindNavMeshAgents()
-    {
-        _badBlobAgents = FindObjectsOfType<NavMeshAgent>();
-    }
 }

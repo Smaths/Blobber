@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 10340198024988419}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DeathEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2559045478967820260}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   - component: {fileID: 8772220674439284327}
   - component: {fileID: 3597532536665528444}
   - component: {fileID: 291035978483762748}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blob_Baddy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,6 +119,7 @@ MonoBehaviour:
   _blobType: 1
   _pointValue: -10
   _currentState: 0
+  _speed: 2
   _searchRate: 0.2
   _sightRange: 4
   _sightMask:
@@ -248,6 +249,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 10340198024988419}
     m_Modifications:
+    - target: {fileID: 725748389098120080, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 725748389098120094, guid: 4bda94453d2ca7444a0fff05b2d425f5,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -258,6 +264,11 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 725748389192728894, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 725748389856807713, guid: 4bda94453d2ca7444a0fff05b2d425f5,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -267,6 +278,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CFXR Explosion Smoke 2 Solo (HDR)
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5,
         type: 3}
@@ -333,10 +349,20 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 725748390055121426, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 725748390129463916, guid: 4bda94453d2ca7444a0fff05b2d425f5,
         type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748390129463918, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
@@ -433,6 +459,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VikingHelmet
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2e6931140dfc0a342b8aaca58929e860,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e6931140dfc0a342b8aaca58929e860, type: 3}
@@ -779,6 +810,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2559045478967820260}
     m_Modifications:
+    - target: {fileID: -8974606608180858246, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
         type: 3}
       propertyPath: m_RootOrder
@@ -854,10 +890,45 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f851d1f8bd66443f4ae1b2ce7d9d8a94, type: 2}
+    - target: {fileID: -5098033314448498520, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -809624348202768371, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
         type: 3}
       propertyPath: m_Name
       value: Slime_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1891019083907190217, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2668605608433959078, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5221923010788876961, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7044479379385586571, guid: 9981a4f80fb95b04fb9d36e07baa17cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9981a4f80fb95b04fb9d36e07baa17cb, type: 3}

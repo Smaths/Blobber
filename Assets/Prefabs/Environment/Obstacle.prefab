@@ -67,7 +67,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8229635688099300071}
         m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DOPlay
+        m_MethodName: DORestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -79,7 +79,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 4049500075142090110}
         m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DOPlay
+        m_MethodName: DORestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -391,7 +391,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 860217477029456148}
         m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DOPlay
+        m_MethodName: DORestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -403,7 +403,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 5352925337534080538}
         m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DOPlay
+        m_MethodName: DORestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1079,7 +1079,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1882781830492810303}
         m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DOPlay
+        m_MethodName: DORestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1091,7 +1091,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 6633418830234916520}
         m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DOPlay
+        m_MethodName: DORestart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1479,7 +1479,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 019369d37dc7645d6bca7264e060cf80, type: 2}
   - {fileID: 2100000, guid: 019369d37dc7645d6bca7264e060cf80, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

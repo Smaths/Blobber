@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1127174936115297914}
   - component: {fileID: 6683042729723538190}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5371155676846694039}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,8 +134,8 @@ GameObject:
   - component: {fileID: 4792851192523333099}
   - component: {fileID: 2321951032106921473}
   - component: {fileID: 5291235113792741783}
-  m_Layer: 0
-  m_Name: Pickup_Good
+  m_Layer: 6
+  m_Name: Blob_Good
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,6 +175,7 @@ MonoBehaviour:
   _blobType: 0
   _pointValue: 5
   _currentState: 0
+  _speed: 3.5
   _searchRate: 0.25
   _sightRange: 4
   _sightMask:
@@ -258,7 +259,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6917547098822754884}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8438615724494573756}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}

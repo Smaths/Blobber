@@ -135,6 +135,8 @@ public class PlayerController : MonoBehaviour
     {
         _isGrounded = _controller.isGrounded;
 
+        transform.position = Vector3.Scale(transform.position, new Vector3(1f, 0f, 1f));    // Keep grounded. 
+
         MovePlayer();
 
         if (_isBoosting) BoostPlayer();

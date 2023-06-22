@@ -23,6 +23,8 @@ public class BlobAI : MonoBehaviour
     [SerializeField] private BlobType _blobType;
     [SerializeField] private int _pointValue = 5;
     [SerializeField] private BlobAIState _currentState;
+    [SerializeField] private float _speed = 4;
+
     [Header("Sight")]
     [Tooltip("Rate in seconds that the character will scan for targets that are on the 'Sight Mask' layer.")]
     [SuffixLabel("second(s)")] [MinValue(0.01f)]
@@ -76,6 +78,7 @@ public class BlobAI : MonoBehaviour
     public UnityEvent OnDeath;
     private bool _hadTarget;
 
+    #region Public properties
     public BlobAIState CurrentState
     {
         get => _currentState;
@@ -107,6 +110,12 @@ public class BlobAI : MonoBehaviour
             _currentState = value;
         }
     }
+    public BlobType Type => _blobType;
+
+    public NavMeshAgent Agent => _agent;
+
+    public float Speed => _speed;
+    #endregion
 
     #region Lifecycle
     private void OnDrawGizmosSelected()
@@ -146,11 +155,16 @@ public class BlobAI : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        _agent.speed = _speed;
+    }
+
     private void Start()
     {
         if (_agent)
         {
-            if (_blobType == BlobType.Bad)
+            if (Type == BlobType.Bad)
             {
                 StartCoroutine(SearchForPlayerCoroutine());
             }
@@ -188,6 +202,21 @@ public class BlobAI : MonoBehaviour
         CurrentState = BlobAIState.Dead;
 
         PlayDeathAnimation();
+
+        if (BlobManager.Instance)
+        {
+            switch(_blobType)
+            {
+                case BlobType.Good:
+                    BlobManager.Instance.OnGoodBlobDestroyed(this);
+                    break;
+                case BlobType.Bad:
+                    BlobManager.Instance.OnBadBlobDestroyed(this);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 
     private void PlayDeathAnimation()
