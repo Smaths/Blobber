@@ -3,6 +3,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
+// Script execution order modified.
+
 public class GameTimer : MonoBehaviour
 {
     public static GameTimer instance;

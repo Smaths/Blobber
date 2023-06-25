@@ -311,6 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede837fe7b014438bb91e70fe5361a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _setupCanvas: {fileID: 0}
   _playerNameLabel: {fileID: 7695421675688818174}
   _showDebug: 0
   OnPlayerNameTapped:
@@ -318,19 +319,7 @@ MonoBehaviour:
       m_Calls: []
   OnStartTapped:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SceneFader, Assembly-CSharp
-        m_MethodName: FadeTo
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Level_2
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnSettingsTapped:
     m_PersistentCalls:
       m_Calls: []

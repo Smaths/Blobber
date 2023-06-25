@@ -1,4 +1,3 @@
-using System;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
@@ -23,6 +22,7 @@ namespace UI
             _playerNameInput.onValueChanged.AddListener(OnValueChanged);
             _submitButton.onClick.AddListener(OnSubmit_Tapped);
 
+            _playerNameInput.text = string.Empty;
             _submitButton.interactable = false;
         }
 
@@ -41,7 +41,7 @@ namespace UI
             if (charIndex + 1 >= _maxCharacterCount) return '\0';
 
             // Only accept: Letters, Digits, Punctuation.
-            if (char.IsLetterOrDigit(addedChar) || Char.IsPunctuation(addedChar))
+            if (char.IsLetterOrDigit(addedChar) || char.IsPunctuation(addedChar) || char.IsSeparator(addedChar))
             {
                 return addedChar;
             }
@@ -51,6 +51,7 @@ namespace UI
 
         private void OnValueChanged(string text)
         {
+            // Limit length
             _submitButton.interactable = text.Length > 0;
         }
 
@@ -60,9 +61,11 @@ namespace UI
             string playerName = _playerNameInput.text;
             if (playerName.IsNullOrWhitespace()) return;
 
-            LootLockerTool.Instance.SetPlayerName(playerName);
+            LootLockerTool.Instance.UpdatePlayerName(playerName);
 
             OnSubmit?.Invoke(playerName);
+
+            gameObject.SetActive(false);
         }
     }
 }

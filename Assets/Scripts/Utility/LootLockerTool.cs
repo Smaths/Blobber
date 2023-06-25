@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 // Lootlocker source: https://docs.lootlocker.com/players/authentication/guest-login
+// Script execution order modified.
+
 namespace Utility
 {
     public class LootLockerTool : Singleton<LootLockerTool>
@@ -19,7 +21,7 @@ namespace Utility
         [Header("Data")]
         [SerializeField] private LootLockerLeaderboardMember[] _members;
         [Header("Events")]
-        public UnityEvent OnPlayerNameSet;
+        public UnityEvent<string> OnPlayerNameSet;
         public UnityEvent OnSessionSetupCompleted;
         public UnityEvent OnTopScoresDownloadComplete;
         public UnityEvent OnNearbyScoresDownloadComplete;
@@ -34,6 +36,12 @@ namespace Utility
         {
             SetupLootLockerGuestSession();
         }
+
+        private void OnEnable()
+        {
+            // Grab new scores when page appears. 
+            _members = GetTopScores();
+        }
         #endregion
 
         #region Setup
@@ -47,20 +55,25 @@ namespace Utility
                     return;
                 }
 
-                SetupDidComplete();
+                GuestSessionDidStart();
                 Debug.Log("Successfully started LootLocker session");
             });
         }
 
-        private void SetupDidComplete()
+        private void GuestSessionDidStart()
         {
-            _members = GetTopScores();
+            GetPlayerName();
+
+            LootLockerLeaderboardMember[] topScoreMembers = GetTopScores();
+            _members = topScoreMembers;
+
+            OnSessionSetupCompleted?.Invoke();
         }
         #endregion
 
         public void SubmitScore(int score)
         {
-            var memberID = _memberID.IsNullOrWhitespace() ? "Test" : _memberID;
+            string memberID = _memberID.IsNullOrWhitespace() ? "Test" : _memberID;
 
             LootLockerSDKManager.SubmitScore(memberID, score, _leaderboardKey, response =>
             {
@@ -86,6 +99,8 @@ namespace Utility
                         Debug.Log(member.ToString());
 
                     _members = response.items;
+
+                    OnTopScoresDownloadComplete?.Invoke();
                 } else {
                     Debug.Log("Leaderboard Get Top Scores Failed: " + response.Error);
                 }
@@ -104,19 +119,21 @@ namespace Utility
                     int count = _downloadCount;
                     int after = rank < 6 ? 0 : rank - 5;
 
-                    LootLockerSDKManager.GetScoreList(_leaderboardKey, count, after, response =>
+                    LootLockerSDKManager.GetScoreList(_leaderboardKey, count, after, scoreResponse =>
                     {
-                        if (response.statusCode == 200)
+                        if (scoreResponse.statusCode == 200)
                         {
-                            Debug.Log($"Leaderboard Get Scores Around Member Successful – {response.items.Length} item(s) downloaded.");
+                            Debug.Log($"Leaderboard Get Scores Around Member Successful – {scoreResponse.items.Length} item(s) downloaded.");
 
-                            foreach (LootLockerLeaderboardMember member in response.items)
+                            foreach (LootLockerLeaderboardMember member in scoreResponse.items)
                                 Debug.Log(member.ToString());
 
-                            _members = response.items;
+                            _members = scoreResponse.items;
+
+                            OnNearbyScoresDownloadComplete?.Invoke();
                         }
 
-                        Debug.Log("Leaderboard Get Scores Around Member Failed: " + response.Error);
+                        Debug.Log("Leaderboard Get Scores Around Member Failed: " + scoreResponse.Error);
                     });
                 }
                 else
@@ -128,15 +145,36 @@ namespace Utility
             return Array.Empty<LootLockerLeaderboardMember>();;
         }
 
-        public void SetPlayerName(string playerName)
+        public void GetPlayerName()
+        {
+            LootLockerSDKManager.GetPlayerName(response =>
+            {
+                if (response.success)
+                {
+                    Debug.Log("Successfully retrieved player name: " + response.name);
+
+                    _playerName = response.name;
+
+                    OnPlayerNameSet?.Invoke(_playerName);
+                }
+                else
+                {
+                    Debug.Log("Error getting player name");
+                }
+            });
+        }
+
+        public void UpdatePlayerName(string playerName)
         {
             LootLockerSDKManager.SetPlayerName(playerName, (response) =>
             {
                 if (response.success)
                 {
                     Debug.Log($"Successfully set player name:{_playerName}({_memberID})");
+
                     _playerName = playerName;
-                    OnPlayerNameSet?.Invoke();
+
+                    OnPlayerNameSet?.Invoke(playerName);
                 }
                 else
                 {

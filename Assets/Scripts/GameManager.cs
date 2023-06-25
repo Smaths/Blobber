@@ -1,6 +1,7 @@
 using UnityEngine;
 
 // Persistant game object source: https://pavcreations.com/data-persistence-or-how-to-save-load-game-data-in-unity/
+// Script execution order modified.
 
 public class GameManager : MonoBehaviour
 {

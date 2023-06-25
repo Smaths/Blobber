@@ -19,8 +19,9 @@ namespace UI
         private CanvasGroup _canvasGroup;
 
         // Public events
+        [Header("Events")]
         public UnityEvent OnPlayerNameTapped;
-        public UnityEvent OnStartTapped;
+        public UnityEvent OnPlayTapped;
         public UnityEvent OnSettingsTapped;
         public UnityEvent OnLeaderboardTapped;
         public UnityEvent OnCreditsTapped;
@@ -42,8 +43,23 @@ namespace UI
             }
             else
             {
-                _setupCanvas.gameObject.SetActive(false);
                 _playerNameLabel.text = LootLockerTool.Instance.PlayerName;
+            }
+        }
+
+        private void OnEnable()
+        {
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnPlayerNameSet.AddListener(SetPlayerNameLabel);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnPlayerNameSet.RemoveListener(SetPlayerNameLabel);
             }
         }
         #endregion
@@ -51,7 +67,6 @@ namespace UI
         #region Buttons Events
         public void PlayerName_Tapped()
         {
-
             OnPlayerNameTapped?.Invoke();
         }
 
@@ -59,16 +74,24 @@ namespace UI
         {
             if (_showDebug) print($"{gameObject.name} - Start Tapped");
 
-            //TODO: This isn't getting called, may need to be set in Unity.
             if (string.IsNullOrEmpty(LootLockerTool.Instance.PlayerName))
             {
+                // Request player name if missing
                 _setupCanvas.gameObject.SetActive(true);
                 _setupCanvas.GetComponent<UI_PlayerSetup>().OnSubmit.AddListener(
-                    delegate { SceneFader.instance.FadeTo("Level_2"); }
+                    delegate
+                    {
+                        SceneFader.instance.FadeTo("Level_2");
+                    }
                 );
             }
+            else
+            {
+                // Player name is set already, go to next scene.
+                SceneFader.instance.FadeTo("Level_2");
+            }
 
-            OnStartTapped?.Invoke();
+            OnPlayTapped?.Invoke();
         }
 
         public void Settings_Tapped()
@@ -102,7 +125,7 @@ namespace UI
         }
         #endregion
 
-        public void SetPlayerNameLabel(string playerName)
+        private void SetPlayerNameLabel(string playerName)
         {
             _playerNameLabel.text = playerName;
         }

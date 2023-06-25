@@ -2,6 +2,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
+// Script execution order modified.
+
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;

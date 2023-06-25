@@ -169,8 +169,6 @@ public class BlobAI : MonoBehaviour
     {
         if (newState == _currentState) return;  // Prevent redundant state sets
 
-        print($"{gameObject.name} - BlobAIState: {newState}");
-
         // Set Face
         if (_faceMaterial & _faceData)
             UpdateFace(newState);
