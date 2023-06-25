@@ -1,23 +1,23 @@
 using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Utility;
 
 
 public enum PlayerState { Idle, Moving, Boosting, Attacked, Dead }
 
 public class PlayerController : MonoBehaviour
 {
-
     // Editor fields
-    [BoxGroup("Dependencies")]
-    [SerializeField] private CharacterController _controller;
     [BoxGroup("Dependencies")]
     [SerializeField] private Renderer _blobRenderer;
     [BoxGroup("Dependencies")]
     [SerializeField] private Camera _playerCamera;
+    [SerializeField] private TMP_Text _nameLabel;
 
     [Title("Player Settings")]
     [SerializeField] private PlayerState _playerState;
@@ -63,6 +63,8 @@ public class PlayerController : MonoBehaviour
     public AK.Wwise.Event ScoreIncreaseEvent;
 
     // Private fields
+    private PlayerState _previousState;
+    private CharacterController _controller;
     private Vector2 _moveDirection;
     private Color _cachedColor;
 
@@ -76,11 +78,11 @@ public class PlayerController : MonoBehaviour
             {
                 case true:
                     IsMovingState.SetValue();
-                    State = PlayerState.Moving;
+                    SetState(PlayerState.Moving);
                     break;
                 case false:
-                    State = PlayerState.Idle;
                     IsStoppedState.SetValue();
+                    SetState(PlayerState.Idle);
                     break;
             }
             _isMoving = value;
@@ -90,14 +92,6 @@ public class PlayerController : MonoBehaviour
     public PlayerState State
     {
         get => _playerState;
-        set
-        {
-            if (_faceMaterial & _faceData)
-            {
-                UpdateFace(value);
-            }
-            _playerState = value;
-        }
     }
 
     #region Lifecycle
@@ -111,7 +105,7 @@ public class PlayerController : MonoBehaviour
             if (_faceData != null)
             {
                 if (_faceMaterial)
-                    State = _playerState;
+                    SetState(_playerState);
             }
         }
     }
@@ -124,6 +118,7 @@ public class PlayerController : MonoBehaviour
         IsStoppedState.SetValue();
 
         _cachedColor = _blobRenderer.material.color;
+        _nameLabel.text = LootLockerTool.Instance.PlayerName;
 
         _isBoosting = false;
         _boostTimer = 0f;
@@ -184,6 +179,18 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    private void SetState(PlayerState newState)
+    {
+        if (_playerState == newState) return; // ignore redundant state sets
+
+        // Set blob face
+        if (_faceMaterial & _faceData)
+            UpdateFace(newState);
+
+        _previousState = _playerState;
+        _playerState = newState;
+    }
+
     #region Player Input
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -223,14 +230,17 @@ public class PlayerController : MonoBehaviour
         _isBoosting = true;
         _boostTimer = 0f;
 
-        State = PlayerState.Boosting;
+        SetState(PlayerState.Boosting);
+
         OnBoost?.Invoke();
     }
 
     private void EndBoost()
     {
         _isBoosting = false;
+
         // Perform any necessary actions after the boost has ended
+        SetState(_previousState);
     }
     #endregion
 

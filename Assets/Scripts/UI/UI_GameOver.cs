@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility;
 
 namespace UI
 {
@@ -13,11 +14,6 @@ namespace UI
         [SerializeField] private CanvasGroup _canvasGroup;
 
         [SerializeField] private TMP_Text _timeLabel;
-        [SerializeField] private TMP_Text _descriptionLabel;
-
-        [Header("Game Over Text")]
-        [SerializeField] private string _BelowZeroPointsGameOverText = "Your points went below 0";
-        [SerializeField] private string _TimeUpGameOverText = "Time's Up!";
 
         [Header("Fade Time")]
         [SerializeField] private float _fadeInTime = 0.3f;
@@ -43,6 +39,8 @@ namespace UI
             _canvasGroup.DOFade(1f, _fadeInTime);
 
             SetTimeLabel();
+
+            SubmitScoreToLeaderboard();
         }
 
         private void SetTimeLabel()
@@ -79,19 +77,12 @@ namespace UI
         }
         #endregion
 
-        // Set UI.
-        public void SetGameOver_TimeUp()
+        private void SubmitScoreToLeaderboard()
         {
-            _timeLabel.gameObject.SetActive(false);
-            _descriptionLabel.text = _TimeUpGameOverText;
+            if (LootLockerTool.instanceExists && LevelManager.instance.Points > 0)
+            {
+                LootLockerTool.Instance.SubmitScore(LevelManager.instance.Points);
+            }
         }
-
-        public void SetGameOver_ScoreBelowZero()
-        {
-            _timeLabel.gameObject.SetActive(true);
-            _descriptionLabel.text = _BelowZeroPointsGameOverText;
-        }
-
-
     }
 }

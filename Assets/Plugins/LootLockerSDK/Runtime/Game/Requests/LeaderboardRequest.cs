@@ -1,7 +1,6 @@
 using System;
 using LootLocker.Requests;
 
-
 namespace LootLocker.Requests
 {
     public class LootLockerGetMemberRankResponse : LootLockerResponse
@@ -27,8 +26,14 @@ namespace LootLocker.Requests
         public LootLockerLeaderboardMember[] members { get; set; }
     }
 
+    [Serializable]
     public class LootLockerLeaderboardMember
     {
+        public override string ToString()
+        {
+            return $"Rank: {rank} | Player: {player.name} ({player.id} | {player.public_uid}) | Score: {score}";;
+        }
+
         public string member_id { get; set; }
         public int rank { get; set; }
         public int score { get; set; }

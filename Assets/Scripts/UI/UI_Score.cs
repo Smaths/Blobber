@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -31,7 +30,7 @@ namespace UI
         {
             if (LevelManager.instance)
             {
-                _label.text = LevelManager.instance.Points.ToString(CultureInfo.InvariantCulture);
+                _label.text = LevelManager.instance.Points.ToString(CultureInfo.CurrentCulture);
             }
         }
     }

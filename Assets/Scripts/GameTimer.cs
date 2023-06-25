@@ -10,8 +10,9 @@ public class GameTimer : MonoBehaviour
     // Editor fields
     [Header("Time Settings")]
     [LabelText("Countdown Duration")]
-    [SuffixLabel("seconds"), MinValue(1)]
+    [SuffixLabel("second(s)"), MinValue(1)]
     [SerializeField] private float _countdownTimerDuration = 60f;
+    [SuffixLabel("second(s)")]
     [SerializeField, ReadOnly] private float _currentTime; // Current time remaining
     [SerializeField, ReadOnly] private bool _isPaused;
 

@@ -8,14 +8,12 @@ using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public enum BlobType { Good, Bad }
-public enum BlobAIState { Idle, Patrol, Attack, Dead }
+public enum BlobAIState { Idle, Patrol, Attack, Paused, Dead }
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class BlobAI : MonoBehaviour
 {
     [BoxGroup("Dependencies")]
-    [SerializeField] private NavMeshAgent _agent;
-    [BoxGroup("Dependencies")]
-    [SerializeField] private GameObject _playerBlob;
     [BoxGroup("Dependencies")]
     [SerializeField] private GameObject _blobMesh;
 
@@ -48,6 +46,10 @@ public class BlobAI : MonoBehaviour
     [Tooltip("Select layers for the character to avoid when finding a random patrol position.")]
     [SerializeField] private LayerMask _avoidMask;
 
+    [Header("Meshes")]
+    [SerializeField] private GameObject _playerBlob;
+    [SerializeField] private GameObject _hat;
+
     [Header("Faces :D")]
     [SerializeField] private Face _faceData;
     [SerializeField] private Material _faceMaterial;
@@ -56,6 +58,7 @@ public class BlobAI : MonoBehaviour
     [Header("Debugging")]
     [SerializeField] private bool _showDebug;
 
+    private NavMeshAgent _agent;
     private bool _isDestroying;
     private Vector3 _targetDestination;
     private bool _hasTarget;
@@ -75,6 +78,8 @@ public class BlobAI : MonoBehaviour
     [FoldoutGroup("Events")]
     public UnityEvent OnAttack;
     [FoldoutGroup("Events")]
+    public UnityEvent OnPause;
+    [FoldoutGroup("Events")]
     public UnityEvent OnDeath;
     private bool _hadTarget;
 
@@ -82,33 +87,6 @@ public class BlobAI : MonoBehaviour
     public BlobAIState CurrentState
     {
         get => _currentState;
-        private set
-        {
-            switch (value)
-            {
-                case BlobAIState.Idle:
-                    OnIdle?.Invoke();
-                    break;
-                case BlobAIState.Patrol:
-                    OnPatrol?.Invoke();
-                    break;
-                case BlobAIState.Attack:
-                    OnAttack?.Invoke();
-                    break;
-                case BlobAIState.Dead:
-                    OnDeath?.Invoke();
-                    break;
-            }
-
-            if (_faceMaterial & _faceData)
-            {
-                UpdateFace(value);
-            }
-
-            OnBlobStateChange?.Invoke(value);
-
-            _currentState = value;
-        }
     }
     public BlobType Type => _blobType;
 
@@ -127,20 +105,22 @@ public class BlobAI : MonoBehaviour
 
     private void OnValidate()
     {
+        _agent ??= GetComponent<NavMeshAgent>();
         _playerBlob ??= FindObjectOfType<PlayerController>().gameObject;
 
-        if (_blobMesh)
-        {
-            if (_faceData != null)
-            {
-                if (_faceMaterial)
-                    CurrentState = _currentState;
-            }
-        }
+        // if (_blobMesh)
+        // {
+        //     if (_faceData != null)
+        //     {
+        //         if (_faceMaterial)
+        //             CurrentState = _currentState;
+        //     }
+        // }
     }
 
     private void Awake()
     {
+        _agent ??= GetComponent<NavMeshAgent>();
         _playerBlob ??= FindObjectOfType<PlayerController>().gameObject;
 
         if (_blobMesh)
@@ -150,7 +130,7 @@ public class BlobAI : MonoBehaviour
                 _faceMaterial = _blobMesh.GetComponent<Renderer>().materials[1];
 
                 if (_faceMaterial)
-                    CurrentState = _currentState;
+                    SetState(_currentState);   // Update the blob's face
             }
         }
     }
@@ -170,7 +150,7 @@ public class BlobAI : MonoBehaviour
             }
         }
 
-        CurrentState = BlobAIState.Idle;
+        SetState(BlobAIState.Idle);
     }
 
     private void Update()
@@ -184,6 +164,44 @@ public class BlobAI : MonoBehaviour
         }
     }
     #endregion
+
+    private void SetState(BlobAIState newState)
+    {
+        if (newState == _currentState) return;  // Prevent redundant state sets
+
+        print($"{gameObject.name} - BlobAIState: {newState}");
+
+        // Set Face
+        if (_faceMaterial & _faceData)
+            UpdateFace(newState);
+
+        _currentState = newState;
+
+        // Events
+        OnBlobStateChange?.Invoke(newState);
+
+        switch (newState)
+        {
+            case BlobAIState.Idle:
+                OnIdle?.Invoke();
+                break;
+            case BlobAIState.Patrol:
+                OnPatrol?.Invoke();
+                break;
+            case BlobAIState.Attack:
+                OnAttack?.Invoke();
+                break;
+            case BlobAIState.Dead:
+                PlayDeathAnimation();
+                OnDeath?.Invoke();
+                break;
+            case BlobAIState.Paused:
+                OnPause?.Invoke();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+        }
+    }
 
     #region Collider Trigger
     private void OnTriggerEnter(Collider other)
@@ -199,11 +217,9 @@ public class BlobAI : MonoBehaviour
 
         LevelManager.instance.AddPoints(_pointValue);
 
-        CurrentState = BlobAIState.Dead;
+        SetState(BlobAIState.Dead);
 
-        PlayDeathAnimation();
-
-        if (BlobManager.Instance)
+        if (BlobManager.instanceExists)
         {
             switch(_blobType)
             {
@@ -213,8 +229,6 @@ public class BlobAI : MonoBehaviour
                 case BlobType.Bad:
                     BlobManager.Instance.OnBadBlobDestroyed(this);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -243,7 +257,8 @@ public class BlobAI : MonoBehaviour
                 // No target found
                 _hasTarget = false;
 
-                CurrentState = BlobAIState.Patrol;
+                SetState(BlobAIState.Patrol);
+
                 if (_hadTarget)
                 {
                     _hadTarget = false;
@@ -257,9 +272,9 @@ public class BlobAI : MonoBehaviour
                 _hadTarget = true;
                 _targetDestination = colliders[0].transform.position;
 
-                CurrentState = BlobAIState.Attack;
-
                 _agent.SetDestination(_targetDestination);
+
+                SetState(BlobAIState.Attack);
 
                 OnGainedTarget?.Invoke();
             }
