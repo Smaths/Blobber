@@ -16,26 +16,12 @@ public class BlobManager : Singleton<BlobManager>
     [Header("Good Blobs")]
     [AssetsOnly, Required]
     [SerializeField] private GameObject _goodBlobPrefab;
-    [HorizontalGroup("Good")]
-    [LabelText("Minimum")]
-    [MinValue(0)]
-    [SerializeField] private int _minimumGoodBlobCount = 30;
-    [HorizontalGroup("Good")]
-    [LabelText("Current")]
-    [SerializeField] private int _currentGoodBlobCount;
     [SceneObjectsOnly]
     [SerializeField] private BlobAI[] _goodBlobs;
 
     [Header("Bad Blobs")]
     [AssetsOnly, Required]
     [SerializeField] private GameObject _badBlobPrefab;
-    [HorizontalGroup("Bad")]
-    [LabelText("Minimum")]
-    [MinValue(0)]
-    [SerializeField] private int _minimumBadBlobCount = 15;
-    [HorizontalGroup("Bad")]
-    [LabelText("Current")]
-    [SerializeField] private int _currentBadBlobCount;
     [SceneObjectsOnly]
     [SerializeField] private BlobAI[] _badBlobs;
 
@@ -48,17 +34,6 @@ public class BlobManager : Singleton<BlobManager>
     private void OnValidate()
     {
         FindBlobs();
-
-        if (_blobs.Count > 0)
-        {
-            _currentGoodBlobCount = _goodBlobs.Length;
-            _currentBadBlobCount = _badBlobs.Length;
-        }
-        else
-        {
-            _currentGoodBlobCount = 0;
-            _currentBadBlobCount = 0;
-        }
     }
 
     protected override void Awake()
@@ -73,14 +48,11 @@ public class BlobManager : Singleton<BlobManager>
     private void FindBlobs()
     {
         _blobs = FindObjectsOfType<BlobAI>().ToList();
-        _blobAgents = new List<NavMeshAgent>();
 
         _goodBlobs = _blobs.Where(b => b.Type == BlobType.Good).ToArray();
         _badBlobs = _blobs.Where(b => b.Type == BlobType.Bad).ToArray();
 
-        _currentGoodBlobCount = _goodBlobs.Length;
-        _currentBadBlobCount = _badBlobs.Length;
-
+        _blobAgents = new List<NavMeshAgent>();
         foreach (BlobAI blob in _blobs)
         {
             _blobAgents.Add(blob.Agent);
@@ -89,25 +61,23 @@ public class BlobManager : Singleton<BlobManager>
 
     public void DisableBlobs()
     {
-        if (_blobs.IsNullOrEmpty() == false)
+        if (_blobs == null || _blobs.Count == 0) return;
+
+        foreach (var blob in _blobs)
         {
-            foreach (var blob in _blobs)
-            {
-                if (blob == null) continue;
-                blob.Agent.speed = 0;   // Stop speed
-            }
+            if (blob == null) continue;
+            blob.Agent.speed = 0;   // Stop speed
         }
     }
 
     public void EnableBlobs()
     {
-        if (_blobs.IsNullOrEmpty() == false)
+        if (_blobs == null || _blobs.Count == 0) return;
+
+        foreach (var blob in _blobs)
         {
-            foreach (var blob in _blobs)
-            {
-                if (blob == null) continue;
-                blob.Agent.speed = blob.Speed;  // Reset speed
-            }
+            if (blob == null) continue;
+            blob.Agent.speed = blob.Speed;  // Reset speed
         }
     }
 

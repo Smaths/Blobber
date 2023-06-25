@@ -3,6 +3,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
+// Script execution order modified.
+
 public class GameTimer : MonoBehaviour
 {
     public static GameTimer instance;
@@ -10,8 +12,9 @@ public class GameTimer : MonoBehaviour
     // Editor fields
     [Header("Time Settings")]
     [LabelText("Countdown Duration")]
-    [SuffixLabel("seconds"), MinValue(1)]
+    [SuffixLabel("second(s)"), MinValue(1)]
     [SerializeField] private float _countdownTimerDuration = 60f;
+    [SuffixLabel("second(s)")]
     [SerializeField, ReadOnly] private float _currentTime; // Current time remaining
     [SerializeField, ReadOnly] private bool _isPaused;
 
