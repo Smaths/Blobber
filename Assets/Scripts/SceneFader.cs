@@ -23,7 +23,7 @@ public class SceneFader : MonoBehaviour
 
     [Header("Scene Names")]
     [SerializeField] private string _startSceneName = "Start";
-    [SerializeField] private string _level1SceneName = "Level_1";
+    [SerializeField] private string _gameSceneName = "Level_1";
 
     [FoldoutGroup("Public Events", false)]
     public UnityEvent OnFadeInStarted;
@@ -64,10 +64,10 @@ public class SceneFader : MonoBehaviour
         instance.FadeTo(_startSceneName);
     }
 
-    public void FadeToLevel1()
+    public void FadeToGame()
     {
         OnFadeToLevel?.Invoke();
-        FadeTo(_level1SceneName);
+        FadeTo(_gameSceneName);
     }
 
     public void FadeToCurrentScene()

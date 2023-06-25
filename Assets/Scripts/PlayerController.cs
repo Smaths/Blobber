@@ -192,12 +192,12 @@ public class PlayerController : MonoBehaviour
     #region Player Input
     public void OnMoveInput(InputAction.CallbackContext context)
     {
+        // // Convert input to world space relative to the camera orientation
+        // Vector3 cameraForward = Vector3.Scale(_playerCamera.transform.forward, new Vector3(1, 1, 0)).normalized;
+        // var moveInput = context.ReadValue<Vector2>();
+        // _moveDirection = (cameraForward * moveInput.y + _playerCamera.transform.right * moveInput.x).normalized;
 
-        // Convert input to world space relative to the camera orientation
-        Vector3 cameraForward = Vector3.Scale(_playerCamera.transform.forward, new Vector3(1, 1, 0)).normalized;
-        var moveInput = context.ReadValue<Vector2>();
-        _moveDirection = (cameraForward * moveInput.y + _playerCamera.transform.right * moveInput.x).normalized;
-
+        _moveDirection = context.ReadValue<Vector2>().normalized;
     }
 
     public void OnBoostInput(InputAction.CallbackContext context)
