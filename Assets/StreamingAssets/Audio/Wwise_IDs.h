@@ -11,12 +11,6 @@
 
 namespace AK
 {
-    namespace EVENTS
-    {
-        static const AkUniqueID BLOB_PLAYER = 3768464496U;
-        static const AkUniqueID COMEON = 2931178234U;
-    } // namespace EVENTS
-
     namespace STATES
     {
         namespace PLAYER_MOVIN
