@@ -79,9 +79,9 @@ namespace UI
 
         private void SubmitScoreToLeaderboard()
         {
-            if (LootLockerTool.instanceExists && LevelManager.instance.Points > 0)
+            if (LootLockerTool.instanceExists && ScoreManager.instance.Points > 0)
             {
-                LootLockerTool.Instance.SubmitScore(LevelManager.instance.Points);
+                LootLockerTool.Instance.SubmitScore(ScoreManager.instance.Points);
             }
         }
     }

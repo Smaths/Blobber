@@ -145,23 +145,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (LevelManager.instance)
+        if (ScoreManager.instance)
         {
-            LevelManager.instance.ScoreChanged.AddListener(ResizeOnScoreDidChange);
-            LevelManager.instance.OnScoreIncrease.AddListener(OnScoreDidIncrease);
-            LevelManager.instance.OnScoreDecrease.AddListener(OnScoreDidDecrease);
-            LevelManager.instance.OnPlayerPointsDepleted.AddListener(OnDidDie);
+            ScoreManager.instance.ScoreChanged.AddListener(ResizeOnScoreDidChange);
+            ScoreManager.instance.OnScoreIncrease.AddListener(OnScoreDidIncrease);
+            ScoreManager.instance.OnScoreDecrease.AddListener(OnScoreDidDecrease);
+            ScoreManager.instance.OnPlayerPointsDepleted.AddListener(OnDidDie);
         }
     }
 
     private void OnDisable()
     {
-        if (LevelManager.instance)
+        if (ScoreManager.instance)
         {
-            LevelManager.instance.ScoreChanged.RemoveListener(ResizeOnScoreDidChange);
-            LevelManager.instance.OnScoreIncrease.RemoveListener(OnScoreDidIncrease);
-            LevelManager.instance.OnScoreDecrease.RemoveListener(OnScoreDidDecrease);
-            LevelManager.instance.OnPlayerPointsDepleted.RemoveListener(OnDidDie);
+            ScoreManager.instance.ScoreChanged.RemoveListener(ResizeOnScoreDidChange);
+            ScoreManager.instance.OnScoreIncrease.RemoveListener(OnScoreDidIncrease);
+            ScoreManager.instance.OnScoreDecrease.RemoveListener(OnScoreDidDecrease);
+            ScoreManager.instance.OnPlayerPointsDepleted.RemoveListener(OnDidDie);
         }
     }
     #endregion
