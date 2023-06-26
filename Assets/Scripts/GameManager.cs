@@ -3,22 +3,25 @@ using UnityEngine;
 // Persistant game object source: https://pavcreations.com/data-persistence-or-how-to-save-load-game-data-in-unity/
 // Script execution order modified.
 
-public class GameManager : MonoBehaviour
+namespace SnarfumIndustries
 {
-    public static GameManager instance;
-
-    #region Lifecycle
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        if (instance == null)
+        public static GameManager instance;
+
+        #region Lifecycle
+        private void Awake()
         {
-            instance = this;
-            DontDestroyOnLoad(this); // Persist the object on scene unload
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(this); // Persist the object on scene unload
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        #endregion
     }
-    #endregion
 }

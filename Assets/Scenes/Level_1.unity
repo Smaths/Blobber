@@ -3543,6 +3543,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 330780885}
+  - component: {fileID: 330780887}
   - component: {fileID: 330780884}
   - component: {fileID: 330780886}
   m_Layer: 0
@@ -3618,6 +3619,56 @@ MonoBehaviour:
   unloadTriggerList: 958ca0ea
   bankNameInternal: 
   valueGuidInternal: 
+--- !u!114 &330780887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330780883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 956e089f9161a4de0a39a7055023b3fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerBlob: {fileID: 1939840379}
+  OnScoreDecreaseEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnScoreIncreaseEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnBoostActivatedEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnGameStartEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnGamePauseEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnGameResumeEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnGameOverEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnDeadEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  OnButtonClickEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  _showDebug: 1
 --- !u!1 &346549375 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6168903172985038333, guid: 173569853ef204fadbee0910228b8a8f,
@@ -6525,6 +6576,12 @@ MonoBehaviour:
   _countdownTimerDuration: 60
   _currentTime: 0
   _isPaused: 0
+  OnPreCountdownStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCountdownStarted:
+    m_PersistentCalls:
+      m_Calls: []
   OnCountdownCompleted:
     m_PersistentCalls:
       m_Calls:
