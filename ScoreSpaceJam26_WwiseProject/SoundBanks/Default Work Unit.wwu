@@ -10,7 +10,9 @@
 						<ObjectRef Name="Boost" ID="{6DC8864A-83AC-49A4-B361-35273A6298F2}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="GameOver" ID="{919F80B7-A6F4-4A23-8F29-1D0E143DBE32}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="OnDeadEvent" ID="{97F1A7BD-9680-4A24-8CE6-B373343AE22C}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Pause" ID="{079A483B-448E-4B8F-8FF8-59AA0A1A0BA2}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="ScoreIncrease" ID="{1AB2CAEF-B7B0-4C27-BFAF-CFC2879A5B8A}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Resume" ID="{AEFE5E12-A5BC-4D8F-A9DE-F709BAF7E980}" WorkUnitID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
