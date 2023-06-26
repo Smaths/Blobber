@@ -7,14 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blob_Bad
+  m_Name: Blob_Horns
   m_Shader: {fileID: 4800000, guid: bee44b4a58655ee4cbff107302a3e131, type: 3}
   m_ValidKeywords:
   - DR_OUTLINE_ON
   - _CELPRIMARYMODE_SINGLE
   - _TEXTUREBLENDINGMODE_MULTIPLY
-  m_InvalidKeywords:
-  - _UNITYSHADOWMODE_NONE
+  - _UNITYSHADOWMODE_COLOR
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -52,7 +52,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Diffuse:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FalloffSampler:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -72,7 +80,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RimLightSampler:
+        m_Texture: {fileID: 2800000, guid: 2227c4b1ddd5ff242a7cf504719bdcbb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonRamp:
+        m_Texture: {fileID: 2800000, guid: 51cb96c42fc4517488ef33ad3a28441c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonShade:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -91,6 +115,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AlphaCutoff: 0.5
+    - _AmbientCol: 0.553
     - _Blend: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0
@@ -99,11 +125,16 @@ Material:
     - _CelPrimaryMode: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _Clip: 0
+    - _Clipped: 1
+    - _ColBright: 0
+    - _ColIntense: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EdgeThickness: 1
     - _EnvironmentReflections: 1
     - _FlatRimEdgeSmoothness: 0.5
     - _FlatRimLightAlign: 0
@@ -124,9 +155,13 @@ Material:
     - _LightFalloffSize: 0
     - _LightmapDirectionPitch: 0
     - _LightmapDirectionYaw: 0
+    - _Lumin: 0
+    - _MaxLight: 1
     - _Metallic: 0
+    - _MinLight: 0
     - _OcclusionStrength: 1
-    - _OutlineDepthOffset: 0
+    - _Offset: 0.59
+    - _OutlineDepthOffset: 0.005
     - _OutlineEnabled: 1
     - _OutlineScale: 1
     - _OutlineWidth: 1
@@ -135,19 +170,28 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimEnabled: 0
+    - _RimOffset: -0.4
+    - _RimPower: 10
+    - _Segmented: 1
     - _SelfShadingSize: 0.5
     - _SelfShadingSizeExtra: 0.6
     - _ShadowEdgeSize: 0.05
     - _ShadowEdgeSizeExtra: 0.05
+    - _ShnIntense: 0.237
+    - _ShnOverlap: 0
+    - _ShnRange: 0.038
+    - _ShnSmooth: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularEnabled: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Steps: 2.4
+    - _StpSmooth: 0.317
     - _Surface: 0
     - _TextureBlendingMode: 0
     - _TextureImpact: 1
-    - _UnityShadowMode: 0
+    - _UnityShadowMode: 2
     - _UnityShadowOcclusion: 0
     - _UnityShadowPower: 0.2
     - _UnityShadowSharpness: 1
@@ -155,22 +199,25 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.68235296, g: 0.29803923, b: 0.29411766, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.2, g: 0.08735633, b: 0.086206906, a: 1}
+    - _Color: {r: 1, g: 0.9502317, b: 0.75, a: 1}
     - _ColorDim: {r: 0, g: 0, b: 0, a: 1}
     - _ColorDimCurve: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _ColorDimExtra: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _ColorDimSteps: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _ColorGradient: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FlatRimColor: {r: 0.7495598, g: 0.75471693, b: 0.245639, a: 1}
-    - _FlatSpecularColor: {r: 0.7495598, g: 0.75471693, b: 0.245639, a: 1}
+    - _FlatRimColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
+    - _FlatSpecularColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _LightmapDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _OutlineColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _ShadowColor: {r: 0.745283, g: 0.64348674, b: 0.35506406, a: 1}
+    - _ShnColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _UnityShadowColor: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
+    - _UnityShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &2395145659384920324
+--- !u!114 &1279713253239269728
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,4 +229,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 4

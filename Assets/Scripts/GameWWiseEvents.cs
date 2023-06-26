@@ -35,11 +35,11 @@ public class GameWWiseEvents : MonoBehaviour
             GameTimer.instance.OnResume.AddListener(OnGameResume);
         }
 
-        if (LevelManager.instance)
+        if (ScoreManager.instance)
         {
-            LevelManager.instance.OnScoreDecrease.AddListener(OnScoreDecrease);
-            LevelManager.instance.OnScoreIncrease.AddListener(OnScoreIncrease);
-            LevelManager.instance.OnPlayerPointsDepleted.AddListener(OnDead);
+            ScoreManager.instance.OnScoreDecrease.AddListener(OnScoreDecrease);
+            ScoreManager.instance.OnScoreIncrease.AddListener(OnScoreIncrease);
+            ScoreManager.instance.OnPlayerPointsDepleted.AddListener(OnDead);
         }
 
         if (_playerBlob)
@@ -58,11 +58,11 @@ public class GameWWiseEvents : MonoBehaviour
             GameTimer.instance.OnResume.RemoveListener(OnGameResume);
         }
 
-        if (LevelManager.instance)
+        if (ScoreManager.instance)
         {
-            LevelManager.instance.OnScoreDecrease.RemoveListener(OnScoreDecrease);
-            LevelManager.instance.OnScoreIncrease.RemoveListener(OnScoreIncrease);
-            LevelManager.instance.OnPlayerPointsDepleted.RemoveListener(OnDead);
+            ScoreManager.instance.OnScoreDecrease.RemoveListener(OnScoreDecrease);
+            ScoreManager.instance.OnScoreIncrease.RemoveListener(OnScoreIncrease);
+            ScoreManager.instance.OnPlayerPointsDepleted.RemoveListener(OnDead);
         }
 
         if (_playerBlob)
@@ -72,6 +72,7 @@ public class GameWWiseEvents : MonoBehaviour
     }
     #endregion
 
+    #region Methods
     private void OnScoreDecrease(int arg0)
     {
         if (_showDebug) print($"{gameObject.name} - On Score Decrease({arg0})");
@@ -119,4 +120,5 @@ public class GameWWiseEvents : MonoBehaviour
         if (_showDebug) print($"{gameObject.name} - On Dead)");
         OnDeadEvent.Post(gameObject);
     }
+    #endregion
 }
