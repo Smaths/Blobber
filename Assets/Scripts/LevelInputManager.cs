@@ -1,10 +1,12 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class LevelInputManager : MonoBehaviour
 {
-    [SerializeField] private LevelManager _levelManager;
+    [FormerlySerializedAs("_levelManager")]
+    [SerializeField] private ScoreManager _scoreManager;
     [SerializeField] private GameTimer _gameTimer;
     [SerializeField] private PlayerController _playerController;
 
@@ -63,7 +65,7 @@ public class LevelInputManager : MonoBehaviour
     // Actions
     private void OnPausePerformed(InputAction.CallbackContext context)
     {
-        if (LevelManager.instance.GameIsOver) return;
+        if (ScoreManager.instance.GameIsOver) return;
         _gameTimer.TogglePause();
     }
 }
