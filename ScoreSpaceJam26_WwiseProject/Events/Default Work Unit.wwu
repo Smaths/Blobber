@@ -95,8 +95,36 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Pause" ID="{079A483B-448E-4B8F-8FF8-59AA0A1A0BA2}"/>
-				<Event Name="Resume" ID="{AEFE5E12-A5BC-4D8F-A9DE-F709BAF7E980}"/>
+				<Event Name="Pause" ID="{079A483B-448E-4B8F-8FF8-59AA0A1A0BA2}">
+					<ChildrenList>
+						<Action Name="" ID="{A79EAD21-C6A1-40AA-B9AA-A796DCCEE06F}" ShortID="661526863">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="7"/>
+								<Property Name="Scope" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Level_1" ID="{8ED6AE6F-E71D-419D-9FC9-6D7A4C90E0C6}" WorkUnitID="{7C798310-2B6F-4CED-BF86-036A80AEF6C2}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Resume" ID="{AEFE5E12-A5BC-4D8F-A9DE-F709BAF7E980}">
+					<ChildrenList>
+						<Action Name="" ID="{7099515A-067C-4784-8551-A1465E0877DB}" ShortID="602165310">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="9"/>
+								<Property Name="Scope" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Level_1" ID="{8ED6AE6F-E71D-419D-9FC9-6D7A4C90E0C6}" WorkUnitID="{7C798310-2B6F-4CED-BF86-036A80AEF6C2}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 				<Event Name="GameOver" ID="{919F80B7-A6F4-4A23-8F29-1D0E143DBE32}">
 					<ChildrenList>
 						<Action Name="" ID="{67EDE527-FC25-4F9E-BB00-A35EFF0D517E}" ShortID="9046206">
