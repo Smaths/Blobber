@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks/Default Work Unit
     guid: 3798821604e7d942a6f708c20b69efd8
     GuidInternal: 
-    m_lastTime: -8585138056899055735
+    m_lastTime: -8585137945875552155
     List:
     - name: Main
       guid: 68bf71e29546904baa21f502f9888299
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit
     guid: 09684f657cf3d640b652a9b2cd92ccd4
     GuidInternal: 
-    m_lastTime: -8585138056899120138
+    m_lastTime: -8585137945875663658
     List:
     - name: Boost
       guid: 4a86c86dac83a449b36135273a6298f2
@@ -130,6 +130,23 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: -1
       minDuration: -1
+    - name: OnDeadEvent
+      guid: bda7f1978096244a8ce6b373343ae22c
+      id: 421083672
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 09684f657cf3d640b652a9b2cd92ccd4
+      - ElementName: OnDeadEvent
+        ObjectType: 3
+        guid: bda7f1978096244a8ce6b373343ae22c
+      Path: Events/Default Work Unit/OnDeadEvent
+      maxAttenuation: 0
+      maxDuration: -1
+      minDuration: -1
     - name: Pause
       guid: 3b489a078e448f4b8ff859aa0a1a0ba2
       id: 3092587493
@@ -144,23 +161,6 @@ MonoBehaviour:
         ObjectType: 3
         guid: 3b489a078e448f4b8ff859aa0a1a0ba2
       Path: Events/Default Work Unit/Pause
-      maxAttenuation: 0
-      maxDuration: -1
-      minDuration: -1
-    - name: PlayerDead
-      guid: bda7f1978096244a8ce6b373343ae22c
-      id: 2356585300
-      PathAndIcons:
-      - ElementName: Events
-        ObjectType: 5
-        guid: 00000000000000000000000000000000
-      - ElementName: Default Work Unit
-        ObjectType: 12
-        guid: 09684f657cf3d640b652a9b2cd92ccd4
-      - ElementName: PlayerDead
-        ObjectType: 3
-        guid: bda7f1978096244a8ce6b373343ae22c
-      Path: Events/Default Work Unit/PlayerDead
       maxAttenuation: 0
       maxDuration: -1
       minDuration: -1
@@ -244,7 +244,7 @@ MonoBehaviour:
     ParentPath: Game Parameters/Default Work Unit
     guid: 6ba4c3cd7894d34a93080e358a665507
     GuidInternal: 
-    m_lastTime: -8585145712149664029
+    m_lastTime: -8585137945875615791
     List: []
   StateWwu:
   - PhysicalPath: States/Default Work Unit.wwu
@@ -258,7 +258,7 @@ MonoBehaviour:
     ParentPath: States/Default Work Unit
     guid: 590333e6d065b14f84013fa473d845c9
     GuidInternal: 
-    m_lastTime: -8585145356477559700
+    m_lastTime: -8585137945875641305
     List:
     - name: Player_Movin
       guid: 936904ca72147944ae443e9754b9c4b2

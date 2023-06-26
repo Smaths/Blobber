@@ -11,6 +11,16 @@
 
 namespace AK
 {
+    namespace EVENTS
+    {
+        static const AkUniqueID BOOST = 2389703494U;
+        static const AkUniqueID GAMEOVER = 4158285989U;
+        static const AkUniqueID ONDEADEVENT = 421083672U;
+        static const AkUniqueID SCOREDECREASE = 3675724169U;
+        static const AkUniqueID SCOREINCREASE = 1486520697U;
+        static const AkUniqueID START = 1281810935U;
+    } // namespace EVENTS
+
     namespace STATES
     {
         namespace PLAYER_MOVIN

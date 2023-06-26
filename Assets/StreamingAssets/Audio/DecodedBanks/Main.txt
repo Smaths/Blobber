@@ -1,8 +1,10 @@
 Event	ID	Name			Wwise Object Path	Notes
 	421083672	OnDeadEvent			\Default Work Unit\OnDeadEvent	
+	953277036	Resume			\Default Work Unit\Resume	
 	1281810935	Start			\Default Work Unit\Start	
 	1486520697	ScoreIncrease			\Default Work Unit\ScoreIncrease	
 	2389703494	Boost			\Default Work Unit\Boost	
+	3092587493	Pause			\Default Work Unit\Pause	
 	3675724169	ScoreDecrease			\Default Work Unit\ScoreDecrease	
 	4158285989	GameOver			\Default Work Unit\GameOver	
 
