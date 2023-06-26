@@ -1,19 +1,49 @@
 Event	ID	Name			Wwise Object Path	Notes
-	2931178234	COMEON			\Default Work Unit\COMEON	
-	3768464496	Blob_Player			\Default Work Unit\Blob_Player	
-
-State Group	ID	Name			Wwise Object Path	Notes
-	3803121560	Player_Movin			\Default Work Unit\Player_Movin	
-
-State	ID	Name	State Group			Notes
-	748895195	None	Player_Movin			
-	2649703675	Moving	Player_Movin			
-	3053284133	Not_Moving	Player_Movin			
-
-Custom State	ID	Name	State Group	Owner		Notes
-	266574094	Not_Moving	Player_Movin	\Actor-Mixer Hierarchy\Default Work Unit\Key		
+	421083672	OnDeadEvent			\Default Work Unit\OnDeadEvent	
+	1281810935	Start			\Default Work Unit\Start	
+	1486520697	ScoreIncrease			\Default Work Unit\ScoreIncrease	
+	2389703494	Boost			\Default Work Unit\Boost	
+	3675724169	ScoreDecrease			\Default Work Unit\ScoreDecrease	
+	4158285989	GameOver			\Default Work Unit\GameOver	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	636929756	Attack_Combo_2-2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Attack_Combo_2-2_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sound_1\Attack_Combo_2-2		87596
-	721416143	Key_Loop	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Key_Pickup_Weapon_Loop_D79FB2B7.wem		\Actor-Mixer Hierarchy\Default Work Unit\Key\Key_Loop		5376096
+	13108613	EXPLDsgn_Explosion Stylized Blob 3	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 3_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 3		572832
+	21634795	ScoreDecrease_Voice 1	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 1_C3F89D73.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 1		126724
+	32904743	Voices-001	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Voices-001_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Positive\Voices-001		166684
+	35623045	Part 3	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Part 3_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\Level_1\Part 3\Part 3		4835652
+	56157022	ScoreDecrease_Voice 5	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 5_D61295A7.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 5		254484
+	78419698	ScoreDecrease_Voice 4	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 4_EAC072FC.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 4		247788
+	107166575	EXPLDsgn_Explosion Stylized Blob 4	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 4_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 4		378996
+	138282282	Eating_Blob 4	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Eating_Blob 4_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Score_Increase\Eating_Blob 4		140896
+	139915654	Eating_Blob 1	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Eating_Blob 1_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Score_Increase\Eating_Blob 1		140896
+	140830429	ScoreDecrease_Voice 8	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 8_1DBB1F1B.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 8		241092
+	153118221	Boost_Voice 1	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 1_4C47FB6F.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 1		320420
+	179892662	Boost_Voice 9	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 9_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 9		398748
+	188365107	Voices-005	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Voices-005_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Positive\Voices-005		121696
+	230237707	Boost_Voice 4	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 4_B5AC3ED9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 4		278748
+	232288348	EXPLDsgn_Explosion Stylized Blob 2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 2_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 2		257568
+	276585805	Voices-004	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Voices-004_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Positive\Voices-004		166684
+	278900591	EXPLDsgn_Explosion Stylized Blob 6	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 6_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 6		256824
+	337173996	Eating_Blob 2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Eating_Blob 2_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Score_Increase\Eating_Blob 2		160096
+	361162962	Boost_Voice 5	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 5_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 5		288096
+	376768318	ScoreDecrease_Voice 3	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 3_CB210701.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 3		178300
+	417322332	Boost_Voice 8	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 8_3F5FBDD0.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 8		362872
+	445303456	Voices-003	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Voices-003_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Positive\Voices-003		135860
+	479430164	Eating_Blob 5	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Eating_Blob 5_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Score_Increase\Eating_Blob 5		134496
+	504600093	Voices-002	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Voices-002_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Positive\Voices-002		153696
+	517804071	EXPLDsgn_Explosion Stylized Blob 8	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 8_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 8		501628
+	535676505	Boost_Voice 3	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 3_B1D4488E.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 3		314968
+	639396132	Part 1	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Part 1_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\Level_1\Part 1\Part 1		3413432
+	647932384	EXPLDsgn_Explosion Stylized Blob 7	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 7_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 7		317820
+	692399328	ScoreDecrease_Voice 2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 2_814C2FCF.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 2		187540
+	695519422	Boost_Voice 6	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 6_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 6		365876
+	755209257	ScoreDecrease_Voice 6	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 6_3F2B1776.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 6		314736
+	760503642	EXPLDsgn_Explosion Stylized Blob 5	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 5_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 5		163388
+	782227835	Boost_Voice 2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 2_152D7BA9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 2		269404
+	783438576	ScoreDecrease_Voice 7	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\ScoreDecrease_Voice 7_BE8936CF.wem		\Actor-Mixer Hierarchy\Default Work Unit\Voices_Negative\ScoreDecrease_Voice 7		255436
+	791441589	EXPLDsgn_Explosion Stylized Blob 1	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\EXPLDsgn_Explosion Stylized Blob 1_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Socre_Decrease_Explosion\EXPLDsgn_Explosion Stylized Blob 1		384736
+	820204719	Boost_Voice 7	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Voice 7_50574776.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Voices\Boost_Voice 7		274076
+	878908986	Part 2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Part 2_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\Level_1\Part 2\Part 2		3413432
+	970101688	Eating_Blob 3	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Eating_Blob 3_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Score_Increase\Eating_Blob 3		162068
+	1070133552	Boost_Test	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Mac\SFX\Boost_Test_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Boost_Sound\Boost_Test		281488
 

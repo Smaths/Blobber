@@ -3,23 +3,125 @@
 	<Events>
 		<WorkUnit Name="Default Work Unit" ID="{654F6809-F37C-40D6-B652-A9B2CD92CCD4}" PersistMode="Standalone">
 			<ChildrenList>
-				<Event Name="COMEON" ID="{5E024679-BD3B-4CAD-952D-1A147C2B344E}">
+				<Event Name="ScoreDecrease" ID="{8BE6D3AE-55DD-4841-AA9E-D7DD4AE38AA5}">
 					<ChildrenList>
-						<Action Name="" ID="{75C33256-7EE0-4046-9DAB-6368EA5120F0}" ShortID="920367033">
+						<Action Name="" ID="{9DD627A3-8A2D-4C4B-BC8D-3CE8DA563D42}" ShortID="554969282">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Attack_Combo_2-2" ID="{AFDA5961-02B8-46F3-842D-4DACB0B41D8B}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+									<ObjectRef Name="Score_Increase" ID="{20149774-8D48-4563-B209-807A458C7C2F}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{FCEB4CBD-6B7D-4AAD-8453-E10A9BD2BF3B}" ShortID="199098202">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Socre_Decrease_Explosion" ID="{3E459B54-3347-4101-BC01-3C3F0F9E9FA6}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{C5D6A604-1CB9-4CE7-A979-0FCFC6D1F251}" ShortID="177916499">
+							<PropertyList>
+								<Property Name="Delay" Type="Real64" Value="0.6"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Voices_Negative" ID="{5FFCDD29-52F8-4927-B447-45E7C1D3BF6E}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Blob_Player" ID="{AC4E05F1-AE83-4206-8A2C-068A114DDA03}">
+				<Event Name="ScoreIncrease" ID="{1AB2CAEF-B7B0-4C27-BFAF-CFC2879A5B8A}">
 					<ChildrenList>
-						<Action Name="" ID="{650B2FB6-3C3F-46FD-9E75-7E0C24F4A608}" ShortID="767362389">
+						<Action Name="" ID="{F997CDE6-9B49-4873-997B-4761B7828405}" ShortID="92162095">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Key_Loop" ID="{02BB5833-4F3B-4D75-8CA6-7DB463C62846}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+									<ObjectRef Name="Score_Increase" ID="{20149774-8D48-4563-B209-807A458C7C2F}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{B5B3825B-685B-4061-A189-D0D6D26A3669}" ShortID="831016242">
+							<PropertyList>
+								<Property Name="Delay" Type="Real64" Value="0.5">
+									<ModifierList>
+										<ModifierInfo>
+											<Modifier Name="" ID="{241D9F9E-CA2C-42E7-8BB6-2EBBC95A0599}">
+												<PropertyList>
+													<Property Name="Enabled" Type="bool" Value="True"/>
+													<Property Name="Min" Type="Real64" Value="-0.2"/>
+												</PropertyList>
+											</Modifier>
+										</ModifierInfo>
+									</ModifierList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Voices_Positive" ID="{F13162DB-DF70-4683-AE1C-ED51C9164008}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Boost" ID="{6DC8864A-83AC-49A4-B361-35273A6298F2}">
+					<ChildrenList>
+						<Action Name="" ID="{E49F9FAE-B9B5-49BA-B331-07CF5EF596DA}" ShortID="987471366">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Boost_Voices" ID="{3B821137-66AD-467F-BE54-ACB505029DE8}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{97F5A6B7-ECF7-47F6-A6A9-B08EABE84FFD}" ShortID="51975930">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Boost_Sound" ID="{E4E8F139-389E-46F8-ADD3-9AC06E92F852}" WorkUnitID="{A5B7E751-D0E6-47B6-A3A3-194078794D88}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Start" ID="{8F77C2D9-DF0A-4045-9F0F-F4E2BBD3EE93}">
+					<ChildrenList>
+						<Action Name="" ID="{63A4C710-B4DA-442D-9AAC-554DCA6A7CF3}" ShortID="34776790">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Level_1" ID="{8ED6AE6F-E71D-419D-9FC9-6D7A4C90E0C6}" WorkUnitID="{7C798310-2B6F-4CED-BF86-036A80AEF6C2}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Pause" ID="{079A483B-448E-4B8F-8FF8-59AA0A1A0BA2}"/>
+				<Event Name="Resume" ID="{AEFE5E12-A5BC-4D8F-A9DE-F709BAF7E980}"/>
+				<Event Name="GameOver" ID="{919F80B7-A6F4-4A23-8F29-1D0E143DBE32}">
+					<ChildrenList>
+						<Action Name="" ID="{67EDE527-FC25-4F9E-BB00-A35EFF0D517E}" ShortID="9046206">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="Scope" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Level_1" ID="{8ED6AE6F-E71D-419D-9FC9-6D7A4C90E0C6}" WorkUnitID="{7C798310-2B6F-4CED-BF86-036A80AEF6C2}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="OnDeadEvent" ID="{97F1A7BD-9680-4A24-8CE6-B373343AE22C}">
+					<ChildrenList>
+						<Action Name="" ID="{F37F5C1D-08DF-4512-B07D-CF20E9D37D0C}" ShortID="251777213">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="Scope" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Level_1" ID="{8ED6AE6F-E71D-419D-9FC9-6D7A4C90E0C6}" WorkUnitID="{7C798310-2B6F-4CED-BF86-036A80AEF6C2}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
