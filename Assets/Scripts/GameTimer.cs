@@ -20,6 +20,10 @@ public class GameTimer : MonoBehaviour
 
     // Events
     [FoldoutGroup("Events", false)]
+    public UnityEvent OnPreCountdownStarted;
+    [FoldoutGroup("Events")]
+    public UnityEvent OnCountdownStarted;
+    [FoldoutGroup("Events")]
     public UnityEvent OnCountdownCompleted;
     [FoldoutGroup("Events")]
     public UnityEvent<string> OnTimeChanged;
@@ -95,8 +99,6 @@ public class GameTimer : MonoBehaviour
     public void TogglePause()
     {
         _isPaused = !_isPaused;
-
-        print($"{gameObject.name} - Paused: {_isPaused}");
 
         if (_isPaused) OnPause?.Invoke();
         else OnResume?.Invoke();

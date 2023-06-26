@@ -55,13 +55,6 @@ public class PlayerController : MonoBehaviour
     [FoldoutGroup("Unity Events")]
     public UnityEvent OnBoost;
 
-    [Title("WWise Events", "For hooking up player events and stuff to WWise", TitleAlignments.Split)]
-    public AK.Wwise.State IsStoppedState;
-    public AK.Wwise.State IsMovingState;
-    public AK.Wwise.Event IsDeadEvent;
-    public AK.Wwise.Event ScoreDecreaseEvent;
-    public AK.Wwise.Event ScoreIncreaseEvent;
-
     // Private fields
     private PlayerState _previousState;
     private CharacterController _controller;
@@ -77,11 +70,9 @@ public class PlayerController : MonoBehaviour
             switch (value)
             {
                 case true:
-                    IsMovingState.SetValue();
                     SetState(PlayerState.Moving);
                     break;
                 case false:
-                    IsStoppedState.SetValue();
                     SetState(PlayerState.Idle);
                     break;
             }
@@ -114,8 +105,6 @@ public class PlayerController : MonoBehaviour
     {
         _controller ??= GetComponentInChildren<CharacterController>();
         _playerCamera ??= Camera.main;
-
-        IsStoppedState.SetValue();
 
         _cachedColor = _blobRenderer.material.color;
         _nameLabel.text = LootLockerTool.Instance.PlayerName;
@@ -281,7 +270,6 @@ public class PlayerController : MonoBehaviour
 
         // Events
         OnScoreIncrease?.Invoke();
-        ScoreIncreaseEvent.Post(gameObject);
     }
 
     public void OnScoreDidDecrease(int amount)
@@ -294,13 +282,11 @@ public class PlayerController : MonoBehaviour
 
         // Events
         OnScoreDecrease?.Invoke();
-        ScoreDecreaseEvent.Post(gameObject);
     }
 
     public void OnDidDie()
     {
         OnDeath?.Invoke();
-        IsDeadEvent.Post(gameObject);
     }
 
     // Resize on score change
