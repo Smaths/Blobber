@@ -102,6 +102,8 @@ public class BlobAI : MonoBehaviour
     [FoldoutGroup("Events")]
     public UnityEvent OnAttack;
     [FoldoutGroup("Events")]
+    public UnityEvent OnTransform;
+    [FoldoutGroup("Events")]
     public UnityEvent OnPause;
     [FoldoutGroup("Events")]
     public UnityEvent OnDeath;
@@ -426,6 +428,8 @@ public class BlobAI : MonoBehaviour
     private void OnTransformationDidStart()
     {
         _isTransforming = true;
+
+        OnTransform?.Invoke();
 
         Disable();
     }

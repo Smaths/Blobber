@@ -24,6 +24,7 @@ public class SceneFader : MonoBehaviour
     [Header("Scene Names")]
     [SerializeField] private string _startSceneName = "Start";
     [SerializeField] private string _gameSceneName = "Level_1";
+    [SerializeField] private string _tutorialSceneName = "Tutorial";
 
     [FoldoutGroup("Public Events", false)]
     public UnityEvent OnFadeInStarted;
@@ -68,6 +69,11 @@ public class SceneFader : MonoBehaviour
     {
         OnFadeToLevel?.Invoke();
         FadeTo(_gameSceneName);
+    }
+
+    public void FadeToTutorial()
+    {
+        FadeTo(_tutorialSceneName);
     }
 
     public void FadeToCurrentScene()

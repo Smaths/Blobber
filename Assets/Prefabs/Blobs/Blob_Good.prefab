@@ -338,6 +338,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Horns
       objectReference: {fileID: 0}
+    - target: {fileID: 288024696299012842, guid: 55602126ae3364ed2901f2466ba46877,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 627289267751688272, guid: 55602126ae3364ed2901f2466ba46877,
         type: 3}
       propertyPath: m_RootOrder
