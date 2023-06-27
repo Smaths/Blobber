@@ -243,7 +243,6 @@ public class BlobAI : MonoBehaviour
 
         // Invert points if blob is transformed
         int points = _isTransformed ? -_pointValue : _pointValue;
-        // ScoreManager.instance.AddPoints(points);
         ScoreManager.instance.AddPoints(points, transform.position);
 
         if (BlobManager.instanceExists)

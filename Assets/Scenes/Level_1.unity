@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028393, g: 0.22571395, b: 0.30692184, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465788, g: 0.49641448, b: 0.57481605, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1298,7 +1298,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -1313,14 +1313,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 141201943}
-  m_LocalRotation: {x: 0.4118363, y: -0.20341258, z: 0.094852835, w: 0.88318586}
+  m_LocalRotation: {x: 0.40624675, y: -0.24981226, z: 0.11648936, w: 0.871199}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 50, y: -25.94, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: -32, z: 0}
 --- !u!114 &141201946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2882,7 +2882,6 @@ GameObject:
   m_Component:
   - component: {fileID: 330780885}
   - component: {fileID: 330780887}
-  - component: {fileID: 330780884}
   - component: {fileID: 330780886}
   m_Layer: 0
   m_Name: WwiseGlobal
@@ -2891,32 +2890,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &330780884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330780883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6687f290cd1049dd9490b8faf50a29f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InitializationSettings: {fileID: 11400000, guid: 2d8a220b489f24dbaaaa03912db403d5,
-    type: 2}
-  basePath: 
-  language: 
-  defaultPoolSize: 0
-  lowerPoolSize: 0
-  streamingPoolSize: 0
-  memoryCutoffThreshold: 0
-  monitorPoolSize: 0
-  monitorQueuePoolSize: 0
-  callbackManagerBufferSize: 0
-  spatialAudioPoolSize: 0
-  maxSoundPropagationDepth: 0
-  engineLogging: 0
 --- !u!4 &330780885
 Transform:
   m_ObjectHideFlags: 0
@@ -4818,6 +4791,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1939840375}
         m_TargetAssemblyTypeName: UnityEngine.InputSystem.PlayerInput, Unity.InputSystem
         m_MethodName: DeactivateInput
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 645142069}
+        m_TargetAssemblyTypeName: GameTimer, Assembly-CSharp
+        m_MethodName: Stop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8157,6 +8142,64 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1025617868}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1033294425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1033294427}
+  - component: {fileID: 1033294426}
+  m_Layer: 0
+  m_Name: WwiseGlobal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1033294426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033294425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6687f290cd1049dd9490b8faf50a29f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitializationSettings: {fileID: 11400000, guid: 2d8a220b489f24dbaaaa03912db403d5,
+    type: 2}
+  basePath: 
+  language: 
+  defaultPoolSize: 0
+  lowerPoolSize: 0
+  streamingPoolSize: 0
+  memoryCutoffThreshold: 0
+  monitorPoolSize: 0
+  monitorQueuePoolSize: 0
+  callbackManagerBufferSize: 0
+  spatialAudioPoolSize: 0
+  maxSoundPropagationDepth: 0
+  engineLogging: 0
+--- !u!4 &1033294427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033294425}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 34
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1034699789
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18805,6 +18848,41 @@ PrefabInstance:
       propertyPath: _playerController
       value: 
       objectReference: {fileID: 1939840379}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1939840379}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Boost
+      objectReference: {fileID: 0}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: OnBoostTapped.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2060359422647813579, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_AnchorMax.y

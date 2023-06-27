@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UI
 {
@@ -11,6 +12,8 @@ namespace UI
         [SerializeField] private int _currentBoostCount;
         [SerializeField] private UI_Boost[] _boostIndicators;
         private UI_Boost _activeIcon;
+
+        public UnityEvent OnBoostTapped;
 
         #region Lifecycle
         private void OnValidate()
@@ -32,6 +35,7 @@ namespace UI
             if (_playerController)
             {
                 _currentBoostCount = _playerController.BoostCount;
+                UpdateBoostIndicators();
             }
         }
 
@@ -40,7 +44,7 @@ namespace UI
             if (_playerController.BoostCount < 3)
             {
                 _activeIcon = _boostIndicators[_currentBoostCount];
-                _activeIcon.Indicator.fillAmount = _playerController.BoostProgress;
+                _activeIcon.SetFillingState(_playerController.BoostProgress);
             }
         }
         #endregion
@@ -52,11 +56,16 @@ namespace UI
 
             UpdateBoostIndicators();
         }
+
+        public void Boost_Tapped()
+        {
+            OnBoostTapped?.Invoke();
+        }
         #endregion
 
-        // TODO: Super hack, replace with cleaner logic.
         private void UpdateBoostIndicators()
         {
+            // TODO: Super hack, replace with cleaner logic.
             switch (_currentBoostCount)
             {
                 case 0:

@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ namespace UI
 
     public class UI_Boost : MonoBehaviour
     {
+        [SerializeField] private BoostIndicatorState _state;
         [SerializeField] private Color _unfilledColor;
         [SerializeField] private Color _fillingColor;
         [SerializeField] private Color _filledColor;
@@ -24,16 +26,17 @@ namespace UI
         private void OnValidate()
         {
             _image ??= GetComponentInChildren<Image>();
+
+            SetState(_state, 50f);
         }
 
         private void Awake()
         {
             _image ??= GetComponentInChildren<Image>();
-            _image ??= GetComponentInChildren<Image>();
         }
         #endregion
 
-        private void SetState(BoostIndicatorState newState)
+        private void SetState(BoostIndicatorState newState, float progress)
         {
             switch (newState)
             {
@@ -41,7 +44,7 @@ namespace UI
                     SetUnfilledState();
                     break;
                 case BoostIndicatorState.Filling:
-                    SetFillingState(0f);
+                    SetFillingState(progress);
                     break;
                 case BoostIndicatorState.Filled:
                     SetFilledState();
@@ -49,6 +52,8 @@ namespace UI
                 default:
                     throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
             }
+
+            _state = newState;
         }
 
         public void SetUnfilledState()
@@ -62,6 +67,7 @@ namespace UI
         {
             _image ??= GetComponentInChildren<Image>();
             _image.color = _fillingColor;
+            _image.fillAmount = progress;
         }
 
         public void SetFilledState()
@@ -69,6 +75,8 @@ namespace UI
             _image ??= GetComponentInChildren<Image>();
             _image.color = _filledColor;
             _image.fillAmount = 100f;
+
+            _image.transform.DOPunchScale(Vector3.one * 0.8f, 0.5f, 3, 0.5f);
         }
     }
 }

@@ -62,12 +62,13 @@
 				<Property Name="Music Transition List\{8ED6AE6F-E71D-419D-9FC9-6D7A4C90E0C6}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="ObjectTabPanel\x64_CurrentObjects_{031E1E2C-DC25-4332-80C3-FFCC371AC803}" Type="string" Value="ewBFADIANwAxAEIARgA2ADgALQA0ADYAOQA1AC0ANABCADkAMAAtAEEAQQAyADEALQBGADUAMAAyAEYAOQA4ADgAOAAyADkAOQB9AAAAAAE="/>
 				<Property Name="ObjectTabPanel\x64_CurrentObjects_{4ECCC340-9541-48D9-9E85-16DDFF8235CB}" Type="string" Value="ewA1AEUAMAAyADQANgA3ADkALQBCAEQAMwBCAC0ANABDAEEARAAtADkANQAyAEQALQAxAEEAMQA0ADcAQwAyAEIAMwA0ADQARQB9AAAAAQF7AEMAQQAwADQANgA5ADkAMwAtADEANAA3ADIALQA0ADQANwA5AC0AQQBFADQANAAtADMARQA5ADcANQA0AEIAOQBDADQAQgAyAH0AAAAAAQ=="/>
+				<Property Name="ObjectTabPanel\x64_CurrentObjects_{D5805147-985E-4C5B-B817-369AF1B7184D}" Type="string" Value="ewBFADIANwAxAEIARgA2ADgALQA0ADYAOQA1AC0ANABCADkAMAAtAEEAQQAyADEALQBGADUAMAAyAEYAOQA4ADgAOAAyADkAOQB9AAAAAAE="/>
 				<Property Name="OverrideCacheFolder\Active" Type="bool" Value="False"/>
 				<Property Name="OverrideCacheFolder\Path" Type="string" Value=".cache"/>
 				<Property Name="OverrideOriginalFolder\Active" Type="bool" Value="False"/>
 				<Property Name="OverrideOriginalFolder\Path" Type="string" Value="Originals"/>
 				<Property Name="ProjectExplorer\AudioSelectionChannel1\ProjectExplorer2LastScrollState" Type="int32" Value="0"/>
-				<Property Name="ProjectExplorer\AudioSelectionChannel1\x64_ProjectExplorer2LastExpandedState" Type="string" Value="iC8JJ1oiVBFnJcijTz1EguraiCN1l8ZGou3FIio5d1a6VHijlGCVTZ0bSUHqqHbd+LunXsBkUEqIIaB+i+IdaFHnt6Xm0LZHo6MZQHh5TYiX4DB4f0E3QKPyIyOluMOA1evhd3HmYE+42LlxnLl+D2bT/kkwtahCmTuSSHOqtwc="/>
+				<Property Name="ProjectExplorer\AudioSelectionChannel1\x64_ProjectExplorer2LastExpandedState" Type="string" Value="iC8JJ1oiVBFnJcijTz1EguraiCN1l8ZGou3FIio5d1a6VHijlGCVTZ0bSUHqqHbd+LunXsBkUEqIIaB+i+IdaFHnt6Xm0LZHo6MZQHh5TYhm0/5JMLWoQpk7kkhzqrcH"/>
 				<Property Name="ProjectExplorer\AudioSelectionChannel2\ProjectExplorer2LastScrollState" Type="int32" Value="0"/>
 				<Property Name="ProjectExplorer\AudioSelectionChannel2\x64_ProjectExplorer2LastExpandedState" Type="string" Value="iC8JJ1oiVBFnJcijTz1EguraiCN1l8ZGou3FIio5d1b4u6dewGRQSoghoH6L4h1oUee3pebQtkejoxlAeHlNiGbT/kkwtahCmTuSSHOqtwc="/>
 				<Property Name="ProjectExplorer\EventsSelectionChannel1\ProjectExplorer2LastScrollState" Type="int32" Value="0"/>

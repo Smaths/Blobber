@@ -265,6 +265,9 @@ MonoBehaviour:
   - {fileID: 3641553209905753301}
   - {fileID: 1675738276383846135}
   - {fileID: 412202026612363497}
+  OnBoostTapped:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3627253458968216643
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,6 +279,7 @@ GameObject:
   - component: {fileID: 7999930491832331205}
   - component: {fileID: 2275848163698727413}
   - component: {fileID: 832647173268656070}
+  - component: {fileID: 4988868922989345199}
   m_Layer: 0
   m_Name: BoostLabel
   m_TagString: Untagged
@@ -341,8 +345,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290690750
+  m_fontColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -401,6 +405,62 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4988868922989345199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3627253458968216643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 0.745283, g: 0.745283, b: 0.745283, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 832647173268656070}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 670480491443813105}
+        m_TargetAssemblyTypeName: UI.UI_BoostContainer, Assembly-CSharp
+        m_MethodName: Boost_Tapped
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3911060063269838358
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,7 +702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4862745, g: 0.4862745, b: 0.4862745, a: 1}
+  m_Color: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -671,6 +731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddfe9d78953a436c861fc80ebaf442d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _state: 2
   _unfilledColor: {r: 0.4862745, g: 0.4862745, b: 0.4862745, a: 1}
   _fillingColor: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
   _filledColor: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
@@ -915,7 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4862745, g: 0.4862745, b: 0.4862745, a: 1}
+  m_Color: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -944,6 +1005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddfe9d78953a436c861fc80ebaf442d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _state: 2
   _unfilledColor: {r: 0.4862745, g: 0.4862745, b: 0.4862745, a: 1}
   _fillingColor: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
   _filledColor: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
@@ -1007,7 +1069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4862745, g: 0.4862745, b: 0.4862745, a: 1}
+  m_Color: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1036,6 +1098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddfe9d78953a436c861fc80ebaf442d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _state: 2
   _unfilledColor: {r: 0.4862745, g: 0.4862745, b: 0.4862745, a: 1}
   _fillingColor: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
   _filledColor: {r: 0.9025, g: 0.911466, b: 0.95, a: 1}
