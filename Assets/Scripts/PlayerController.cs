@@ -5,8 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Utility;
-
 
 public enum PlayerState { Idle, Moving, Boosting, Attacked, Dead }
 
@@ -29,8 +29,14 @@ public class PlayerController : MonoBehaviour
 
     [Header("Boost")]
     [SerializeField] private  float boostForce = 10f;          // The force to apply during the boost
+    [SuffixLabel("second(s)"), MinValue(0)]
     [SerializeField] private  float boostDuration = 1f;        // The duration of the boost
     private float _boostTimer;
+    [SuffixLabel("second(s)"), MinValue(0)]
+    [SerializeField] private float _boostChargeTime = 10f;
+    private float _boostChargeTimeTrigger;
+    [SerializeField] private int _currentBoostCount;
+    [SerializeField] private int _maxBoostCount = 3;
 
     [Header("Info")]
     [SerializeField] [DisplayAsString] private bool _isMoving;
@@ -52,8 +58,11 @@ public class PlayerController : MonoBehaviour
     public UnityEvent OnDeath;
     [FoldoutGroup("Unity Events")]
     public UnityEvent OnBirth;
+    [FormerlySerializedAs("OnBoost")]
     [FoldoutGroup("Unity Events")]
-    public UnityEvent OnBoost;
+    public UnityEvent OnBoostActivated;
+    [FoldoutGroup("Unity Events")]
+    public UnityEvent OnBoostChargeIncreased;
 
     // Private fields
     private PlayerState _previousState;
@@ -61,6 +70,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveDirection;
     private Color _cachedColor;
 
+    #region Public Properties
     public bool IsMoving
     {
         get => _isMoving;
@@ -79,11 +89,21 @@ public class PlayerController : MonoBehaviour
             _isMoving = value;
         }
     }
-
-    public PlayerState State
+    
+    public float BoostChargeTimeRemaining => Mathf.Max(_boostChargeTimeTrigger - Time.time, 0);   // NOTE: `Mathf.Max` keeps values above 0.
+    public float BoostProgress
     {
-        get => _playerState;
+        get
+        {
+            if (BoostChargeTimeRemaining <= 0) return 1.0f;    // No time remaining, progress complete.
+            return 1 - BoostChargeTimeRemaining / _boostChargeTime;
+        }
     }
+
+    public PlayerState State => _playerState;
+
+    public int BoostCount => _currentBoostCount;
+    #endregion
 
     #region Lifecycle
     private void OnValidate()
@@ -112,6 +132,8 @@ public class PlayerController : MonoBehaviour
         _isBoosting = false;
         _boostTimer = 0f;
 
+        _boostChargeTimeTrigger = Time.time + _boostChargeTime;
+
         OnBirth?.Invoke();
     }
 
@@ -122,8 +144,8 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
 
         if (_isBoosting) BoostPlayer();
+        else CheckBoost();
 
-        // Check movement for events
         IsMoving = _moveDirection != Vector2.zero;
     }
 
@@ -212,14 +234,35 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Boost
+    private void CheckBoost()
+    {
+        if (Time.time >= _boostChargeTimeTrigger)
+        {
+            // Timer is done
+
+            if (_currentBoostCount < _maxBoostCount)
+                _currentBoostCount++;
+
+            _boostChargeTimeTrigger = Time.time + _boostChargeTime;
+
+            OnBoostChargeIncreased?.Invoke();
+        }
+
+        // Timer is not done.
+    }
+
     private void StartBoost()
     {
+        if (_isBoosting) return;
+        if (_currentBoostCount == 0) return;
+
         _isBoosting = true;
         _boostTimer = 0f;
+        _currentBoostCount--;
 
         SetState(PlayerState.Boosting);
 
-        OnBoost?.Invoke();
+        OnBoostActivated?.Invoke();
     }
 
     private void EndBoost()

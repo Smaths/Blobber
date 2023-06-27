@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -42,6 +43,8 @@ public class BlobManager : Singleton<BlobManager>
     #region Blobs
     public void DisableBlobs()
     {
+        FindBlobs();
+
         foreach (BlobAI blob in _blobs)
             blob.Disable();
     }
@@ -60,20 +63,25 @@ public class BlobManager : Singleton<BlobManager>
     #endregion
 
     #region Blob Event Handlers
-    public void OnGoodBlobDestroyed(BlobAI blob)
+    public void OnBlobDestroy(BlobAI blob)
     {
-        if (_showDebug) print($"{gameObject.name} - Good Blob Destroyed {blob.name}");
+        if (_showDebug) print($"{gameObject.name} - ({blob.Type}) {blob.name} destroyed");
         _blobs.Remove(blob);
 
-        Instantiate(_goodBlobPrefab, RandomSpawnPointPosition(), quaternion.identity);
-    }
+        GameObject newBlob;
+        switch (blob.Type)
+        {
+            case BlobType.Good:
+                newBlob = Instantiate(_goodBlobPrefab, RandomSpawnPointPosition(), quaternion.identity);
+                break;
+            case BlobType.Bad:
+                newBlob = Instantiate(_badBlobPrefab, RandomSpawnPointPosition(), quaternion.identity);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
 
-    public void OnBadBlobDestroyed(BlobAI blob)
-    {
-        if (_showDebug)print($"{gameObject.name} - Bad Blob Destroyed {blob.name}");
-        _blobs.Remove(blob);
-
-        Instantiate(_badBlobPrefab, RandomSpawnPointPosition(), quaternion.identity);
+        _blobs.Add(newBlob.GetComponent<BlobAI>());
     }
     #endregion
 

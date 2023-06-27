@@ -106,6 +106,8 @@ public class BlobAI : MonoBehaviour
     [FoldoutGroup("Events")]
     public UnityEvent OnDeath;
 
+    public BlobType Type => _blobType;
+
     #region Lifecycle
     private void OnDrawGizmosSelected()
     {
@@ -243,17 +245,7 @@ public class BlobAI : MonoBehaviour
         ScoreManager.instance.AddPoints(points, transform.position);
 
         if (BlobManager.instanceExists)
-        {
-            switch(_blobType)
-            {
-                case BlobType.Good:
-                    BlobManager.Instance.OnGoodBlobDestroyed(this);
-                    break;
-                case BlobType.Bad:
-                    BlobManager.Instance.OnBadBlobDestroyed(this);
-                    break;
-            }
-        }
+            BlobManager.Instance.OnBlobDestroy(this);
 
         SetState(BlobAIState.Dead);
     }
