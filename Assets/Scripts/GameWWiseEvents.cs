@@ -44,7 +44,7 @@ public class GameWWiseEvents : MonoBehaviour
 
         if (_playerBlob)
         {
-            _playerBlob.OnBoost.AddListener(OnPlayerBoostActivated);
+            _playerBlob.OnBoostActivated.AddListener(OnPlayerBoostActivated);
         }
     }
 
@@ -67,7 +67,7 @@ public class GameWWiseEvents : MonoBehaviour
 
         if (_playerBlob)
         {
-            _playerBlob.OnBoost.RemoveListener(OnPlayerBoostActivated);
+            _playerBlob.OnBoostActivated.RemoveListener(OnPlayerBoostActivated);
         }
     }
     #endregion
