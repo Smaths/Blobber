@@ -509,29 +509,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00a320a2f3c849c5a7f5f58b6597215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _blobMesh: {fileID: 2221890846040173535}
+  _playerBlob: {fileID: 2221890846040173535}
   _blobType: 1
-  _pointValue: -10
   _currentState: 0
+  _pointValue: -10
   _speed: 2.25
+  _untransformedDuration: {x: 5, y: 6}
+  _transformedDuration: {x: 3, y: 4}
+  _transformationTime: 1.5
   _searchRate: 0.2
   _sightRange: 4
   _sightMask:
     serializedVersion: 2
     m_Bits: 128
-  _patrolRange: 4
-  _patrolDistanceThreshold: 0.25
-  _patrolWaitTime: {x: 2, y: 4}
+  _wanderRange: 4
+  _wanderDistanceThreshold: 0.25
+  _wanderWaitTime: {x: 2, y: 4}
   _groundMask:
     serializedVersion: 2
     m_Bits: 256
   _avoidMask:
     serializedVersion: 2
     m_Bits: 576
-  _playerBlob: {fileID: 2221890846040173535}
+  _blobMesh: {fileID: 2221890846040173535}
   _hat: {fileID: 6605536760363992709}
+  _goodBlobColor: {r: 0.749, g: 0.753, b: 0.247, a: 1}
+  _badBlobColor: {r: 0.682, g: 0.298, b: 0.294, a: 1}
   _faceData: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
-  _faceMaterial: {fileID: 2100000, guid: c12dba4db4b10a34ea85b03c5b9263e6, type: 2}
+  _isDestroying: 0
+  _hasTarget: 0
+  _targetDestination: {x: 0, y: 0, z: 0}
+  _isTransforming: 0
+  _isTransformed: 0
   _showDebug: 0
   OnBlobStateChange:
     m_PersistentCalls:
@@ -545,10 +554,13 @@ MonoBehaviour:
   OnIdle:
     m_PersistentCalls:
       m_Calls: []
-  OnPatrol:
+  OnWander:
     m_PersistentCalls:
       m_Calls: []
   OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTransform:
     m_PersistentCalls:
       m_Calls: []
   OnPause:
@@ -561,42 +573,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DORestart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DORestart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DG.Tweening.DOTweenAnimation, Assembly-CSharp-firstpass
-        m_MethodName: DORestart
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -637,8 +613,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.3
-  m_Height: 0.5
+  m_Radius: 0.27425766
+  m_Height: 0.6
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &5489901189213381756

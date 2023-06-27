@@ -5154,7 +5154,7 @@ MonoBehaviour:
   boostForce: 8
   boostDuration: 0.3
   _boostChargeTime: 10
-  _currentBoostCount: 0
+  _currentBoostCount: 3
   _maxBoostCount: 3
   _isMoving: 0
   _isBoosting: 0

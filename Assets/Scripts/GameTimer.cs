@@ -96,6 +96,11 @@ public class GameTimer : MonoBehaviour
     }
     #endregion
 
+    public void Stop()
+    {
+        _isPaused = true;
+    }
+
     public void TogglePause()
     {
         _isPaused = !_isPaused;

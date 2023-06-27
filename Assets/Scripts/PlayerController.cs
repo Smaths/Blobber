@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
 {
     // Editor fields
     [BoxGroup("Dependencies")]
-    [SerializeField] private Renderer _blobRenderer;
-    [BoxGroup("Dependencies")]
     [SerializeField] private Camera _playerCamera;
     [SerializeField] private TMP_Text _nameLabel;
 
@@ -67,6 +65,7 @@ public class PlayerController : MonoBehaviour
     // Private fields
     private PlayerState _previousState;
     private CharacterController _controller;
+    private Renderer _blobRenderer;
     private Vector2 _moveDirection;
     private Color _cachedColor;
 
@@ -89,7 +88,6 @@ public class PlayerController : MonoBehaviour
             _isMoving = value;
         }
     }
-    
     public float BoostChargeTimeRemaining => Mathf.Max(_boostChargeTimeTrigger - Time.time, 0);   // NOTE: `Mathf.Max` keeps values above 0.
     public float BoostProgress
     {
@@ -99,9 +97,7 @@ public class PlayerController : MonoBehaviour
             return 1 - BoostChargeTimeRemaining / _boostChargeTime;
         }
     }
-
     public PlayerState State => _playerState;
-
     public int BoostCount => _currentBoostCount;
     #endregion
 
@@ -251,10 +247,19 @@ public class PlayerController : MonoBehaviour
         // Timer is not done.
     }
 
+    public void Boost()
+    {
+        StartBoost();
+    }
+
     private void StartBoost()
     {
         if (_isBoosting) return;
         if (_currentBoostCount == 0) return;
+
+        // Restart boost cooldown from 0 when boosting from max count.
+        if (_currentBoostCount == _maxBoostCount)
+            _boostChargeTimeTrigger = Time.time + _boostChargeTime;
 
         _isBoosting = true;
         _boostTimer = 0f;
