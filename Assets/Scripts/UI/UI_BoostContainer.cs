@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ namespace UI
     {
         [BoxGroup("Dependencies")]
         [SerializeField] private PlayerController _playerController;
+
         [SerializeField] private int _currentBoostCount;
         [SerializeField] private UI_Boost[] _boostIndicators;
         private UI_Boost _activeIcon;
@@ -16,15 +16,13 @@ namespace UI
         private void OnValidate()
         {
             _boostIndicators = GetComponentsInChildren<UI_Boost>();
-            _playerController ??= FindObjectOfType<PlayerController>();
 
             UpdateBoostIndicators();
         }
 
-        private void Awake()
+        private void OnEnable()
         {
-            _boostIndicators = GetComponentsInChildren<UI_Boost>();
-            _playerController ??= FindObjectOfType<PlayerController>();
+            _boostIndicators ??= GetComponentsInChildren<UI_Boost>();
 
             UpdateBoostIndicators();
         }
@@ -52,41 +50,35 @@ namespace UI
         {
             _currentBoostCount += count;
 
-            print($"{gameObject.name} - Boost Event, current boost: {_currentBoostCount}");
-            
             UpdateBoostIndicators();
         }
         #endregion
 
-        // TODO: Fix, super hack.
+        // TODO: Super hack, replace with cleaner logic.
         private void UpdateBoostIndicators()
         {
-            if (_currentBoostCount == 0)
+            switch (_currentBoostCount)
             {
-                _boostIndicators[0].SetUnfilledState();
-                _boostIndicators[1].SetUnfilledState();
-                _boostIndicators[2].SetUnfilledState();
-            }
-
-            if (_currentBoostCount == 1)
-            {
-                _boostIndicators[0].SetFilledState();
-                _boostIndicators[1].SetUnfilledState();
-                _boostIndicators[2].SetUnfilledState();
-            }
-
-            if (_currentBoostCount == 2)
-            {
-                _boostIndicators[0].SetFilledState();
-                _boostIndicators[1].SetFilledState();
-                _boostIndicators[2].SetUnfilledState();
-            }
-
-            if (_currentBoostCount == 3)
-            {
-                _boostIndicators[0].SetFilledState();
-                _boostIndicators[1].SetFilledState();
-                _boostIndicators[2].SetFilledState();
+                case 0:
+                    _boostIndicators[0].SetUnfilledState();
+                    _boostIndicators[1].SetUnfilledState();
+                    _boostIndicators[2].SetUnfilledState();
+                    break;
+                case 1:
+                    _boostIndicators[0].SetFilledState();
+                    _boostIndicators[1].SetUnfilledState();
+                    _boostIndicators[2].SetUnfilledState();
+                    break;
+                case 2:
+                    _boostIndicators[0].SetFilledState();
+                    _boostIndicators[1].SetFilledState();
+                    _boostIndicators[2].SetUnfilledState();
+                    break;
+                case 3:
+                    _boostIndicators[0].SetFilledState();
+                    _boostIndicators[1].SetFilledState();
+                    _boostIndicators[2].SetFilledState();
+                    break;
             }
         }
     }

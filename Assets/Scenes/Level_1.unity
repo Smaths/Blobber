@@ -7845,7 +7845,7 @@ Transform:
   - {fileID: 574732249}
   - {fileID: 1646274707}
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1022085337
 PrefabInstance:
@@ -11329,7 +11329,7 @@ Transform:
   - {fileID: 29316504}
   - {fileID: 718645259}
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1255619236
 MonoBehaviour:
@@ -18714,6 +18714,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -75
       objectReference: {fileID: 0}
+    - target: {fileID: 670480491443813105, guid: 8bb484e20577a476f8a55deb3641b505,
+        type: 3}
+      propertyPath: _playerController
+      value: 
+      objectReference: {fileID: 1939840379}
     - target: {fileID: 2060359422647813579, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_AnchorMax.y
