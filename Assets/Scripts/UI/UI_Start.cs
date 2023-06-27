@@ -22,6 +22,7 @@ namespace UI
         [Header("Events")]
         public UnityEvent OnPlayerNameTapped;
         public UnityEvent OnPlayTapped;
+        public UnityEvent OnTutorialTapped;
         public UnityEvent OnSettingsTapped;
         public UnityEvent OnLeaderboardTapped;
         public UnityEvent OnCreditsTapped;
@@ -92,6 +93,13 @@ namespace UI
             }
 
             OnPlayTapped?.Invoke();
+        }
+
+        public void Tutorial_Tapped()
+        {
+            if (_showDebug) print($"{gameObject.name} - Tutorial Tapped");
+
+            OnTutorialTapped?.Invoke();
         }
 
         public void Settings_Tapped()
