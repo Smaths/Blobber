@@ -10,24 +10,19 @@ namespace UI
         [SerializeField] private PlayerController _playerController;
 
         [SerializeField] private int _currentBoostCount;
-        [SerializeField] private UI_Boost[] _boostIndicators;
-        private UI_Boost _activeIcon;
+        [SerializeField] private UI_Boost[] _indicators;
+        private UI_Boost _activeIndicator;
 
         public UnityEvent OnBoostTapped;
 
         #region Lifecycle
         private void OnValidate()
         {
-            _boostIndicators = GetComponentsInChildren<UI_Boost>();
+            if (Application.isEditor == false) return;
 
-            UpdateBoostIndicators();
-        }
+            _indicators ??= GetComponentsInChildren<UI_Boost>();
 
-        private void OnEnable()
-        {
-            _boostIndicators ??= GetComponentsInChildren<UI_Boost>();
-
-            UpdateBoostIndicators();
+            SetBoostIndicators(_currentBoostCount);
         }
 
         private void Start()
@@ -35,17 +30,18 @@ namespace UI
             if (_playerController)
             {
                 _currentBoostCount = _playerController.BoostCount;
-                UpdateBoostIndicators();
+                SetBoostIndicators(_playerController.BoostCount);
             }
         }
 
         private void Update()
         {
-            if (_playerController.BoostCount < 3)
-            {
-                _activeIcon = _boostIndicators[_currentBoostCount];
-                _activeIcon.SetFillingState(_playerController.BoostProgress);
-            }
+            if (_playerController == null) return;
+            // Don't do any work if player boost charges are at max count.
+            if (_playerController.BoostCount >= _playerController.MaxBoostCount) return;
+            if (_activeIndicator == null) return;
+
+            _activeIndicator.SetFillingState(_playerController.BoostProgress);
         }
         #endregion
 
@@ -53,8 +49,7 @@ namespace UI
         public void AddBoostCount(int count)
         {
             _currentBoostCount += count;
-
-            UpdateBoostIndicators();
+            SetBoostIndicators(_currentBoostCount);
         }
 
         public void Boost_Tapped()
@@ -63,32 +58,16 @@ namespace UI
         }
         #endregion
 
-        private void UpdateBoostIndicators()
+        private void SetBoostIndicators(int activeCount)
         {
-            // TODO: Super hack, replace with cleaner logic.
-            switch (_currentBoostCount)
+            for (int i = 0; i < _indicators.Length; i++)
             {
-                case 0:
-                    _boostIndicators[0].SetUnfilledState();
-                    _boostIndicators[1].SetUnfilledState();
-                    _boostIndicators[2].SetUnfilledState();
-                    break;
-                case 1:
-                    _boostIndicators[0].SetFilledState();
-                    _boostIndicators[1].SetUnfilledState();
-                    _boostIndicators[2].SetUnfilledState();
-                    break;
-                case 2:
-                    _boostIndicators[0].SetFilledState();
-                    _boostIndicators[1].SetFilledState();
-                    _boostIndicators[2].SetUnfilledState();
-                    break;
-                case 3:
-                    _boostIndicators[0].SetFilledState();
-                    _boostIndicators[1].SetFilledState();
-                    _boostIndicators[2].SetFilledState();
-                    break;
+                if (i < activeCount) _indicators[i].SetFilledState();
+                else _indicators[i].SetUnfilledState();
             }
+
+            if (activeCount >= _indicators.Length) _activeIndicator = null;
+            else _activeIndicator = _indicators[activeCount];
         }
     }
 }

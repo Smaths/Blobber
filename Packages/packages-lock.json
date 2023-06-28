@@ -12,6 +12,13 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.lootlocker.lootlockersdk": {
+      "version": "https://github.com/LootLocker/unity-sdk.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f5ae97f9e2b05b91fb9787d6a20b86cc8988c1ad"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
