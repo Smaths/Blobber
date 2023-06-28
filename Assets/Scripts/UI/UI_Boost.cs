@@ -42,7 +42,7 @@ namespace UI
             _image.color = _filledColor;
             _image.fillAmount = 100f;
 
-            //_image.transform.DOPunchScale(Vector3.one * 0.8f, 0.5f, 3, 0.5f);
+            _image.transform.DOPunchScale(Vector3.one * 0.8f, 0.5f, 3, 0.5f);
         }
     }
 }

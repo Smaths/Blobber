@@ -174,8 +174,8 @@ MonoBehaviour:
   _playerBlob: {fileID: 0}
   _blobType: 0
   _currentState: 0
-  _pointValue: 5
-  _speed: 3.5
+  _pointValue: 100
+  _speed: 3
   _untransformedDuration: {x: 5, y: 12}
   _transformedDuration: {x: 2, y: 4}
   _transformationTime: 0.5
@@ -186,7 +186,7 @@ MonoBehaviour:
     m_Bits: 128
   _wanderRange: 4
   _wanderDistanceThreshold: 0.25
-  _wanderWaitTime: {x: 2, y: 5}
+  _wanderWaitTime: {x: 2, y: 4.5}
   _groundMask:
     serializedVersion: 2
     m_Bits: 256
@@ -198,6 +198,7 @@ MonoBehaviour:
   _goodBlobColor: {r: 0.7490196, g: 0.7529412, b: 0.24705882, a: 1}
   _badBlobColor: {r: 0.68235296, g: 0.29803923, b: 0.29411766, a: 1}
   _faceData: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
+  _deathFX: {fileID: 2710812742892477839}
   _isDestroying: 0
   _hasTarget: 0
   _targetDestination: {x: 0, y: 0, z: 0}
@@ -230,19 +231,7 @@ MonoBehaviour:
       m_Calls: []
   OnDeath:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2710812742892477839}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!195 &2321951032106921473
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -509,10 +509,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00a320a2f3c849c5a7f5f58b6597215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerBlob: {fileID: 2221890846040173535}
+  _playerBlob: {fileID: 0}
   _blobType: 1
   _currentState: 0
-  _pointValue: -10
+  _pointValue: -200
   _speed: 2.25
   _untransformedDuration: {x: 5, y: 6}
   _transformedDuration: {x: 3, y: 4}
@@ -536,6 +536,7 @@ MonoBehaviour:
   _goodBlobColor: {r: 0.749, g: 0.753, b: 0.247, a: 1}
   _badBlobColor: {r: 0.682, g: 0.298, b: 0.294, a: 1}
   _faceData: {fileID: 11400000, guid: 52902c8f35cc848cbb5ec5bc21e4126f, type: 2}
+  _deathFX: {fileID: 5053720873294688094}
   _isDestroying: 0
   _hasTarget: 0
   _targetDestination: {x: 0, y: 0, z: 0}
@@ -568,19 +569,7 @@ MonoBehaviour:
       m_Calls: []
   OnDeath:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5053720873294688094}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!195 &3597532536665528444
 NavMeshAgent:
   m_ObjectHideFlags: 0
