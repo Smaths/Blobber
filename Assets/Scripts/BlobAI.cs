@@ -76,6 +76,8 @@ public class BlobAI : MonoBehaviour
     private Material _blobMaterial;
     private Material _faceMaterial;
     private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+    [ChildGameObjectsOnly]
+    [SerializeField] private GameObject _deathFX;
 
     [Header("Info")]
     [SerializeField, DisplayAsString] private bool _isDestroying;
@@ -89,6 +91,7 @@ public class BlobAI : MonoBehaviour
     [SerializeField] private bool _isTransformed;
     [SerializeField] private bool _showDebug;
 
+    #region Events
     [FoldoutGroup("Events", false)]
     public UnityEvent<BlobAIState> OnBlobStateChange;
     [FoldoutGroup("Events")]
@@ -107,6 +110,7 @@ public class BlobAI : MonoBehaviour
     public UnityEvent OnPause;
     [FoldoutGroup("Events")]
     public UnityEvent OnDeath;
+    #endregion
 
     public BlobType Type => _blobType;
 
@@ -144,13 +148,15 @@ public class BlobAI : MonoBehaviour
     {
         _agent.speed = _speed;
 
+        _deathFX.gameObject.SetActive(false);
+
         if (_blobType == BlobType.Good)
         {
             _blobMaterial.color = _goodBlobColor;
             _hat.transform.localScale = Vector3.zero;
 
-            // Set transformation time trigger
-            _transformationTimeTrigger = Time.time + GetRandomDuration();
+            // Set initial transformation time trigger (extra randomness)
+            _transformationTimeTrigger = Time.time + GetTransformationDuration() + Random.Range(-1f, 3f);
         }
     }
 
@@ -253,6 +259,10 @@ public class BlobAI : MonoBehaviour
 
     private void PlayDeathAnimation()
     {
+        // Play death FX
+        if (_blobType == BlobType.Bad || _isTransformed)
+            _deathFX.gameObject.SetActive(true);
+
         // Animation
         Sequence sequence = DOTween.Sequence();
         sequence.Append(transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f, vibrato: 0));
@@ -390,6 +400,7 @@ public class BlobAI : MonoBehaviour
     }
     #endregion
 
+    #region Transformation
     private void TransformationCheck()
     {
         if (_isTransforming) return;    // Ignore timer during transformation
@@ -438,18 +449,19 @@ public class BlobAI : MonoBehaviour
         _isTransforming = false;
         _isTransformed = !_isTransformed;
 
-        float randomDuration = GetRandomDuration();
+        float randomDuration = GetTransformationDuration();
 
         _transformationTimeTrigger = Time.time + randomDuration;
 
         Enable();
     }
 
-    private float GetRandomDuration()
+    private float GetTransformationDuration()
     {
         float randomMin = _isTransformed ? _transformedDuration.x : _untransformedDuration.x;
         float randomMax = _isTransformed ? _transformedDuration.y : _untransformedDuration.y;
         float randomDuration = Random.Range(randomMin, randomMax);
         return randomDuration;
     }
+    #endregion
 }

@@ -225,8 +225,8 @@ public class StylizedSurfaceEditor : BaseShaderGUI {
             _target.DisableKeyword("_RECEIVE_SHADOWS_OFF");
         }
 
-        // Toggle the outline pass.
-        _target.SetShaderPassEnabled("Outline", _target.IsKeywordEnabled("DR_OUTLINE_ON"));
+        // Toggle the outline pass. Disabling by name `Outline` doesn't work.
+        _target.SetShaderPassEnabled("SRPDEFAULTUNLIT", _target.IsKeywordEnabled("DR_OUTLINE_ON"));
 
         /*
         if (HasProperty("_MainTex")) {

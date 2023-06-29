@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Utility;
 
 public enum PlayerState { Idle, Moving, Boosting, Attacked, Dead }
@@ -16,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [BoxGroup("Dependencies")]
     [SerializeField] private Camera _playerCamera;
     [SerializeField] private TMP_Text _nameLabel;
+    [SerializeField] private GameObject _mesh;
 
     [Title("Player Settings")]
     [SerializeField] private PlayerState _playerState;
@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour
     [Header("Info")]
     [SerializeField] [DisplayAsString] private bool _isMoving;
     [SerializeField] [DisplayAsString] private bool _isBoosting;
-    [SerializeField] [DisplayAsString] private bool _isGrounded;
 
     [Header("Faces :D")]
     [SerializeField] private Face _faceData;
@@ -56,11 +55,10 @@ public class PlayerController : MonoBehaviour
     public UnityEvent OnDeath;
     [FoldoutGroup("Unity Events")]
     public UnityEvent OnBirth;
-    [FormerlySerializedAs("OnBoost")]
     [FoldoutGroup("Unity Events")]
     public UnityEvent OnBoostActivated;
     [FoldoutGroup("Unity Events")]
-    public UnityEvent OnBoostChargeIncreased;
+    public UnityEvent OnBoostChargeAdded;
 
     // Private fields
     private PlayerState _previousState;
@@ -70,6 +68,7 @@ public class PlayerController : MonoBehaviour
     private Color _cachedColor;
 
     #region Public Properties
+    public PlayerState State => _playerState;
     public bool IsMoving
     {
         get => _isMoving;
@@ -88,7 +87,8 @@ public class PlayerController : MonoBehaviour
             _isMoving = value;
         }
     }
-    public float BoostChargeTimeRemaining => Mathf.Max(_boostChargeTimeTrigger - Time.time, 0);   // NOTE: `Mathf.Max` keeps values above 0.
+    public int BoostCount => _currentBoostCount;
+    [ShowInInspector]
     public float BoostProgress
     {
         get
@@ -97,8 +97,10 @@ public class PlayerController : MonoBehaviour
             return 1 - BoostChargeTimeRemaining / _boostChargeTime;
         }
     }
-    public PlayerState State => _playerState;
-    public int BoostCount => _currentBoostCount;
+    [ShowInInspector]
+    public float BoostChargeTimeRemaining => Mathf.Max(_boostChargeTimeTrigger - Time.time, 0);   // NOTE: `Mathf.Max` keeps values above 0.
+
+    public int MaxBoostCount => _maxBoostCount;
     #endregion
 
     #region Lifecycle
@@ -117,12 +119,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         _controller ??= GetComponentInChildren<CharacterController>();
+        _blobRenderer = _mesh.GetComponent<Renderer>();
+        _cachedColor = _blobRenderer.material.color;
+    }
+
+    private void Start()
+    {
         _playerCamera ??= Camera.main;
 
-        _cachedColor = _blobRenderer.material.color;
         _nameLabel.text = LootLockerTool.Instance.PlayerName;
 
         _isBoosting = false;
@@ -135,8 +142,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _isGrounded = _controller.isGrounded;
-
         MovePlayer();
 
         if (_isBoosting) BoostPlayer();
@@ -197,7 +202,7 @@ public class PlayerController : MonoBehaviour
     }
 
     #region Player Input
-    public void OnMoveInput(InputAction.CallbackContext context)
+    public void OnMovePerformed(InputAction.CallbackContext context)
     {
         // // Convert input to world space relative to the camera orientation
         // Vector3 cameraForward = Vector3.Scale(_playerCamera.transform.forward, new Vector3(1, 1, 0)).normalized;
@@ -207,9 +212,14 @@ public class PlayerController : MonoBehaviour
         _moveDirection = context.ReadValue<Vector2>().normalized;
     }
 
+    public void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        _moveDirection = Vector2.zero;
+    }
+
     public void OnBoostInput(InputAction.CallbackContext context)
     {
-        StartBoost();
+        Boost();
     }
     #endregion
 
@@ -235,32 +245,31 @@ public class PlayerController : MonoBehaviour
         if (Time.time >= _boostChargeTimeTrigger)
         {
             // Timer is done
+            if (_currentBoostCount >= _maxBoostCount) return;
 
-            if (_currentBoostCount < _maxBoostCount)
-                _currentBoostCount++;
+            _currentBoostCount++;
 
-            _boostChargeTimeTrigger = Time.time + _boostChargeTime;
+            RestartBoostTimer();
 
-            OnBoostChargeIncreased?.Invoke();
+            OnBoostChargeAdded?.Invoke();
         }
 
-        // Timer is not done.
+        // Timer still running.
     }
 
     public void Boost()
     {
+        if (_isBoosting) return;
+        if (_currentBoostCount == 0) return;
+
+        if (_currentBoostCount >= _maxBoostCount)
+            RestartBoostTimer();
+
         StartBoost();
     }
 
     private void StartBoost()
     {
-        if (_isBoosting) return;
-        if (_currentBoostCount == 0) return;
-
-        // Restart boost cooldown from 0 when boosting from max count.
-        if (_currentBoostCount == _maxBoostCount)
-            _boostChargeTimeTrigger = Time.time + _boostChargeTime;
-
         _isBoosting = true;
         _boostTimer = 0f;
         _currentBoostCount--;
@@ -276,6 +285,11 @@ public class PlayerController : MonoBehaviour
 
         // Perform any necessary actions after the boost has ended
         SetState(_previousState);
+    }
+
+    private void RestartBoostTimer()
+    {
+        _boostChargeTimeTrigger = Time.time + _boostChargeTime;
     }
     #endregion
 

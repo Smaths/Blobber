@@ -14,6 +14,7 @@ namespace UI
         // Editor fields
         [SerializeField] private TMP_Text _playerNameLabel;
         [SerializeField] private bool _showDebug;
+        [SerializeField] private GameObject _quitButton;
 
         // Private fields
         private CanvasGroup _canvasGroup;
@@ -39,13 +40,9 @@ namespace UI
             _canvasGroup.alpha = 1;
 
             if (string.IsNullOrEmpty(LootLockerTool.Instance.PlayerName))
-            {
                 _playerNameLabel.text = string.Empty;
-            }
             else
-            {
                 _playerNameLabel.text = LootLockerTool.Instance.PlayerName;
-            }
         }
 
         private void OnEnable()
@@ -54,6 +51,8 @@ namespace UI
             {
                 LootLockerTool.Instance.OnPlayerNameSet.AddListener(SetPlayerNameLabel);
             }
+
+            _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
         }
 
         private void OnDisable()

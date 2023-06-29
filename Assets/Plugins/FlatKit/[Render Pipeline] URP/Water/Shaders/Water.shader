@@ -69,25 +69,61 @@
         Lighting Off
         ZWrite[_ZWrite]
 
+    	HLSLINCLUDE
+    	#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Version.hlsl"
+    	ENDHLSL
+
         Pass
         {
             HLSLPROGRAM
             #pragma prefer_hlslcc gles
-            #pragma target 4.5
+            #pragma target 2.0
 
             #pragma shader_feature_local _COLORMODE_LINEAR _COLORMODE_GRADIENT_TEXTURE
             #pragma shader_feature_local _FOAMMODE_NONE _FOAMMODE_GRADIENT_NOISE _FOAMMODE_TEXTURE
             #pragma shader_feature_local _WAVEMODE_NONE _WAVEMODE_ROUND _WAVEMODE_GRID _WAVEMODE_POINTY
 
-            #pragma multi_compile_fog
-
-            #pragma multi_compile _ DOTS_INSTANCING_ON
-
             // -------------------------------------
-            // Universal Render Pipeline keywords
+            // Universal Pipeline keywords
+            #if VERSION_GREATER_EQUAL(11, 0)
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #else
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _SHADOWS_SOFT
+            #endif
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
+            #pragma multi_compile _ SHADOWS_SHADOWMASK
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+            #if VERSION_GREATER_EQUAL(12, 0)
+            #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
+            #pragma multi_compile_fragment _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile _ _CLUSTERED_RENDERING
+            #endif
+            #if UNITY_VERSION >= 202220
+            #pragma multi_compile _ _FORWARD_PLUS
+            #pragma multi_compile_fragment _ _WRITE_RENDERING_LAYERS
+            #endif
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
+            #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile_fog
+            #if UNITY_VERSION >= 202220
+            #pragma multi_compile _ DYNAMICLIGHTMAP_ON
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+            #endif
+
+            //--------------------------------------
+            // GPU Instancing
+            #pragma multi_compile_instancing
+            #pragma instancing_options renderinglayer
+            #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
@@ -326,25 +362,28 @@
 
                 // Foam.
                 #if !defined(_FOAMMODE_NONE)
-                    float uv_angle = atan2(i.uv.y, i.uv.x);
-                    float cs = cos(uv_angle + _FoamDirection * PI);
-                    float sn = sin(uv_angle + _FoamDirection * PI);
-                    float2 rotated_uv = float2(i.uv.x * cs - i.uv.y * sn, i.uv.x * sn + i.uv.y * cs);
-                    float2 noise_uv_foam = rotated_uv * 100.0f + _Time.zz * _FoamSpeed;
-
+                    float2 stretch_factor = float2(_FoamStretchX, _FoamStretchY);
                     float noise_foam_base;
+
                 #if defined(_FOAMMODE_TEXTURE)
-                        float2 stretch_factor = float2(_FoamStretchX, _FoamStretchY);
-                        noise_foam_base = SAMPLE_TEXTURE2D(_NoiseMap, sampler_NoiseMap,
-                            noise_uv_foam * stretch_factor / (_FoamScale * 100.0)).r;
+                    const float2 rotated_uv = i.uv * cos(_FoamDirection * PI) +
+                        float2(i.uv.y, -i.uv.x) * sin(_FoamDirection * PI);
+                    const float2 noise_uv_foam = rotated_uv * 100.0f + _Time.zz * _FoamSpeed;
+                    noise_foam_base = SAMPLE_TEXTURE2D(_NoiseMap, sampler_NoiseMap,
+                        noise_uv_foam * stretch_factor / (_FoamScale * 100.0)).r;
                 #endif
 
                 #if defined(_FOAMMODE_GRADIENT_NOISE)
-                        float2 stretch_factor = float2(_FoamStretchX, _FoamStretchY);
-                        noise_foam_base = GradientNoise(noise_uv_foam * stretch_factor, _FoamScale);
+                    // This rotation is not exactly correct, but we're keeping it for backwards compatibility.
+                    const float uv_angle = atan2(i.uv.y, i.uv.x);
+                    const float cs = cos(uv_angle + _FoamDirection * PI);
+                    const float sn = sin(uv_angle + _FoamDirection * PI);
+                    const float2 rotated_uv = float2(i.uv.x * cs - i.uv.y * sn, i.uv.x * sn + i.uv.y * cs);
+                    const float2 noise_uv_foam = rotated_uv * 100.0f + _Time.zz * _FoamSpeed;
+                    noise_foam_base = GradientNoise(noise_uv_foam * stretch_factor, _FoamScale);
                 #endif
 
-                    float foam_blur = 1.0 - _FoamSharpness;
+                    float foam_blur = 1.0 - _FoamSharpness + 1e-6;
                     float shore_fade = saturate(depth_fade / _FoamDepth);
                     float hard_foam_end = 0.1;
                     float soft_foam_end = hard_foam_end + foam_blur * 0.3;
@@ -360,14 +399,8 @@
                 #endif
 
                 // Shadow.
+                #define _MAIN_LIGHT_SHADOWS  // Since URP 13 or 14 this is not defined by default.
                 #if defined(_MAIN_LIGHT_SHADOWS)
-                    /*
-                    struct VertexPositionInputs
-                        float3 positionWS; // World space position
-                        float3 positionVS; // View space position
-                        float4 positionCS; // Homogeneous clip space position
-                        float4 positionNDC;// Homogeneous normalized device coordinates
-                    */
                     VertexPositionInputs vertexInput = (VertexPositionInputs)0;
                     vertexInput.positionWS = i.positionWS.xyz;
                     float4 shadowCoord = GetShadowCoord(vertexInput);

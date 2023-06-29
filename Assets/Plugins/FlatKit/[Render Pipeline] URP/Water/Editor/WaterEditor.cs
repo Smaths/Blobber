@@ -34,11 +34,10 @@ public class FlatKitWaterEditor : ShaderGUI {
                         continue;
                     }
 
-                    var param = bracket;
                     bool isNegative = bracket.StartsWith("!");
                     bool isPositive = !isNegative;
-                    param = bracket.TrimStart('!');
-                    bool keywordOn = ArrayUtility.Contains(keywords, param);
+                    var param = bracket.TrimStart('!');
+                    bool keywordOn = Array.IndexOf(keywords, param) != -1;
 
                     if (isPositive && !keywordOn) {
                         skipProperty = true;

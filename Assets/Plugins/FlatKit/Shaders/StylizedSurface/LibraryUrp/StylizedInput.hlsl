@@ -5,7 +5,11 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 
 #ifndef FLATKIT_TERRAIN
+#if _FORWARD_PLUS
+CBUFFER_START(UnityPerMaterialNoBatching)
+#else
 CBUFFER_START(UnityPerMaterial)
+#endif
 #endif
 
 // --- `SimpleLitInput.hlsl` ---

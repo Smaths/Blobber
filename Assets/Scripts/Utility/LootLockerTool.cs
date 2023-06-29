@@ -79,7 +79,7 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    if (_showDebug) Debug.Log($"Submit Score Successful – memberID: {_memberID} | score: {score} | leaderboardKey: {_leaderboardKey}");
+                    Debug.Log($"––––LootLocker: Submit Score Successful––––\nmemberID: {memberID}| player name: {_playerName} | score: {score} | leaderboardKey: {_leaderboardKey}\n––––––––––––––––––––––––––––––––––––");
                 }
                 else
                 {

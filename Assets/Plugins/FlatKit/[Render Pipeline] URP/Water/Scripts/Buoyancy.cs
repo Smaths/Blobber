@@ -5,7 +5,8 @@ public class Buoyancy : MonoBehaviour {
     [Tooltip("The object that contains a Water material.")]
     public Transform water;
 
-    [Space][Tooltip("Range of probing wave height for buoyancy rotation.")]
+    [Space]
+    [Tooltip("Range of probing wave height for buoyancy rotation.")]
     public float size = 1f;
 
     [Tooltip("Max height of buoyancy going up and down.")]
@@ -21,6 +22,7 @@ public class Buoyancy : MonoBehaviour {
     private float _direction;
 
     private Vector3 _originalPosition;
+    private Quaternion _originalRotation;
 
     private void Start() {
         var r = water.GetComponent<Renderer>();
@@ -35,6 +37,7 @@ public class Buoyancy : MonoBehaviour {
 
         var t = transform;
         _originalPosition = t.position;
+        _originalRotation = t.rotation;
     }
 
     private void Update() {
@@ -44,7 +47,8 @@ public class Buoyancy : MonoBehaviour {
         positionWS.y = GetHeightOS(positionOS) + _originalPosition.y;
 
         transform.position = positionWS;
-        transform.up = GetNormalWS(positionOS);
+        var normal = GetNormalWS(positionOS);
+        transform.rotation = Quaternion.FromToRotation(Vector3.up, normal) * _originalRotation;
     }
 
     Vector2 GradientNoiseDir(Vector2 p) {
