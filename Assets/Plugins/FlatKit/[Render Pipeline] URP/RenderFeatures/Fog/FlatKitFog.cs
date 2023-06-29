@@ -2,10 +2,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-// TODO: Remove for URP 13.
-// https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.1/manual/upgrade-guide-2022-1.html
-#pragma warning disable CS0618
-
 namespace FlatKit {
 public class FlatKitFog : ScriptableRendererFeature {
     [Tooltip("To create new settings use 'Create > FlatKit > Fog Settings'.")]
@@ -15,8 +11,6 @@ public class FlatKitFog : ScriptableRendererFeature {
     private Material _effectMaterial;
 
     private BlitTexturePass _blitTexturePass;
-
-    private RenderTargetHandle _fogTexture;
 
     private Texture2D _lutDepth;
     private Texture2D _lutHeight;
@@ -55,7 +49,10 @@ public class FlatKitFog : ScriptableRendererFeature {
         SetMaterialProperties();
 
         _blitTexturePass = new BlitTexturePass(_effectMaterial, useDepth: true, useNormals: false, useColor: false);
-        _fogTexture.Init("_EffectTexture");
+    }
+
+    protected override void Dispose(bool disposing) {
+        _blitTexturePass.Dispose();
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
@@ -65,7 +62,10 @@ public class FlatKitFog : ScriptableRendererFeature {
 #endif
 
         SetMaterialProperties();
+
+        _blitTexturePass.Setup(renderingData);
         _blitTexturePass.renderPassEvent = settings.renderEvent;
+
         renderer.EnqueuePass(_blitTexturePass);
     }
 

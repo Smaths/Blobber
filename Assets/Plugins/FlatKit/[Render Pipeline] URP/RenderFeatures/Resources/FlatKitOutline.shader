@@ -58,8 +58,8 @@ Shader "Hidden/FlatKit/OutlineFilter"
             TEXTURE2D_X(_CameraColorTexture);
             SAMPLER(sampler_CameraColorTexture);
 
-            #define OUTLINE_USE_TRANSPARENT_DEPTH 0
-            #if defined(OUTLINE_USE_TRANSPARENT_DEPTH)
+            // #define OUTLINE_USE_TRANSPARENT_DEPTH
+            #ifdef OUTLINE_USE_TRANSPARENT_DEPTH
             TEXTURE2D_X(_CameraTransparentDepthTexture);
             #endif
 
@@ -78,7 +78,7 @@ Shader "Hidden/FlatKit/OutlineFilter"
             float SampleDepth(float2 uv)
             {
                 float d = SampleSceneDepth(uv);
-                #if defined(OUTLINE_USE_TRANSPARENT_DEPTH)
+                #ifdef OUTLINE_USE_TRANSPARENT_DEPTH
                 d += SAMPLE_TEXTURE2D_X(_CameraTransparentDepthTexture, sampler_CameraColorTexture, UnityStereoTransformScreenSpaceTex(uv)).r;
                 #endif
                 return Linear01Depth(d);

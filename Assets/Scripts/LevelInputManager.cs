@@ -1,11 +1,9 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class LevelInputManager : MonoBehaviour
 {
-    [FormerlySerializedAs("_levelManager")]
     [SerializeField] private ScoreManager _scoreManager;
     [SerializeField] private GameTimer _gameTimer;
     [SerializeField] private PlayerController _playerController;
@@ -14,24 +12,16 @@ public class LevelInputManager : MonoBehaviour
     [ReadOnly]
     [SerializeField]
     private Vector2 _currentPointerPosition;
-    [Title("Click Settings")]
-    [SerializeField] private bool _areControlsEnabled;
-    [SerializeField]
-    private LayerMask _clickLayerMask;
     [Title("Misc Settings")]
     [DisplayAsString]
     [SerializeField]
     private bool _isOverUIObject;
-    [SerializeField]
-    private bool _showDebugMessages;
 
     private GameInputActions _gameInputActions;
-    private UnityEngine.Camera _camera;
 
     // Public Properties
     public bool IsOverUIObject => _isOverUIObject;
     public Vector2 CurrentPointerPosition => _currentPointerPosition;
-    public bool AreControlsEnabled => _areControlsEnabled;
 
     #region Lifecycle
     private void Awake()
@@ -39,33 +29,43 @@ public class LevelInputManager : MonoBehaviour
         _gameInputActions = new GameInputActions();
     }
 
-    private void Start()
-    {
-        InitializeInputActions();
-
-        _camera = Camera.main;
-    }
-
     private void OnEnable()
     {
         _gameInputActions.Enable();
+
+        _gameInputActions.UI.Cancel.performed += OnPausePerformed;
+        _gameInputActions.Player.Move.performed += _playerController.OnMovePerformed;
+        _gameInputActions.Player.Move.canceled += _playerController.OnMoveCanceled;
+        _gameInputActions.Player.Boost.performed += _playerController.OnBoostInput;
     }
 
     private void OnDisable()
     {
         _gameInputActions.Disable();
+
+        _gameInputActions.UI.Cancel.performed -= OnPausePerformed;
+        _gameInputActions.Player.Move.performed -= _playerController.OnMovePerformed;
+        _gameInputActions.Player.Move.canceled -= _playerController.OnMoveCanceled;
+        _gameInputActions.Player.Boost.performed -= _playerController.OnBoostInput;
     }
     #endregion
-
-    private void InitializeInputActions ()
-    {
-        _gameInputActions.Player.Pause.performed += OnPausePerformed;
-    }
 
     // Actions
     private void OnPausePerformed(InputAction.CallbackContext context)
     {
         if (ScoreManager.instance.GameIsOver) return;
         _gameTimer.TogglePause();
+    }
+
+    public void EnablePlayerInput(bool enable)
+    {
+        if (enable)
+        {
+            _gameInputActions.Player.Enable();
+        }
+        else
+        {
+            _gameInputActions.Player.Disable();
+        }
     }
 }

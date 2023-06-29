@@ -19,7 +19,7 @@ public class FlatKitReadme : ScriptableObject {
     public bool FlatKitInstalled;
 
     [NonSerialized]
-    public readonly string FlatKitVersion = "3.2.0";
+    public readonly string FlatKitVersion = "3.7.0";
 
     [NonSerialized]
     public bool? UrpInstalled;
@@ -61,7 +61,7 @@ public class FlatKitReadme : ScriptableObject {
     private PackageCollection GetPackageList() {
         var listRequest = Client.List(true);
 
-        while (listRequest.Status == StatusCode.InProgress) continue;
+        while (listRequest.Status == StatusCode.InProgress) { }
 
         if (listRequest.Status == StatusCode.Failure) {
             PackageManagerError = listRequest.Error.message;

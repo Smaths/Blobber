@@ -2,6 +2,12 @@
 #define FLATKIT_LIGHT_PASS_DR_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+// Check is needed because in Unity 2021 they use two different URP versions - 14 on desktop and 12 on mobile.
+#if !VERSION_LOWER(13, 0)
+#if defined(LOD_FADE_CROSSFADE)
+    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
+#endif
+#endif
 #include "Lighting_DR.hlsl"
 
 struct Attributes
@@ -10,7 +16,8 @@ struct Attributes
     float3 normalOS     : NORMAL;
     float4 tangentOS    : TANGENT;
     float2 texcoord     : TEXCOORD0;
-    float2 lightmapUV   : TEXCOORD1;
+    float2 staticLightmapUV    : TEXCOORD1;
+    float2 dynamicLightmapUV    : TEXCOORD2;
 
 #if defined(DR_VERTEX_COLORS_ON)
     float4 color        : COLOR;
@@ -22,26 +29,36 @@ struct Attributes
 struct Varyings
 {
     float2 uv                       : TEXCOORD0;
-    DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 1);
 
-    float3 posWS                    : TEXCOORD2;    // xyz: posWS
+    float3 positionWS               : TEXCOORD1;    // xyz: posWS
 
 #ifdef _NORMALMAP
-    float4 normal                   : TEXCOORD3;    // xyz: normal, w: viewDir.x
-    float4 tangent                  : TEXCOORD4;    // xyz: tangent, w: viewDir.y
-    float4 bitangent                : TEXCOORD5;    // xyz: bitangent, w: viewDir.z
+    float4 normalWS                   : TEXCOORD2;    // xyz: normal, w: viewDir.x
+    float4 tangentWS                  : TEXCOORD3;    // xyz: tangent, w: viewDir.y
+    float4 bitangentWS                : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
 #else
-    float3  normal                  : TEXCOORD3;
-    float3 viewDir                  : TEXCOORD4;
+    float3  normalWS                  : TEXCOORD2;
+    float3 viewDir                    : TEXCOORD3;
 #endif
 
-    half4 fogFactorAndVertexLight   : TEXCOORD6; // x: fogFactor, yzw: vertex light
+#ifdef _ADDITIONAL_LIGHTS_VERTEX
+    half4 fogFactorAndVertexLight  : TEXCOORD5; // x: fogFactor, yzw: vertex light
+#else
+    half  fogFactor                 : TEXCOORD5;
+#endif
 
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    float4 shadowCoord              : TEXCOORD7;
+    float4 shadowCoord              : TEXCOORD6;
+#endif
+
+    DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
+    
+#ifdef DYNAMICLIGHTMAP_ON
+    float2  dynamicLightmapUV : TEXCOORD8; // Dynamic lightmap UVs
 #endif
 
     float4 positionCS               : SV_POSITION;
+
 #if defined(DR_VERTEX_COLORS_ON)
     float4 VertexColor              : COLOR;
 #endif
@@ -56,16 +73,22 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 {
     inputData = (InputData)0;
 
-    inputData.positionWS = input.posWS;
+    inputData.positionWS = input.positionWS;
 
-#ifdef _NORMALMAP
-    half3 viewDirWS = half3(input.normal.w, input.tangent.w, input.bitangent.w);
-    inputData.normalWS = TransformTangentToWorld(normalTS,
-        half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz));
+    #ifdef _NORMALMAP
+    half3 viewDirWS = half3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
+#if VERSION_GREATER_EQUAL(12, 0)
+    inputData.tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
+    inputData.normalWS = TransformTangentToWorld(normalTS, inputData.tangentToWorld);
 #else
-    half3 viewDirWS = input.viewDir;
-    inputData.normalWS = input.normal;
-#endif
+    float sgn = input.tangentWS.w;      // should be either +1 or -1
+    float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
+    inputData.normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz));
+    #endif
+#else
+    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
+    inputData.normalWS = input.normalWS;
+    #endif
 
     inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
     viewDirWS = SafeNormalize(viewDirWS);
@@ -80,20 +103,24 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
 
-    inputData.fogCoord = input.fogFactorAndVertexLight.x;
+#ifdef _ADDITIONAL_LIGHTS_VERTEX
+    inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
-    inputData.bakedGI = SAMPLE_GI(input.lightmapUV, input.vertexSH, inputData.normalWS);
-
-#if VERSION_GREATER_EQUAL(10, 0)
-    inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-    inputData.shadowMask = SAMPLE_SHADOWMASK(input.lightmapUV);
-#endif
-
+#else
 #if VERSION_GREATER_EQUAL(12, 0)
-    inputData.positionCS = input.positionCS;
-#if defined(_NORMALMAP)
-    inputData.tangentToWorld = half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz);
+    inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
 #endif
+    inputData.vertexLighting = half3(0, 0, 0);
+#endif
+
+#if defined(DYNAMICLIGHTMAP_ON)
+    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamicLightmapUV, input.vertexSH, inputData.normalWS);
+#else
+    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
+#endif
+
+    inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+    inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
 
     #if defined(DEBUG_DISPLAY)
     #if defined(DYNAMICLIGHTMAP_ON)
@@ -105,7 +132,6 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.vertexSH = input.vertexSH;
     #endif
     #endif
-#endif
 }
 
 Varyings StylizedPassVertex(Attributes input)
@@ -118,35 +144,53 @@ Varyings StylizedPassVertex(Attributes input)
     #endif
     #endif
 
-    UNITY_SETUP_INSTANCE_ID(input);
-
     Varyings output = (Varyings)0;
+
+    UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     const VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    half3 viewDirWS = GetCameraPositionWS() - vertexInput.positionWS;
-    half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+    
+#if defined(_FOG_FRAGMENT)
+    half fogFactor = 0;
+#else
     half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+#endif
 
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
-    output.posWS.xyz = vertexInput.positionWS;
+    output.positionWS.xyz = vertexInput.positionWS;
     output.positionCS = vertexInput.positionCS;
 
+    half3 viewDirWS = GetCameraPositionWS() - vertexInput.positionWS;
+
 #ifdef _NORMALMAP
-    output.normal = half4(normalInput.normalWS, viewDirWS.x);
-    output.tangent = half4(normalInput.tangentWS, viewDirWS.y);
-    output.bitangent = half4(normalInput.bitangentWS, viewDirWS.z);
+    output.normalWS = half4(normalInput.normalWS, viewDirWS.x);
+    output.tangentWS = half4(normalInput.tangentWS, viewDirWS.y);
+    output.bitangentWS = half4(normalInput.bitangentWS, viewDirWS.z);
 #else
     output.normal = NormalizeNormalPerVertex(normalInput.normalWS);
     output.viewDir = viewDirWS;
 #endif
 
-    OUTPUT_LIGHTMAP_UV(input.lightmapUV, unity_LightmapST, output.lightmapUV);
-    OUTPUT_SH(output.normal.xyz, output.vertexSH);
+    OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+#ifdef DYNAMICLIGHTMAP_ON
+    output.dynamicLightmapUV = input.dynamicLightmapUV.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+#endif
 
+#if UNITY_VERSION >= 202310
+    OUTPUT_SH(vertexInput.positionWS, output.normalWS.xyz, GetWorldSpaceNormalizeViewDir(vertexInput.positionWS), output.vertexSH);
+#else
+    OUTPUT_SH(output.normalWS.xyz, output.vertexSH);
+#endif
+
+#ifdef _ADDITIONAL_LIGHTS_VERTEX
+    half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
     output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+#else
+    output.fogFactor = fogFactor;
+#endif
 
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     output.shadowCoord = GetShadowCoord(vertexInput);
@@ -167,15 +211,18 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
     SurfaceData surfaceData;
     InitializeSimpleLitSurfaceData(input.uv, surfaceData);
 
-    InputData inputData;
-    InitializeInputData(input, surfaceData.normalTS, inputData);
-
-#if VERSION_GREATER_EQUAL(12, 1)
-    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+#if defined(LOD_FADE_CROSSFADE) && !VERSION_LOWER(13, 0)
+    LODFadeCrossFade(input.positionCS);
 #endif
 
-#ifdef _DBUFFER
-    ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
+    InputData inputData;
+    InitializeInputData(input, surfaceData.normalTS, inputData);
+    #if VERSION_GREATER_EQUAL(12, 0)
+    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+    #endif
+
+#if defined(DR_VERTEX_COLORS_ON)
+    _BaseColor.rgb *= input.VertexColor.rgb;
 #endif
 
     // Computes direct light contribution.
@@ -183,20 +230,21 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
 
     {
 #if defined(_TEXTUREBLENDINGMODE_ADD)
-        color.rgb += lerp(half3(0.0f, 0.0f, 0.0f), surfaceData.albedo, _TextureImpact);
+        color.rgb += lerp(half3(0.0f, 0.0f, 0.0f), surfaceData.albedo + surfaceData.emission, _TextureImpact);
 #else  // _TEXTUREBLENDINGMODE_MULTIPLY
         // This is the default blending mode for compatibility with the v.1 of the asset.
-        color.rgb *= lerp(half3(1.0f, 1.0f, 1.0f), surfaceData.albedo, _TextureImpact);
+        color.rgb *= lerp(half3(1.0f, 1.0f, 1.0f), surfaceData.albedo + surfaceData.emission, _TextureImpact);
 #endif
     }
 
-#if defined(DR_VERTEX_COLORS_ON)
-    color.rgb *= input.VertexColor.rgb;
+#ifdef _DBUFFER
+    ApplyDecalToBaseColor(input.positionCS, color.rgb);
 #endif
 
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
-
-#if VERSION_GREATER_EQUAL(10, 0)
+#if UNITY_VERSION >= 202220
+    color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
+#else
     color.a = OutputAlpha(color.a, _Surface);
 #endif
 

@@ -2,10 +2,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-// TODO: Remove for URP 13.
-// https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.1/manual/upgrade-guide-2022-1.html
-#pragma warning disable CS0618
-
 namespace FlatKit {
 public class FlatKitOutline : ScriptableRendererFeature {
     [Tooltip("To create new settings use 'Create > FlatKit > Outline Settings'.")]
@@ -48,6 +44,10 @@ public class FlatKitOutline : ScriptableRendererFeature {
             new BlitTexturePass(_effectMaterial, settings.useDepth, settings.useNormals, useColor: true);
     }
 
+    protected override void Dispose(bool disposing) {
+        _blitTexturePass.Dispose();
+    }
+
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
 #if UNITY_EDITOR
         if (renderingData.cameraData.isPreviewCamera) return;
@@ -55,7 +55,10 @@ public class FlatKitOutline : ScriptableRendererFeature {
 #endif
 
         SetMaterialProperties();
+
+        _blitTexturePass.Setup(renderingData);
         _blitTexturePass.renderPassEvent = settings.renderEvent;
+
         renderer.EnqueuePass(_blitTexturePass);
     }
 

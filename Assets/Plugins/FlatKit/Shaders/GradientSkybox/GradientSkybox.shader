@@ -12,6 +12,9 @@
         _DirectionYaw ("Direction X angle", Range (0, 180)) = 0
         _DirectionPitch ("Direction Y angle", Range (0, 180)) = 0
 
+        [Space]
+        _NoiseIntensity ("Noise Intensity", Range (0, 0.25)) = 0.0
+
         [HideInInspector]
         _Direction ("Direction", Vector) = (0, 1, 0, 0)
     }
@@ -37,6 +40,7 @@
     half3 _Direction;
     half _Intensity;
     half _Exponent;
+    half _NoiseIntensity;
 
     v2f vert (appdata v) {
         v2f o;
@@ -49,7 +53,9 @@
 
     fixed4 frag (v2f i) : COLOR {
         const half d = dot(normalize(i.texcoord), _Direction) * 0.5f + 0.5f;
-        return lerp (_Color1, _Color2, pow(d, _Exponent)) * _Intensity;
+        float t = pow(d, _Exponent);
+        t += frac(sin(dot(t, float4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453) * _NoiseIntensity;
+        return lerp(_Color1, _Color2, t) * _Intensity;
     }
 
     ENDCG

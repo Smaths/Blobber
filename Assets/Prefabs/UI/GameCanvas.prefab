@@ -61,7 +61,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1238,6 +1240,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2060359422788256558}
     m_Modifications:
     - target: {fileID: 2599069758496192458, guid: 4b6a84c8eea6a46f686da136929bc411,
@@ -1351,6 +1354,9 @@ PrefabInstance:
       value: TimerContainer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b6a84c8eea6a46f686da136929bc411, type: 3}
 --- !u!224 &2060359423030795144 stripped
 RectTransform:
@@ -1363,6 +1369,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2060359422788256558}
     m_Modifications:
     - target: {fileID: 9199961888266450332, guid: 3cf6c5931ba0845d984587f8f91bf151,
@@ -1476,6 +1483,9 @@ PrefabInstance:
       value: 1.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cf6c5931ba0845d984587f8f91bf151, type: 3}
 --- !u!224 &2060359422614058889 stripped
 RectTransform:
