@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6102682c3d6f4ab78af725eb54a096a1, type: 3}
+  m_Name: ScoreIncrease
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: eba99ff70bfd746d0a1cc83f08684db2, type: 3}
+  - {fileID: 8300000, guid: a57cf63222b2c4816beb86edaa206c64, type: 3}
+  - {fileID: 8300000, guid: e6d9b39bb545f43bcb4390289692c617, type: 3}
+  - {fileID: 8300000, guid: bff6274b4c26349a0ade4f726650831c, type: 3}
+  - {fileID: 8300000, guid: 2af469d5d65e54541bd3b9f1fc5ac83d, type: 3}
+  playType: 0
+  volume: 1
+  volumeVariation: 0.05
+  pitch: 1
+  pitchVariation: 0.05
