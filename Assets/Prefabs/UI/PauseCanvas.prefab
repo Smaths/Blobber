@@ -655,7 +655,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
@@ -1016,6 +1018,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4467934414700761212}
     m_Modifications:
     - target: {fileID: 1149647947066439652, guid: 66ac9616c94b14aa6bfb64f07d5c0902,
@@ -1169,6 +1172,9 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66ac9616c94b14aa6bfb64f07d5c0902, type: 3}
 --- !u!224 &5042831870147681376 stripped
 RectTransform:
@@ -1181,6 +1187,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4467934414700761212}
     m_Modifications:
     - target: {fileID: 1149647947066439652, guid: 66ac9616c94b14aa6bfb64f07d5c0902,
@@ -1334,6 +1341,9 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66ac9616c94b14aa6bfb64f07d5c0902, type: 3}
 --- !u!224 &5702560957710055688 stripped
 RectTransform:
@@ -1346,6 +1356,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4467934414700761212}
     m_Modifications:
     - target: {fileID: 1149647947066439652, guid: 66ac9616c94b14aa6bfb64f07d5c0902,
@@ -1501,6 +1512,9 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66ac9616c94b14aa6bfb64f07d5c0902, type: 3}
 --- !u!224 &6159515128991945682 stripped
 RectTransform:

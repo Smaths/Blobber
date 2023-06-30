@@ -22,6 +22,7 @@ namespace SFXManager
         public SFXClip sfxToPlay;
         private string _sfxLabel = "SFX";
 
+        [Space]
         [SerializeField]
         private bool _showSettings;
         [SerializeField]
@@ -38,6 +39,7 @@ namespace SFXManager
         [EnableIf("_editSettings")]
         [SerializeField]
         private bool _waitToPlay = true;
+
         [ShowIf("_showSettings")]
         [EnableIf("_editSettings")]
         [SerializeField]

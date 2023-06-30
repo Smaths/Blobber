@@ -6,17 +6,25 @@ namespace SFXManager
     public class SFXHub : MonoBehaviour
     {
         [Space]
-        [Title("SFX Connection Hub", "Connect SFX to all game events (in one convenient location!) :D")]
-        [Title("Score")]
+        [TitleGroup("SFX Connection Hub", "Connect SFX to all game events (in one convenient location!) :D")]
+
+        [BoxGroup("SFX Connection Hub/Score")]
         [SerializeField] private SFX OnScoreDecreaseSFX;
+        [BoxGroup("SFX Connection Hub/Score")]
         [SerializeField] private SFX OnScoreIncreaseSFX;
+        [BoxGroup("SFX Connection Hub/Score")]
         [SerializeField] private SFX OnDeadSFX;
-        [Title("Player")]
+
+        [BoxGroup("SFX Connection Hub/Player")]
         [SerializeField] private SFX OnBoostActivatedSFX;
-        [Title("Game Time")]
+
+        [BoxGroup("SFX Connection Hub/Game Time")]
         [SerializeField] private SFX OnGamePauseSFX;
+        [BoxGroup("SFX Connection Hub/Game Time")]
         [SerializeField] private SFX OnGameResumeSFX;
+        [BoxGroup("SFX Connection Hub/Game Time")]
         [SerializeField] private SFX OnGameStartSFX;
+        [BoxGroup("SFX Connection Hub/Game Time")]
         [SerializeField] private SFX OnGameOverSFX;
 
         #region Score Manager

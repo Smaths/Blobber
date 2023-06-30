@@ -24,6 +24,9 @@ namespace SFXManager
         public float pitch = 1f;
         [Range(0f, 0.2f)]
         public float pitchVariation = 0.05f;
+        [MinValue(0)]
+        [SuffixLabel("second(s)")]
+        public float delay = 0f;
 
         private int _currentIndex;
 
