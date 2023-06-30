@@ -39,7 +39,7 @@ namespace SFXManager
         [AssetList(Path = "/Audio/Ambient SFX", AutoPopulate = true)]
         public List<SFXClip> ambientSFX;
 
-        public static void PlaySFX(SFXClip sfx, bool waitToFinish = true, AudioSource audioSource = null)
+        public static void PlaySFX(SFXClip sfxClip, bool waitToFinish = true, AudioSource audioSource = null)
         {
             if (audioSource == null)
                 audioSource = Instance._defaultAudioSource;
@@ -52,20 +52,28 @@ namespace SFXManager
 
             if (!audioSource.isPlaying || !waitToFinish)
             {
-                switch (sfx.playType)
+                // Get clip
+                switch (sfxClip.playType)
                 {
                     case SFXClipPlayType.Next:
-                        audioSource.clip = sfx.NextClip();
+                        audioSource.clip = sfxClip.NextClip();
                         break;
                     case SFXClipPlayType.Random:
-                        audioSource.clip = sfx.RandomClip();
+                        audioSource.clip = sfxClip.RandomClip();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                audioSource.volume = sfx.volume + Random.Range(-sfx.volumeVariation, sfx.volumeVariation);
-                audioSource.pitch = sfx.pitch + Random.Range(-sfx.pitchVariation, sfx.pitchVariation);
-                audioSource.Play();
+
+                // Apply variation
+                audioSource.volume = sfxClip.volume + Random.Range(-sfxClip.volumeVariation, sfxClip.volumeVariation);
+                audioSource.pitch = sfxClip.pitch + Random.Range(-sfxClip.pitchVariation, sfxClip.pitchVariation);
+
+                // Play audio (with delay if present)
+                if (sfxClip.delay <= 0)
+                    audioSource.Play();
+                else
+                    audioSource.PlayDelayed(sfxClip.delay);
             }
         }
 
