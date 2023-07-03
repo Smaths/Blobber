@@ -61,7 +61,7 @@ namespace UI
         #endregion
 
         #region Public Methods
-        public void FadeToStart()
+        public void FadeToStart(bool animated = true)
         {
             OnFadeToStart?.Invoke();
             instance.FadeTo(_startSceneName);
@@ -75,7 +75,7 @@ namespace UI
 
         public void FadeToTutorial()
         {
-            FadeTo(_tutorialSceneName);
+            FadeTo(_tutorialSceneName, false);
         }
 
         public void FadeToCurrentScene()
@@ -84,9 +84,13 @@ namespace UI
             FadeOut(scene.name);
         }
 
-        public void FadeTo(string sceneName)
+        public void FadeTo(string sceneName, bool animated = true)
         {
-            FadeOut(sceneName);
+            if (animated)
+                FadeOut(sceneName);
+            else
+                SceneManager.LoadScene(sceneName);
+
         }
         #endregion
 
