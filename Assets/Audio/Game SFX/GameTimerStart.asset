@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102682c3d6f4ab78af725eb54a096a1, type: 3}
   m_Name: GameTimerStart
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: 135b231dc24bd4e8c8675ff7c1c86b79, type: 3}
   playType: 0
   volume: 1
-  volumeVariation: 0.05
+  volumeVariation: 0
   pitch: 1
-  pitchVariation: 0.05
+  pitchVariation: 0
+  delay: 0

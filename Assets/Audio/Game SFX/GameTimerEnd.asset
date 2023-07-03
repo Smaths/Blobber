@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clips: []
   playType: 0
-  volume: 1
+  volume: 0.675
   volumeVariation: 0.05
   pitch: 1
   pitchVariation: 0.05
+  delay: 0

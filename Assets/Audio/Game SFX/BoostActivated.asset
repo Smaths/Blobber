@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: BoostActivated
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: 4e04ed11c6b2343ea94ffe6b52f8d688, type: 3}
-  - {fileID: 8300000, guid: 61856ed29b2054d58a6bea4aa4862241, type: 3}
-  - {fileID: 8300000, guid: f0aaeed0d9e3544609701cd36d18e395, type: 3}
-  - {fileID: 8300000, guid: 6ba599647612b4f4fac1c107597352a2, type: 3}
-  - {fileID: 8300000, guid: e89e35a9a8c66425b85a05311c683948, type: 3}
-  playType: 0
+  - {fileID: 8300000, guid: 622f02f4b1652440aad1ed0702db305d, type: 3}
+  - {fileID: 8300000, guid: 2766d705f1cc34dfdb44776218ec44c9, type: 3}
+  - {fileID: 8300000, guid: c129ccf20234841ff84e814280bb96ca, type: 3}
+  - {fileID: 8300000, guid: a5921feadf18d48609e9e23a19c1213e, type: 3}
+  - {fileID: 8300000, guid: 8a3504fe9e3b2473ba6c9d002dde106b, type: 3}
+  - {fileID: 8300000, guid: be81a5d9efde84d488b933a32db67b94, type: 3}
+  - {fileID: 8300000, guid: 68450b23c64cf4b2e96a79cf4676d909, type: 3}
+  playType: 1
   volume: 1
-  volumeVariation: 0.05
+  volumeVariation: 0.02
   pitch: 1
   pitchVariation: 0.05
+  delay: 0

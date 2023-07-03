@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102682c3d6f4ab78af725eb54a096a1, type: 3}
   m_Name: Death
   m_EditorClassIdentifier: 
-  clip: {fileID: 0}
-  volume: 1
+  clips:
+  - {fileID: 8300000, guid: 5685b061464cd4241ac1968dade70e51, type: 3}
+  playType: 0
+  volume: 0.315
   volumeVariation: 0.05
   pitch: 1
   pitchVariation: 0.05
+  delay: 0
