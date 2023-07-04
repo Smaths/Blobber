@@ -3,7 +3,10 @@ guid: 044bae5099b44b01acfac2b7320af495
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _canvas: {instanceID: 0}
+  - _popupPrefab: {fileID: 2225145639059729187, guid: 4781d23797ddf4799b1d3e829e6e9000,
+      type: 3}
   executionOrder: -4
   icon: {instanceID: 0}
   userData: 

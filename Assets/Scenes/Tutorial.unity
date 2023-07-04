@@ -1178,9 +1178,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8036288645681857447, guid: d5c5329d16f95422c94ec7b5490d7797,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036288645681857447, guid: d5c5329d16f95422c94ec7b5490d7797,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1621257030}
+    - target: {fileID: 8036288645681857447, guid: d5c5329d16f95422c94ec7b5490d7797,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UI.SceneFader, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

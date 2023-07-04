@@ -1,10 +1,12 @@
 using System.Collections;
 using DG.Tweening;
 using Managers;
+using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Blobs
 {
@@ -14,6 +16,8 @@ namespace Blobs
     [RequireComponent(typeof(NavMeshAgent))]
     public class BlobAI : MonoBehaviour
     {
+        private const float AnimationTime = 0.3f;
+        private const int MaxColliders = 6;
         [BoxGroup("Dependencies")]
         [SceneObjectsOnly]
         [SerializeField] private GameObject _playerBlob;
@@ -27,13 +31,13 @@ namespace Blobs
         private NavMeshAgent _agent;
 
         [Header("Transformation")]
-        [SuffixLabel("second(s)"), HideIf("_blobType", BlobType.Bad)]
+        [SuffixLabel("second(s)")] [HideIf("_blobType", BlobType.Bad)]
         [Tooltip("The duration the character stays in the untransformed state.")]
-        [SerializeField] private Vector2 _untransformedDuration = new (5f, 6f);
-        [SuffixLabel("second(s)"), HideIf("_blobType", BlobType.Bad)]
+        [SerializeField] private Vector2 _untransformedDuration = new(5f, 6f);
+        [SuffixLabel("second(s)")] [HideIf("_blobType", BlobType.Bad)]
         [Tooltip("The duration the character stays in the transformed state.")]
         [SerializeField] private Vector2 _transformedDuration = new(3f, 4f);
-        [SuffixLabel("second(s)"), HideIf("_blobType", BlobType.Bad)]
+        [SuffixLabel("second(s)")] [HideIf("_blobType", BlobType.Bad)]
         [Tooltip("Rate at which the character transforms from one state to the other.")]
         [SerializeField] private float _transformationTime = 1.5f;
         private float _transformationTimeTrigger;
@@ -48,16 +52,17 @@ namespace Blobs
         [SerializeField] private LayerMask _sightMask;
         private bool _hadTarget;
 
+        [FormerlySerializedAs("_wanderRange")]
         [Header("Wander")]
-        [SuffixLabel("meter(s)"), MinValue(0)]
-        [SerializeField] private float _wanderRange = 4f;
+        [SuffixLabel("meter(s)")] [MinValue(0)]
+        [SerializeField] private float _wanderRadius = 4f;
         [LabelText("Distance Threshold")]
-        [SuffixLabel("meter(s)"), MinValue(0.01f)]
+        [SuffixLabel("meter(s)")] [MinValue(0.01f)]
         [Tooltip("Range the character can be from random wander position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
         [SerializeField] private float _wanderDistanceThreshold = 0.25f;
         [SuffixLabel("second(s)")]
         [Tooltip("How long the character will wait before finding a new wander position.")]
-        [SerializeField] private Vector2 _wanderWaitTime = new (2f, 4f);
+        [SerializeField] private Vector2 _wanderWaitTime = new(2f, 4f);
         [Tooltip("Select ground layer to check if random wander point is on the walkable ground.")]
         [SerializeField] private LayerMask _groundMask;
         [Tooltip("Select layers for the character to avoid when finding a random wander position.")]
@@ -66,13 +71,13 @@ namespace Blobs
         private bool _isWaitingAtWanderPoint;
 
         [Header("Meshes")]
-        [Required, ChildGameObjectsOnly]
+        [Required] [ChildGameObjectsOnly]
         [SerializeField] private GameObject _blobMesh;
         [SerializeField] private GameObject _hat;
 
         [Header("Visuals")]
-        [SerializeField] private Color _goodBlobColor = new (0.749f, 0.753f, 0.247f, 1.0f);
-        [SerializeField] private Color _badBlobColor = new (0.682f, 0.298f, 0.294f, 1.0f);
+        [SerializeField] private Color _goodBlobColor = new(0.749f, 0.753f, 0.247f, 1.0f);
+        [SerializeField] private Color _badBlobColor = new(0.682f, 0.298f, 0.294f, 1.0f);
         [AssetsOnly]
         [SerializeField] private global::Face _faceData;
         private Material _blobMaterial;
@@ -82,35 +87,31 @@ namespace Blobs
         [SerializeField] private GameObject _deathFX;
 
         [Header("Info")]
-        [SerializeField, DisplayAsString] private bool _isDestroying;
+        [SerializeField] [DisplayAsString] private bool _isDestroying;
         [HorizontalGroup("Target")]
-        [SerializeField, DisplayAsString] private bool _hasTarget;
-        [HorizontalGroup("Target"), HideLabel]
-        [SerializeField, DisplayAsString] private Vector3 _targetDestination;
-        [HorizontalGroup("Transformation"), DisplayAsString]
+        [SerializeField] [DisplayAsString] private bool _hasTarget;
+        [HorizontalGroup("Target")] [HideLabel]
+        [SerializeField] [DisplayAsString] private Vector3 _targetDestination;
+        [HorizontalGroup("Transformation")] [DisplayAsString]
         [SerializeField] private bool _isTransforming;
-        [HorizontalGroup("Transformation"), DisplayAsString]
+        [HorizontalGroup("Transformation")] [DisplayAsString]
         [SerializeField] private bool _isTransformed;
+
+        [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
+        private Collider[] _searchColliders;
+        private Collider[] _wanderColliders;
 
         #region Events
-        [FoldoutGroup("Events", false)]
+        [Header("Events")]
         public UnityEvent<BlobAIState> OnBlobStateChange;
-        [FoldoutGroup("Events")]
         public UnityEvent OnGainedTarget;
-        [FoldoutGroup("Events")]
         public UnityEvent OnLostTarget;
-        [FoldoutGroup("Events")]
         public UnityEvent OnIdle;
-        [FoldoutGroup("Events")]
         public UnityEvent OnWander;
-        [FoldoutGroup("Events")]
         public UnityEvent OnAttack;
-        [FoldoutGroup("Events")]
         public UnityEvent OnTransform;
-        [FoldoutGroup("Events")]
         public UnityEvent OnPause;
-        [FoldoutGroup("Events")]
         public UnityEvent OnDeath;
         #endregion
 
@@ -149,7 +150,8 @@ namespace Blobs
         private void OnEnable()
         {
             _agent.speed = _speed;
-
+            _isDestroying = false;
+            _isTransforming = false;
             _deathFX.gameObject.SetActive(false);
 
             if (_blobType == BlobType.Good)
@@ -164,6 +166,8 @@ namespace Blobs
 
         private void Start()
         {
+            if (_playerBlob == null) _playerBlob = FindObjectOfType<PlayerController>().gameObject;
+
             switch (_blobType)
             {
                 case BlobType.Good:
@@ -178,7 +182,7 @@ namespace Blobs
 
         private void Update()
         {
-            if (_isDestroying) return;  // Guard
+            if (_isDestroying) return; // Guard
             if (!_agent) return;
             if (_currentState == BlobAIState.Paused) return;
 
@@ -195,7 +199,7 @@ namespace Blobs
         public void Disable()
         {
             if (!isActiveAndEnabled) return;
-        
+
             _agent.speed = 0;
             SetState(BlobAIState.Paused);
         }
@@ -211,7 +215,7 @@ namespace Blobs
 
         private void SetState(BlobAIState newState)
         {
-            if (newState == _currentState) return;  // Prevent redundant state sets
+            if (newState == _currentState) return; // Prevent redundant state sets
 
             // Set Face
             if (_faceMaterial & _faceData)
@@ -235,7 +239,6 @@ namespace Blobs
                     OnAttack?.Invoke();
                     break;
                 case BlobAIState.Dead:
-                    PlayDeathAnimation();
                     OnDeath?.Invoke();
                     break;
                 case BlobAIState.Paused:
@@ -247,42 +250,38 @@ namespace Blobs
         #region Collider Trigger
         private void OnTriggerEnter(Collider other)
         {
-            if (_isDestroying) return;  // guard statement
+            if (_isDestroying) return; // guard statement
+            _isDestroying = true;
 
-            // Invert points if blob is transformed
-            int points = _isTransformed ? -_pointValue : _pointValue;
+            int points = _isTransformed ? -_pointValue : _pointValue; // Invert points if blob is transformed
             ScoreManager.instance.AddPoints(points, transform.position);
 
-            if (BlobManager.instanceExists)
-                BlobManager.Instance.OnBlobDestroy(this);
-
             SetState(BlobAIState.Dead);
-        }
 
-        private void PlayDeathAnimation()
-        {
+            // Animation
+            transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), AnimationTime, 0);
+            transform.DOScale(Vector3.zero, AnimationTime);
+
             // Play death FX
             if (_blobType == BlobType.Bad || _isTransformed)
                 _deathFX.gameObject.SetActive(true);
 
-            // Animation
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f, vibrato: 0));
-            sequence.Append(transform.DOScale(Vector3.zero, 0.2f));
-            sequence.OnStart(() => _isDestroying = true);
-            sequence.OnComplete(() => Destroy(gameObject, 0.1f));
-            sequence.Play();
+            // Object pooling
+            if (BlobManager.instanceExists)
+                BlobManager.Instance.OnBlobReturnToPool(this);
         }
         #endregion
 
         #region Search for Player
         private IEnumerator SearchForPlayerCoroutine()
         {
-            while (!_isDestroying )
+            while (!_isDestroying)
             {
-                Collider[] colliders = Physics.OverlapSphere(transform.position, _sightRange, _sightMask);
+                _searchColliders ??= new Collider[MaxColliders];
+                int numColliders =
+                    Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _searchColliders, _sightMask);
 
-                if (colliders.Length == 0)
+                if (numColliders == 0)
                 {
                     // No target found
                     _hasTarget = false;
@@ -300,7 +299,7 @@ namespace Blobs
                     // Target found
                     _hasTarget = true;
                     _hadTarget = true;
-                    _targetDestination = colliders[0].transform.position;
+                    _targetDestination = _searchColliders[0].transform.position;
 
                     _agent.SetDestination(_targetDestination);
 
@@ -345,17 +344,45 @@ namespace Blobs
             _hasWanderPoint = false;
         }
 
+        // ---
+        // NOTE: Not working, but would be great if it did.
+        private void GetNewWanderPoint()
+        {
+            int walkableLayerMask = NavMesh.GetAreaFromName("Walkable"); // Replace "Walkable" with the actual name of your walkable NavMesh layer
+            Vector3 randomPosition = RandomNavSphere(transform.position, _wanderRadius, walkableLayerMask);
+
+            print($"{gameObject.name} - Random Position: {randomPosition}");
+            
+            _hasWanderPoint = true;
+            _targetDestination = randomPosition;
+        }
+
+        private Vector3 RandomNavSphere(Vector3 origin, float radius, int layerMask)
+        {
+            Vector3 randomDirection = Random.insideUnitSphere * radius;
+            randomDirection += origin;
+
+            NavMesh.SamplePosition(new Vector3(randomDirection.x, origin.y, randomDirection.z), out NavMeshHit navHit, radius, layerMask);
+
+            return navHit.position;
+        }
+        // ---
+
         private void SearchForWanderPoint()
         {
-            float randomX = Random.Range(-_wanderRange, _wanderRange);
-            float randomZ = Random.Range(-_wanderRange, _wanderRange);
+            float randomX = Random.Range(-_wanderRadius, _wanderRadius);
+            float randomZ = Random.Range(-_wanderRadius, _wanderRadius);
 
             Vector3 cachedPosition = transform.position;
-            Vector3 randomPosition = new Vector3(cachedPosition.x + randomX, cachedPosition.y, cachedPosition.z + randomZ);
+            var randomPosition = new Vector3(cachedPosition.x + randomX, cachedPosition.y, cachedPosition.z + randomZ);
 
             // Check - random wander position is NOT inside another collider
-            Collider[] colliders = Physics.OverlapBox(randomPosition, Vector3.one * 0.5f, Quaternion.identity, _avoidMask);
-            if (colliders.Length != 0) return;
+            _wanderColliders ??= new Collider[MaxColliders];
+            int numColliders = Physics.OverlapBoxNonAlloc(randomPosition, Vector3.one * 0.5f, _wanderColliders, Quaternion.identity, _avoidMask);
+            if (numColliders > 0)
+            {
+                return;
+            }
 
             // Check - random wander position is above the ground terrain
             if (!Physics.Raycast(randomPosition, Vector3.down, 2f, _groundMask)) return;
@@ -365,7 +392,6 @@ namespace Blobs
                 var debugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 debugObject.transform.localScale = Vector3.one * 0.2f;
                 Destroy(debugObject, 1f);
-
                 Debug.DrawLine(transform.position, randomPosition, Color.red, 1f);
             }
 
@@ -396,6 +422,7 @@ namespace Blobs
                     break;
             }
         }
+
         private void SetFace(Texture tex)
         {
             _faceMaterial.SetTexture(MainTex, tex);
@@ -405,7 +432,7 @@ namespace Blobs
         #region Transformation
         private void TransformationCheck()
         {
-            if (_isTransforming) return;    // Ignore timer during transformation
+            if (_isTransforming) return; // Ignore timer during transformation
 
             if (!(Time.time >= _transformationTimeTrigger)) return; // Timer still running
             // Timer complete
@@ -418,11 +445,8 @@ namespace Blobs
 
         private Sequence GetTransformingSequence()
         {
-            const float finalTransformationTime = 0.4f;
-
             Sequence sequence = DOTween.Sequence();
             sequence.Append(transform.DOShakeRotation(_transformationTime, 45f, 4, 45));
-
             if (_isTransformed)
             {
                 sequence.Append(_blobMaterial.DOColor(_goodBlobColor, _transformationTime));

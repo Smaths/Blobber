@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace SFXManager
@@ -8,14 +9,12 @@ namespace SFXManager
     [Serializable]
     public class SFX
     {
-        [LabelText("SFX Type")]
-        [LabelWidth(100)]
+        [LabelText("SFX Type")] [LabelWidth(100)]
         [OnValueChanged("SFXChange")]
         [InlineButton("PlaySFX")]
         public SFXManager.SFXType sfxType = SFXManager.SFXType.SFX;
 
-        [LabelText("$_sfxLabel")]
-        [LabelWidth(100)]
+        [LabelText("$_sfxLabel")] [LabelWidth(100)]
         [ValueDropdown("SFXType")]
         [OnValueChanged("SFXChange")]
         [InlineButton("SelectSFX")]
@@ -29,25 +28,21 @@ namespace SFXManager
         private bool _editSettings;
 
         [InlineEditor(InlineEditorObjectFieldModes.Hidden)]
-        [ShowIf("_showSettings")]
-        [EnableIf("_editSettings")]
+        [ShowIf("_showSettings")] [EnableIf("_editSettings")]
         [SerializeField]
         private SFXClip _sfxBase;
 
         [Title("Audio Source")]
-        [ShowIf("_showSettings")]
-        [EnableIf("_editSettings")]
+        [ShowIf("_showSettings")] [EnableIf("_editSettings")]
         [SerializeField]
         private bool _waitToPlay = true;
 
-        [ShowIf("_showSettings")]
-        [EnableIf("_editSettings")]
+        [ShowIf("_showSettings")] [EnableIf("_editSettings")]
         [SerializeField]
         private bool _useDefault = true;
 
         [DisableIf("_useDefault")]
-        [ShowIf("_showSettings")]
-        [EnableIf("_editSettings")]
+        [ShowIf("_showSettings")] [EnableIf("_editSettings")]
         [SerializeField]
         private AudioSource _audioSource;
 
@@ -61,7 +56,9 @@ namespace SFXManager
 
         private void SelectSFX()
         {
-            UnityEditor.Selection.activeObject = sfxToPlay;
+#if UNITY_EDITOR
+            Selection.activeObject = sfxToPlay;
+#endif
         }
 
         // Get list of SFX from manager, used in inspector

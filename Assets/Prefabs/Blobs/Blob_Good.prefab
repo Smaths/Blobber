@@ -178,14 +178,14 @@ MonoBehaviour:
   _speed: 3
   _untransformedDuration: {x: 5, y: 12}
   _transformedDuration: {x: 2, y: 4}
-  _transformationTime: 0.5
+  _transformationTime: 0.25
   _searchRate: 0.25
   _sightRange: 4
   _sightMask:
     serializedVersion: 2
     m_Bits: 128
-  _wanderRange: 4
-  _wanderDistanceThreshold: 0.25
+  _wanderRadius: 4.5
+  _wanderDistanceThreshold: 0.5
   _wanderWaitTime: {x: 2, y: 4.5}
   _groundMask:
     serializedVersion: 2
@@ -262,8 +262,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4789807253655699573}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.3
   m_Height: 1.25
   m_Direction: 1
@@ -368,6 +377,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5371155676846694039}
     m_Modifications:
     - target: {fileID: 288024696299012842, guid: 55602126ae3364ed2901f2466ba46877,
@@ -436,6 +446,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55602126ae3364ed2901f2466ba46877, type: 3}
 --- !u!4 &211105982673859409 stripped
 Transform:
@@ -454,6 +467,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4820327020352807213}
     m_Modifications:
     - target: {fileID: 725748389098120080, guid: 4bda94453d2ca7444a0fff05b2d425f5,
@@ -494,6 +508,11 @@ PrefabInstance:
     - target: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807726, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+        type: 3}
+      propertyPath: animatedLights.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5,
@@ -572,6 +591,9 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
 --- !u!4 &2710812742892477826 stripped
 Transform:

@@ -1,33 +1,44 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ObjectPooling;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
-using Unity.Mathematics;
 using UnityEngine;
 using Utility;
-using Random = UnityEngine.Random;
 
 namespace Blobs
 {
+    [RequireComponent(typeof(PoolManager))]
     public class BlobManager : Singleton<BlobManager>
     {
         [Title("Blob Manager")]
-        [SerializeField] private List<BlobAI> _blobs;
-        [Header("Blob Prefabs")]
-        [AssetsOnly, Required]
+        [Title("Good Blobs", horizontalLine: false)]
+        [AssetsOnly] [Required]
         [SerializeField] private GameObject _goodBlobPrefab;
-        [AssetsOnly, Required]
-        [SerializeField] private GameObject _badBlobPrefab;
-        [Header("Spawn Points")]
-        [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private GameObject _goodBlobContainer;
+        [HorizontalGroup("Good"), LabelText("Start Count")]
+        [SerializeField] private int _defaultCapacity_Good = 19;
+        [HorizontalGroup("Good"), LabelText("Max")]
+        [SerializeField] private int _maxCapacity_Good = 20;
 
+        [Title("Bad Blobs", horizontalLine: false)]
+        [AssetsOnly] [Required]
+        [SerializeField] private GameObject _badBlobPrefab;
+        [SerializeField] private GameObject _badBlobContainer;
+        [HorizontalGroup("Bad"), LabelText("Start Count")]
+        [SerializeField] private int _defaultCapacity_Bad = 15;
+        [HorizontalGroup("Bad"), LabelText("Max")]
+        [SerializeField] private int _maxCapacity_Bad = 16;
+
+        [Title("Spawn Points")]
+        [SerializeField] private ItemDistributor<Transform> _spawnPoints;
+
+        [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
 
         #region Lifecycle
         private void OnValidate()
         {
-            FindBlobs();
             FindSpawnPoints();
         }
 
@@ -35,71 +46,77 @@ namespace Blobs
         {
             base.Awake();
 
-            FindBlobs();
             FindSpawnPoints();
-
-            Debug.Assert(_blobs != null || _blobs.Count > 0, $"{gameObject.name} doesn't have any blobs.");
-        }
-        #endregion
-
-        #region Blobs
-        public void DisableBlobs()
-        {
-            FindBlobs();
-
-            foreach (BlobAI blob in _blobs)
-                blob.Disable();
         }
 
-        public void EnableBlobs()
+        private void Start()
         {
-            foreach (BlobAI blob in _blobs)
-                blob.Enable();
-        }
+            // Create pools
+            PoolManager.Instance.CreatePool(_goodBlobPrefab, _maxCapacity_Good, _goodBlobContainer.transform);
+            PoolManager.Instance.CreatePool(_badBlobPrefab, _maxCapacity_Bad, _badBlobContainer.transform);
 
-        [Button(ButtonSizes.Medium, Icon = SdfIconType.Search)]
-        private void FindBlobs()
-        {
-            _blobs = FindObjectsOfType<BlobAI>().ToList();
+            // Spawn objects
+            for (int i = 0; i < _defaultCapacity_Good; i++)
+                PoolManager.Instance.SpawnFromPool(_goodBlobPrefab, RandomSpawnPointPosition());
+            for (int i = 0; i < _defaultCapacity_Bad; i++)
+                PoolManager.Instance.SpawnFromPool(_badBlobPrefab, RandomSpawnPointPosition());
         }
         #endregion
 
         #region Blob Event Handlers
-        public void OnBlobDestroy(BlobAI blob)
+        public void OnBlobReturnToPool(BlobAI blob)
         {
-            if (_showDebug) print($"{gameObject.name} - ({blob.Type}) {blob.name} destroyed");
-            _blobs.Remove(blob);
+#if UNITY_EDITOR
+            if (_showDebug) print($"{gameObject.name} - ({blob.Type}) {blob.name} returned to pool");
+#endif
 
-            GameObject newBlob;
             switch (blob.Type)
             {
                 case BlobType.Good:
-                    newBlob = Instantiate(_goodBlobPrefab, RandomSpawnPointPosition(), quaternion.identity);
+                    PoolManager.Instance.ReturnToPool(_goodBlobPrefab, blob.gameObject);
+                    PoolManager.Instance.SpawnFromPool(_goodBlobPrefab, RandomSpawnPointPosition());
                     break;
                 case BlobType.Bad:
-                    newBlob = Instantiate(_badBlobPrefab, RandomSpawnPointPosition(), quaternion.identity);
+                    PoolManager.Instance.ReturnToPool(_badBlobPrefab, blob.gameObject);
+                    PoolManager.Instance.SpawnFromPool(_badBlobPrefab, RandomSpawnPointPosition());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            _blobs.Add(newBlob.GetComponent<BlobAI>());
         }
         #endregion
 
+        public void EnableBlobs()
+        {
+            BlobAI[] blobs = FindObjectsOfType<BlobAI>();
+            foreach (var blob in blobs)
+            {
+                blob.Enable();
+            }
+        }
+
+        public void DisableBlobs()
+        {
+            BlobAI[] blobs = FindObjectsOfType<BlobAI>();
+            foreach (var blob in blobs)
+            {
+                blob.Disable();
+            }
+        }
+
         #region Spawn Points
-        [Button(ButtonSizes.Medium, Icon = SdfIconType.Search), PropertyOrder(4)]
+        [Button(ButtonSizes.Medium, Icon = SdfIconType.Search)] [PropertyOrder(4)]
         private void FindSpawnPoints()
         {
-            _spawnPoints = transform.GetComponentsInChildren<Transform>();
+            List<Transform> spawnPoints = transform.GetComponentsInChildren<Transform>().ToList();
+            _spawnPoints = new ItemDistributor<Transform>(spawnPoints);
         }
 
         private Vector3 RandomSpawnPointPosition()
         {
-            if (_spawnPoints.IsNullOrEmpty()) return Vector3.zero;
-
-            int randomIndex = Random.Range(0, _spawnPoints.Length - 1);
-            return _spawnPoints[randomIndex].position;
+            return _spawnPoints.Count > 0
+                ? _spawnPoints.GetNextItem().position
+                : Vector3.zero;
         }
         #endregion
     }

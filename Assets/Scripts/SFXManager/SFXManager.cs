@@ -52,6 +52,8 @@ namespace SFXManager
 
             if (!audioSource.isPlaying || !waitToFinish)
             {
+                if (sfxClip.clips.Count == 0) return;
+
                 // Get clip
                 switch (sfxClip.playType)
                 {
