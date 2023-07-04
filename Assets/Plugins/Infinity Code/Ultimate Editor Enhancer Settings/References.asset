@@ -355,12 +355,8 @@ MonoBehaviour:
     icon: VideoPlayer Icon
     color: {r: 0.5764706, g: 0.43921572, b: 0.8588236, a: 1}
   _sceneHistory:
-  - name: Lighting Test
-    path: Assets/Scenes/Lighting Test.unity
-  - name: Level_1
-    path: Assets/Scenes/Level_1.unity
   - name: Start
     path: Assets/Scenes/Start.unity
-  - name: Tutorial
-    path: Assets/Scenes/Tutorial.unity
+  - name: Level_1
+    path: Assets/Scenes/Level_1.unity
   _notes: []

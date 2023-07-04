@@ -115,7 +115,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f851d1f8bd66443f4ae1b2ce7d9d8a94, type: 2}
+  - {fileID: 2100000, guid: 51b1c58d72f794090aaa0a09cda60c23, type: 2}
   - {fileID: 2100000, guid: c12dba4db4b10a34ea85b03c5b9263e6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -342,7 +342,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c91732b1f9025254389e917797db9b70, type: 2}
+  - {fileID: 2100000, guid: 26c4ad962921b41f1b4bd9804101c306, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -522,7 +522,7 @@ MonoBehaviour:
   _sightMask:
     serializedVersion: 2
     m_Bits: 128
-  _wanderRange: 4
+  _wanderRadius: 4
   _wanderDistanceThreshold: 0.25
   _wanderWaitTime: {x: 2, y: 4}
   _groundMask:
