@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 // Script execution order modified.
@@ -35,7 +34,6 @@ namespace Managers
         public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
         public UnityEvent<int> OnScoreIncrease;
         public UnityEvent<int> OnScoreDecrease;
-        [FormerlySerializedAs("OnPlayerPointsDepleted")]
         public UnityEvent OnScoreIsZero;
 
         #region Public Properties

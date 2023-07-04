@@ -14,13 +14,13 @@ namespace Utility
         [Title("Settings")]
         [SerializeField] private string _leaderboardKey = "blobs_leaderboard";
         [SerializeField] private int _downloadCount = 11;
-        [SerializeField, ReadOnly] private string _memberID;
+        [SerializeField] [ReadOnly] private string _memberID;
         [SerializeField] private string _playerName;
         [Space]
         [Header("Data")]
         [SerializeField] private LootLockerLeaderboardMember[] _members;
         [SerializeField] private bool _showDebug;
-        
+
         [Header("Events")]
         public UnityEvent<string> OnPlayerNameSet;
         public UnityEvent OnSessionSetupCompleted;
@@ -52,13 +52,14 @@ namespace Utility
             {
                 if (!response.success)
                 {
-                    Debug.LogWarning("Error starting Lootlocker session");
+                    Debug.LogWarning("<color=red>––LootLocker––Error starting Lootlocker session</color>");
                     return;
                 }
 
                 GuestSessionDidStart();
 
-                if (_showDebug) Debug.Log("Successfully started LootLocker session");
+                if (_showDebug)
+                    Debug.Log("<color=#ECAB35>––LootLocker––Successfully started LootLocker session</color>");
             });
         }
 
@@ -79,11 +80,14 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    Debug.Log($"––––LootLocker: Submit Score Successful––––\nmemberID: {memberID}| player name: {_playerName} | score: {score} | leaderboardKey: {_leaderboardKey}\n––––––––––––––––––––––––––––––––––––");
+#if UNITY_EDITOR
+                    Debug.Log(
+                        $"<color=#ECAB35>––LootLocker––Submit Score Successful––––\nmemberID: {memberID}| player name: {_playerName} | score: {score} | leaderboardKey: {_leaderboardKey}</color>");
+#endif
                 }
                 else
                 {
-                    Debug.LogWarning("Submit Score Failed: " + response.Error);
+                    Debug.LogWarning("––LootLocker––Submit Score Failed: " + response.Error);
                 }
             });
         }
@@ -92,19 +96,25 @@ namespace Utility
         {
             LootLockerSDKManager.GetScoreList(_leaderboardKey, _downloadCount, 0, response =>
             {
-                if (response.statusCode == 200) {
+                if (response.statusCode == 200)
+                {
                     if (_showDebug)
                     {
-                        Debug.Log($"Leaderboard Get Top Scores Successful – {response.items.Length} leaderboard member(s) downloaded.");
+#if UNITY_EDITOR
+                        Debug.Log(
+                            $"––LootLocker––Get Top Scores Successful – {response.items.Length} leaderboard member(s) downloaded.");
                         foreach (LootLockerLeaderboardMember member in response.items)
                             Debug.Log(member.ToString());
+#endif
                     }
 
                     _members = response.items;
 
                     OnTopScoresDownloadComplete?.Invoke();
-                } else {
-                    Debug.LogWarning("Leaderboard Get Top Scores Failed: " + response.Error);
+                }
+                else
+                {
+                    Debug.LogWarning($"<color=red>––LootLocker––Get Top Scores Failed: {response.Error}</color>");
                 }
             });
         }
@@ -125,9 +135,12 @@ namespace Utility
                         {
                             if (_showDebug)
                             {
-                                Debug.Log($"Leaderboard Get Scores Around Member Successful – {scoreResponse.items.Length} leaderboard member(s) downloaded.");
+#if UNITY_EDITOR
+                                Debug.Log(
+                                    $"––LootLocker––Leaderboard Get Scores Around Member Successful – {scoreResponse.items.Length} leaderboard member(s) downloaded.");
                                 foreach (LootLockerLeaderboardMember member in scoreResponse.items)
                                     Debug.Log(member.ToString());
+#endif
                             }
 
                             _members = scoreResponse.items;
@@ -135,23 +148,28 @@ namespace Utility
                             OnNearbyScoresDownloadComplete?.Invoke();
                         }
 
-                        Debug.LogWarning("Leaderboard Get Scores Around Member Failed: " + scoreResponse.Error);
+                        Debug.LogWarning(
+                            "<color=red>––LootLocker––Leaderboard Get Scores Around Member Failed: {scoreResponse.Error}</color>");
                     });
                 }
                 else
                 {
-                    Debug.LogWarning("Leaderboard Get Member Rank Failed: " + response.Error);
+                    Debug.LogWarning(
+                        $"<color=red>––LootLocker––Leaderboard Get Member Rank Failed: {response.Error}</color>");
                 }
             });
         }
 
-        public void GetPlayerName()
+        private void GetPlayerName()
         {
             LootLockerSDKManager.GetPlayerName(response =>
             {
                 if (response.success)
                 {
-                    Debug.Log("Successfully retrieved player name: " + response.name);
+#if UNITY_EDITOR
+                    Debug.Log(
+                        $"<color=#ECAB35>––LootLocker––Successfully retrieved player name: {response.name}</color>");
+#endif
 
                     _playerName = response.name;
 
@@ -159,18 +177,21 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.Log("Error getting player name");
+                    Debug.Log("<color=red>––LootLocker––Error getting player name</color>");
                 }
             });
         }
 
         public void UpdatePlayerName(string playerName)
         {
-            LootLockerSDKManager.SetPlayerName(playerName, (response) =>
+            LootLockerSDKManager.SetPlayerName(playerName, response =>
             {
                 if (response.success)
                 {
-                    Debug.Log($"Successfully set player name:{_playerName}({_memberID})");
+#if UNITY_EDITOR
+                    Debug.Log(
+                        $"<color=#ECAB35>––LootLocker––Successfully set player name:{_playerName}({_memberID})</color>");
+#endif
 
                     _playerName = playerName;
 
@@ -178,7 +199,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.Log("Error setting player name");
+                    Debug.Log("<color=red>––LootLocker––Error setting player name</color>");
                 }
             });
         }

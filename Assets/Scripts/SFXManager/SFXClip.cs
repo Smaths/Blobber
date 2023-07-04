@@ -34,7 +34,9 @@ namespace SFXManager
         {
             if (clips.Count <= 0)
             {
+#if UNITY_EDITOR
                 Debug.Log($"{name} has no audio clips!");
+#endif
                 return null;
             }
 
@@ -51,7 +53,9 @@ namespace SFXManager
         {
             if (clips.Count <= 0)
             {
+#if UNITY_EDITOR
                 Debug.Log($"{name} has no audio clips!");
+#endif
                 return null;
             }
 
