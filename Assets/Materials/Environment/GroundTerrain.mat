@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: GroundTerrain
   m_Shader: {fileID: 4800000, guid: fea9ee138d4a84d90a0c3f187fb3cd8a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _CELPRIMARYMODE_SINGLE
   - _UNITYSHADOWMODE_COLOR
@@ -20,6 +22,8 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - Outline
+  - SRPDEFAULTUNLIT
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:

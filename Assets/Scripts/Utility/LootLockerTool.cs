@@ -52,13 +52,13 @@ namespace Utility
             {
                 if (!response.success)
                 {
-                    Debug.LogWarning("Error starting Lootlocker session");
+                    Debug.LogWarning("<color=red>Error starting Lootlocker session</color>");
                     return;
                 }
 
                 GuestSessionDidStart();
 
-                if (_showDebug) Debug.Log("Successfully started LootLocker session");
+                if (_showDebug) Debug.Log("<color=#ECAB35>Successfully started LootLocker session</color>");
             });
         }
 
@@ -79,7 +79,9 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    Debug.Log($"––––LootLocker: Submit Score Successful––––\nmemberID: {memberID}| player name: {_playerName} | score: {score} | leaderboardKey: {_leaderboardKey}\n––––––––––––––––––––––––––––––––––––");
+#if UNITY_EDITOR
+                    Debug.Log($"<color=#ECAB35>––––LootLocker: Submit Score Successful––––\nmemberID: {memberID}| player name: {_playerName} | score: {score} | leaderboardKey: {_leaderboardKey}</color>");
+#endif
                 }
                 else
                 {
@@ -95,16 +97,18 @@ namespace Utility
                 if (response.statusCode == 200) {
                     if (_showDebug)
                     {
+#if UNITY_EDITOR
                         Debug.Log($"Leaderboard Get Top Scores Successful – {response.items.Length} leaderboard member(s) downloaded.");
                         foreach (LootLockerLeaderboardMember member in response.items)
                             Debug.Log(member.ToString());
+#endif
                     }
 
                     _members = response.items;
 
                     OnTopScoresDownloadComplete?.Invoke();
                 } else {
-                    Debug.LogWarning("Leaderboard Get Top Scores Failed: " + response.Error);
+                    Debug.LogWarning($"<color=red>Leaderboard Get Top Scores Failed: {response.Error}</color>");
                 }
             });
         }
@@ -125,9 +129,11 @@ namespace Utility
                         {
                             if (_showDebug)
                             {
+#if UNITY_EDITOR
                                 Debug.Log($"Leaderboard Get Scores Around Member Successful – {scoreResponse.items.Length} leaderboard member(s) downloaded.");
                                 foreach (LootLockerLeaderboardMember member in scoreResponse.items)
                                     Debug.Log(member.ToString());
+#endif
                             }
 
                             _members = scoreResponse.items;
@@ -135,12 +141,12 @@ namespace Utility
                             OnNearbyScoresDownloadComplete?.Invoke();
                         }
 
-                        Debug.LogWarning("Leaderboard Get Scores Around Member Failed: " + scoreResponse.Error);
+                        Debug.LogWarning("<color=red>Leaderboard Get Scores Around Member Failed: {scoreResponse.Error}</color>");
                     });
                 }
                 else
                 {
-                    Debug.LogWarning("Leaderboard Get Member Rank Failed: " + response.Error);
+                    Debug.LogWarning($"<color=red>Leaderboard Get Member Rank Failed: {response.Error}</color>");
                 }
             });
         }
@@ -151,7 +157,9 @@ namespace Utility
             {
                 if (response.success)
                 {
-                    Debug.Log("Successfully retrieved player name: " + response.name);
+#if UNITY_EDITOR
+                    Debug.Log($"<color=#ECAB35>Successfully retrieved player name: {response.name}</color>");
+#endif
 
                     _playerName = response.name;
 
@@ -159,7 +167,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.Log("Error getting player name");
+                    Debug.Log("<color=red>Error getting player name</color>");
                 }
             });
         }
@@ -170,7 +178,9 @@ namespace Utility
             {
                 if (response.success)
                 {
-                    Debug.Log($"Successfully set player name:{_playerName}({_memberID})");
+#if UNITY_EDITOR
+                    Debug.Log($"<color=#ECAB35>Successfully set player name:{_playerName}({_memberID})</color>");
+#endif
 
                     _playerName = playerName;
 
@@ -178,7 +188,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.Log("Error setting player name");
+                    Debug.Log("<color=red>Error setting player name</color>");
                 }
             });
         }

@@ -15,7 +15,6 @@ namespace UI
         [SerializeField] private Canvas _canvas;
         [SerializeField] private CanvasGroup _canvasGroup;
 
-
         [Header("Fade Times")]
         [MinValue(0)] [SuffixLabel("s")]
         [Title("Settings")]
@@ -28,17 +27,12 @@ namespace UI
         [SerializeField] private string _gameSceneName = "Level_1";
         [SerializeField] private string _tutorialSceneName = "Tutorial";
 
-        [FoldoutGroup("Public Events", false)]
+        [Header("Public Events")]
         public UnityEvent OnFadeInStarted;
-        [FoldoutGroup("Public Events")]
         public UnityEvent OnFadeInCompleted;
-        [FoldoutGroup("Public Events")]
         public UnityEvent OnFadeOutStarted;
-        [FoldoutGroup("Public Events")]
         public UnityEvent OnFadeOutCompleted;
-        [FoldoutGroup("Public Events")]
         public UnityEvent OnFadeToStart;
-        [FoldoutGroup("Public Events")]
         public UnityEvent OnFadeToLevel;
 
         #region Lifecycle

@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using Sequence = DG.Tweening.Sequence;
 
 namespace Blobs
 {
@@ -14,6 +15,8 @@ namespace Blobs
     [RequireComponent(typeof(NavMeshAgent))]
     public class BlobAI : MonoBehaviour
     {
+        private const float AnimationTime = 0.3f;
+        private const int MaxColliders = 6;
         [BoxGroup("Dependencies")]
         [SceneObjectsOnly]
         [SerializeField] private GameObject _playerBlob;
@@ -91,26 +94,22 @@ namespace Blobs
         [SerializeField] private bool _isTransforming;
         [HorizontalGroup("Transformation"), DisplayAsString]
         [SerializeField] private bool _isTransformed;
+
+        [Space, PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
+        private Collider[] _searchColliders;
+        private Collider[] _wanderColliders;
 
         #region Events
-        [FoldoutGroup("Events", false)]
+        [Header("Events")]
         public UnityEvent<BlobAIState> OnBlobStateChange;
-        [FoldoutGroup("Events")]
         public UnityEvent OnGainedTarget;
-        [FoldoutGroup("Events")]
         public UnityEvent OnLostTarget;
-        [FoldoutGroup("Events")]
         public UnityEvent OnIdle;
-        [FoldoutGroup("Events")]
         public UnityEvent OnWander;
-        [FoldoutGroup("Events")]
         public UnityEvent OnAttack;
-        [FoldoutGroup("Events")]
         public UnityEvent OnTransform;
-        [FoldoutGroup("Events")]
         public UnityEvent OnPause;
-        [FoldoutGroup("Events")]
         public UnityEvent OnDeath;
         #endregion
 
@@ -149,7 +148,8 @@ namespace Blobs
         private void OnEnable()
         {
             _agent.speed = _speed;
-
+            _isDestroying = false;
+            _isTransforming = false;
             _deathFX.gameObject.SetActive(false);
 
             if (_blobType == BlobType.Good)
@@ -164,6 +164,8 @@ namespace Blobs
 
         private void Start()
         {
+            if (_playerBlob == null) _playerBlob = FindObjectOfType<PlayerController>().gameObject;
+
             switch (_blobType)
             {
                 case BlobType.Good:
@@ -235,7 +237,6 @@ namespace Blobs
                     OnAttack?.Invoke();
                     break;
                 case BlobAIState.Dead:
-                    PlayDeathAnimation();
                     OnDeath?.Invoke();
                     break;
                 case BlobAIState.Paused:
@@ -248,30 +249,26 @@ namespace Blobs
         private void OnTriggerEnter(Collider other)
         {
             if (_isDestroying) return;  // guard statement
+            _isDestroying = true;
 
-            // Invert points if blob is transformed
-            int points = _isTransformed ? -_pointValue : _pointValue;
+            int points = _isTransformed ? -_pointValue : _pointValue;   // Invert points if blob is transformed
             ScoreManager.instance.AddPoints(points, transform.position);
 
-            if (BlobManager.instanceExists)
-                BlobManager.Instance.OnBlobDestroy(this);
-
             SetState(BlobAIState.Dead);
-        }
-
-        private void PlayDeathAnimation()
-        {
-            // Play death FX
-            if (_blobType == BlobType.Bad || _isTransformed)
-                _deathFX.gameObject.SetActive(true);
 
             // Animation
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f, vibrato: 0));
-            sequence.Append(transform.DOScale(Vector3.zero, 0.2f));
-            sequence.OnStart(() => _isDestroying = true);
-            sequence.OnComplete(() => Destroy(gameObject, 0.1f));
-            sequence.Play();
+            transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), AnimationTime, vibrato: 0);
+            transform.DOScale(Vector3.zero, AnimationTime);
+
+            // Play death FX
+            if (_blobType == BlobType.Bad || _isTransformed)
+            {
+                print($"{gameObject.name} - Play Death Effect");
+                _deathFX.gameObject.SetActive(true);
+            }
+
+            if (BlobManager.instanceExists)
+                BlobManager.Instance.OnBlobReturnToPool(this);
         }
         #endregion
 
@@ -280,9 +277,10 @@ namespace Blobs
         {
             while (!_isDestroying )
             {
-                Collider[] colliders = Physics.OverlapSphere(transform.position, _sightRange, _sightMask);
+                _searchColliders ??= new Collider[MaxColliders];
+                int numColliders = Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _searchColliders, _sightMask);
 
-                if (colliders.Length == 0)
+                if (numColliders == 0)
                 {
                     // No target found
                     _hasTarget = false;
@@ -300,7 +298,7 @@ namespace Blobs
                     // Target found
                     _hasTarget = true;
                     _hadTarget = true;
-                    _targetDestination = colliders[0].transform.position;
+                    _targetDestination = _searchColliders[0].transform.position;
 
                     _agent.SetDestination(_targetDestination);
 
@@ -354,23 +352,24 @@ namespace Blobs
             Vector3 randomPosition = new Vector3(cachedPosition.x + randomX, cachedPosition.y, cachedPosition.z + randomZ);
 
             // Check - random wander position is NOT inside another collider
-            Collider[] colliders = Physics.OverlapBox(randomPosition, Vector3.one * 0.5f, Quaternion.identity, _avoidMask);
-            if (colliders.Length != 0) return;
-
-            // Check - random wander position is above the ground terrain
-            if (!Physics.Raycast(randomPosition, Vector3.down, 2f, _groundMask)) return;
-
-            if (_showDebug)
+            _wanderColliders ??= new Collider[MaxColliders];
+            int numColliders  = Physics.OverlapBoxNonAlloc(randomPosition, Vector3.one * 0.5f, _wanderColliders, Quaternion.identity, _avoidMask);
+            if (numColliders > 0)
             {
-                var debugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                debugObject.transform.localScale = Vector3.one * 0.2f;
-                Destroy(debugObject, 1f);
+                // Check - random wander position is above the ground terrain
+                if (!Physics.Raycast(randomPosition, Vector3.down, 2f, _groundMask)) return;
 
-                Debug.DrawLine(transform.position, randomPosition, Color.red, 1f);
+                if (_showDebug)
+                {
+                    var debugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    debugObject.transform.localScale = Vector3.one * 0.2f;
+                    Destroy(debugObject, 1f);
+                    Debug.DrawLine(transform.position, randomPosition, Color.red, 1f);
+                }
+
+                _hasWanderPoint = true;
+                _targetDestination = randomPosition;
             }
-
-            _hasWanderPoint = true;
-            _targetDestination = randomPosition;
         }
         #endregion
 
