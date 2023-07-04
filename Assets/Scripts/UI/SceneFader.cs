@@ -84,7 +84,6 @@ namespace UI
                 FadeOut(sceneName);
             else
                 SceneManager.LoadScene(sceneName);
-
         }
         #endregion
 

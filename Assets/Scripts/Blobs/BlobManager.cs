@@ -1,13 +1,15 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ObjectPooling;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Utility;
 
 namespace Blobs
 {
-    public class BlobManager : Utility.Singleton<BlobManager>
+    [RequireComponent(typeof(PoolManager))]
+    public class BlobManager : Singleton<BlobManager>
     {
         [Title("Blob Manager")]
         [Title("Good Blobs", horizontalLine: false)]
@@ -29,7 +31,7 @@ namespace Blobs
         [SerializeField] private int _maxCapacity_Bad = 16;
 
         [Title("Spawn Points")]
-        [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private ItemDistributor<Transform> _spawnPoints;
 
         [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
@@ -106,15 +108,15 @@ namespace Blobs
         [Button(ButtonSizes.Medium, Icon = SdfIconType.Search)] [PropertyOrder(4)]
         private void FindSpawnPoints()
         {
-            _spawnPoints = transform.GetComponentsInChildren<Transform>();
+            List<Transform> spawnPoints = transform.GetComponentsInChildren<Transform>().ToList();
+            _spawnPoints = new ItemDistributor<Transform>(spawnPoints);
         }
 
         private Vector3 RandomSpawnPointPosition()
         {
-            if (_spawnPoints.IsNullOrEmpty()) return Vector3.zero;
-
-            int randomIndex = Random.Range(0, _spawnPoints.Length - 1);
-            return _spawnPoints[randomIndex].position;
+            return _spawnPoints.Count > 0
+                ? _spawnPoints.GetNextItem().position
+                : Vector3.zero;
         }
         #endregion
     }

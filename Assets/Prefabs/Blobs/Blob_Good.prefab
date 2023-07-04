@@ -184,8 +184,8 @@ MonoBehaviour:
   _sightMask:
     serializedVersion: 2
     m_Bits: 128
-  _wanderRange: 4
-  _wanderDistanceThreshold: 0.25
+  _wanderRadius: 4.5
+  _wanderDistanceThreshold: 0.5
   _wanderWaitTime: {x: 2, y: 4.5}
   _groundMask:
     serializedVersion: 2

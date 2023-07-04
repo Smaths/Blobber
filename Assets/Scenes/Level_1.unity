@@ -2178,76 +2178,14 @@ MonoBehaviour:
   _goodBlobPrefab: {fileID: 4789807253655699573, guid: b4dc5bf41d2c8478280a696fb328a0d2,
     type: 3}
   _goodBlobContainer: {fileID: 181035319}
-  _defaultCapacity_Good: 20
-  _maxCapacity_Good: 21
+  _defaultCapacity_Good: 35
+  _maxCapacity_Good: 36
   _badBlobPrefab: {fileID: 8738743235114916857, guid: a2bf9732e03944e098d613f7b5648422,
     type: 3}
   _badBlobContainer: {fileID: 1893031214}
   _defaultCapacity_Bad: 15
   _maxCapacity_Bad: 16
-  _spawnPoints:
-  - {fileID: 182761259}
-  - {fileID: 246278510}
-  - {fileID: 24782282}
-  - {fileID: 1705182209}
-  - {fileID: 2053649300}
-  - {fileID: 982040926}
-  - {fileID: 1331540878}
-  - {fileID: 2058845801}
-  - {fileID: 608262951}
-  - {fileID: 961892763}
-  - {fileID: 1689244178}
-  - {fileID: 158927783}
-  - {fileID: 1057823237}
-  - {fileID: 611370323}
-  - {fileID: 1484846809}
-  - {fileID: 19332232}
-  - {fileID: 1934427510}
-  - {fileID: 372069439}
-  - {fileID: 1095964063}
-  - {fileID: 78563062}
-  - {fileID: 2041812697}
-  - {fileID: 838318514}
-  - {fileID: 1945474321}
-  - {fileID: 1029117308}
-  - {fileID: 1881486827}
-  - {fileID: 1788156590}
-  - {fileID: 1672854315}
-  - {fileID: 1421029765}
-  - {fileID: 2093919478}
-  - {fileID: 2029644058}
-  - {fileID: 1890396732}
-  - {fileID: 1601619833}
-  - {fileID: 516173754}
-  - {fileID: 1883466610}
-  - {fileID: 606173872}
-  - {fileID: 1576239122}
-  - {fileID: 535391226}
-  - {fileID: 368941771}
-  - {fileID: 1813630788}
-  - {fileID: 1018925088}
-  - {fileID: 1148693856}
-  - {fileID: 1499542130}
-  - {fileID: 623055499}
-  - {fileID: 649557918}
-  - {fileID: 1341994007}
-  - {fileID: 1691886155}
-  - {fileID: 401710780}
-  - {fileID: 1810373828}
-  - {fileID: 440216828}
-  - {fileID: 789497908}
-  - {fileID: 309787546}
-  - {fileID: 253740921}
-  - {fileID: 1966606303}
-  - {fileID: 912352385}
-  - {fileID: 169877277}
-  - {fileID: 2090118594}
-  - {fileID: 465733430}
-  - {fileID: 2017352372}
-  - {fileID: 2143992913}
-  - {fileID: 1257586013}
-  - {fileID: 1000839809}
-  _showDebug: 1
+  _showDebug: 0
 --- !u!114 &182761261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11980,8 +11918,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1152270814}
   - {fileID: 1057299453}
+  - {fileID: 1152270814}
   - {fileID: 1202955781}
   - {fileID: 362481095}
   - {fileID: 1694696458}
@@ -21405,7 +21343,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1567788134}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -21434,7 +21372,7 @@ PrefabInstance:
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: GameTimer, Assembly-CSharp
+      value: Managers.GameTimer, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2509869522004423535, guid: 8bb484e20577a476f8a55deb3641b505,
         type: 3}
