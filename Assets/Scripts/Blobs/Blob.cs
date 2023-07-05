@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using Managers;
@@ -190,6 +191,8 @@ namespace Blobs
                 case BlobType.Bad:
                     StartCoroutine(SearchForPlayerCoroutine());
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             SetState(BlobState.Idle);
@@ -276,7 +279,9 @@ namespace Blobs
 
             DoDeath();
         }
+        #endregion
 
+        #region Death
         private void DoDeath()
         {
             // Create mesh animation sequence
@@ -308,7 +313,7 @@ namespace Blobs
                 yield break;
             }
 
-            BlobManager.Instance.OnBlobReturnToPool(this);
+            BlobManager.Instance.ReturnToPool(this);
         }
         #endregion
 

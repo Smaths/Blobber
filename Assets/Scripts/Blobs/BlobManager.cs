@@ -5,7 +5,6 @@ using System.Linq;
 using ObjectPooling;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utility;
 
 namespace Blobs
@@ -14,29 +13,29 @@ namespace Blobs
     public class BlobManager : Singleton<BlobManager>
     {
         [Title("Blob Manager")]
-        [Title("Good Blobs", horizontalLine: false)]
+        [Tooltip("Additional number of objects spawned for object pooling. They are inactive on start.")]
+        [SerializeField] private int _poolBufferAmount = 1; // Additional objects created in pool (inactive on start)
+        [Title("Good Blob Spawner", horizontalLine: false)]
+        [LabelText("Count")] [SuffixLabel("blob(s)")]
+        [SerializeField] private int _startCount_Good = 19;
         [AssetsOnly] [Required]
         [SerializeField] private GameObject _goodBlobPrefab;
         [SceneObjectsOnly]
         [SerializeField] private GameObject _goodBlobContainer;
-        [LabelText("Count")] [SuffixLabel("blob(s)")]
-        [SerializeField] private int _startCount_Good = 19;
 
-        [Title("Bad Blobs", horizontalLine: false)]
+        [Title("Bad Blob Spawner", horizontalLine: false)]
+        [LabelText("Count")] [SuffixLabel("blob(s)")]
+        [SerializeField] private int _startCount_Bad = 15;
         [AssetsOnly] [Required]
         [SerializeField] private GameObject _badBlobPrefab;
         [SceneObjectsOnly]
         [SerializeField] private GameObject _badBlobContainer;
-        [LabelText("Count")] [SuffixLabel("blob(s)")]
-        [SerializeField] private int _startCount_Bad = 15;
 
         [Title("Spawn Points")]
         [SerializeField] private ItemDistributor<Transform> _spawnPoints;
 
         [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
-
-        private const int PoolBufferAmount = 5; // Additional objects created in pool (inactive on start)
 
         #region Lifecycle
         private void OnValidate()
@@ -53,9 +52,16 @@ namespace Blobs
 
         private void Start()
         {
+            CreateBlobPools();
+        }
+        #endregion
+
+        #region Blob Pools
+        private void CreateBlobPools()
+        {
             // Create pools
-            PoolManager.Instance.CreatePool(_goodBlobPrefab, _startCount_Good + PoolBufferAmount, _goodBlobContainer.transform);
-            PoolManager.Instance.CreatePool(_badBlobPrefab, _startCount_Bad + PoolBufferAmount, _badBlobContainer.transform);
+            PoolManager.Instance.CreatePool(_badBlobPrefab, _startCount_Bad + _poolBufferAmount, _badBlobContainer.transform);
+            PoolManager.Instance.CreatePool(_goodBlobPrefab, _startCount_Good + _poolBufferAmount, _goodBlobContainer.transform);
 
             // Spawn objects
             for (int i = 0; i < _startCount_Good; i++)
@@ -63,13 +69,11 @@ namespace Blobs
             for (int i = 0; i < _startCount_Bad; i++)
                 PoolManager.Instance.SpawnFromPool(_badBlobPrefab, RandomSpawnPointPosition());
         }
-        #endregion
 
-        #region Blob Event Handlers
-        public void OnBlobReturnToPool(Blob blob)
+        public void ReturnToPool(Blob blob)
         {
 #if UNITY_EDITOR
-            if (_showDebug) print($"{gameObject.name} - ({blob.BlobType}) {blob.name} returned to pool");
+            if (_showDebug) Debug.Log($"{gameObject.name} - {blob.name} ({blob.gameObject.GetInstanceID()}) returned to pool", transform);
 #endif
 
             switch (blob.BlobType)
@@ -90,7 +94,12 @@ namespace Blobs
         private IEnumerator SpawnAfterDelayCoroutine(GameObject prefab, float time)
         {
             yield return new WaitForSeconds(time);
-            PoolManager.Instance.SpawnFromPool(prefab, RandomSpawnPointPosition());
+
+            GameObject foo = PoolManager.Instance.SpawnFromPool(prefab, RandomSpawnPointPosition());
+
+#if UNITY_EDITOR
+            if (_showDebug) Debug.Log($"{gameObject.name} - {foo.name} ({foo.GetInstanceID()}) spawned from pool", transform);
+#endif
         }
         #endregion
 

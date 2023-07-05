@@ -16,6 +16,7 @@ namespace Managers
     {
         public static ScoreManager instance;
 
+        #region Fields
         [Title("Score Manager", "Main brain for handling score and publishing related events.")]
         // Editor fields
         [Tooltip("Current points of the player, game over if points go below 0.")]
@@ -37,15 +38,18 @@ namespace Managers
         private Camera _camera;
         private readonly Color _goodColor = new (0.749f, 0.753f, 0.247f, 1.0f);
         private readonly Color _badColor = new (0.682f, 0.298f, 0.294f, 1.0f);
-
-        [FoldoutGroup("Events", false)] public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
-        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreIncrease;
-        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreDecrease;
-        [FoldoutGroup("Events")] public UnityEvent OnScoreIsZero;
+        #endregion
 
         #region Public Properties
         public int Points => _points;
         public bool GameIsOver => _gameIsOver;
+        #endregion
+
+        #region Events
+        [FoldoutGroup("Events", false)] public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
+        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreIncrease;
+        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreDecrease;
+        [FoldoutGroup("Events")] public UnityEvent OnScoreIsZero;
         #endregion
 
         #region Lifecycle
