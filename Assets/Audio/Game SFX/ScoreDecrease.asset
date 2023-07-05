@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: ScoreDecrease
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: 3cb18ab01bbcb45cfb73d963ecaecd21, type: 3}
-  - {fileID: 8300000, guid: d85a695ecef96465aa5722801b7c7baa, type: 3}
-  - {fileID: 8300000, guid: 901fefa0be1894fe49e04b0e1ae5c12c, type: 3}
-  - {fileID: 8300000, guid: 192484eaef91a4bf2b57f671fe300be8, type: 3}
-  - {fileID: 8300000, guid: 43596eca9015b485d8576ba29e189312, type: 3}
-  - {fileID: 8300000, guid: d6994bf022a864fb6a1abb0d7d1913c9, type: 3}
-  - {fileID: 8300000, guid: 45ea5ae273b1240f28f726f3facd1f72, type: 3}
-  - {fileID: 8300000, guid: daf2645ce246243cfa4e6b4d17fe9514, type: 3}
-  playType: 0
+  - {fileID: 8300000, guid: f4de17395642f47f287db224809dd06c, type: 3}
+  - {fileID: 8300000, guid: cb983bc0a7aa54d32b6908bec1780b06, type: 3}
+  - {fileID: 8300000, guid: f89c55f09f8424c7abf88425532c336d, type: 3}
+  - {fileID: 8300000, guid: c6d5af65806e24ee4a215640c90f5a54, type: 3}
+  - {fileID: 8300000, guid: 6746345e95e0a40abb905b5c4afe88ef, type: 3}
+  - {fileID: 8300000, guid: 3b8aacc74a46b4e17a122be3671ac7ee, type: 3}
+  - {fileID: 8300000, guid: df68b1a140e5d4d22a365466a2ecb6bf, type: 3}
+  - {fileID: 8300000, guid: d382097b6b77145c795a3e3cd5339538, type: 3}
+  playType: 1
   volume: 0.224
   volumeVariation: 0.05
   pitch: 1

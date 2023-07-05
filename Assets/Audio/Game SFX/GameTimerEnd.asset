@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102682c3d6f4ab78af725eb54a096a1, type: 3}
   m_Name: GameTimerEnd
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: 6b5457951da3f4af9bb0a443d8fc0d81, type: 3}
   playType: 0
   volume: 0.675
   volumeVariation: 0.05

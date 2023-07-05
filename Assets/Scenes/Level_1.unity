@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1346372383}
-  m_IndirectSpecularColor: {r: 0.70080674, g: 0.78563964, b: 0.8201664, a: 1}
+  m_IndirectSpecularColor: {r: 0.7008067, g: 0.7856396, b: 0.82016647, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4413,10 +4413,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8212110484110541830, guid: 44f460a1858114717964ca24026198f9,
     type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5685b061464cd4241ac1968dade70e51, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.9941739
-  m_Pitch: 1.022708
+  m_Volume: 0.2896994
+  m_Pitch: 1.0122712
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -4543,7 +4543,7 @@ MonoBehaviour:
     _showSettings: 1
     _editSettings: 1
     _sfxBase: {fileID: 11400000, guid: bd13e7f04c705435683495a493cb9f62, type: 2}
-    _waitToPlay: 1
+    _waitToPlay: 0
     _useDefault: 1
     _audioSource: {fileID: 0}
   OnScoreIncreaseSFX:
@@ -4561,16 +4561,16 @@ MonoBehaviour:
     _showSettings: 1
     _editSettings: 1
     _sfxBase: {fileID: 11400000, guid: 10a66cd24e882485f8352daec80f6275, type: 2}
-    _waitToPlay: 1
+    _waitToPlay: 0
     _useDefault: 1
     _audioSource: {fileID: 0}
   OnBoostActivatedSFX:
     sfxType: 0
     sfxToPlay: {fileID: 11400000, guid: 6b84876f45d50474c84e2fd1eed77f8b, type: 2}
-    _showSettings: 0
-    _editSettings: 0
+    _showSettings: 1
+    _editSettings: 1
     _sfxBase: {fileID: 11400000, guid: 6b84876f45d50474c84e2fd1eed77f8b, type: 2}
-    _waitToPlay: 1
+    _waitToPlay: 0
     _useDefault: 1
     _audioSource: {fileID: 0}
   OnGamePauseSFX:
@@ -4594,8 +4594,8 @@ MonoBehaviour:
   OnGameStartSFX:
     sfxType: 0
     sfxToPlay: {fileID: 11400000, guid: c533740bd7dd64c40b8c592ad7fcf2c3, type: 2}
-    _showSettings: 0
-    _editSettings: 0
+    _showSettings: 1
+    _editSettings: 1
     _sfxBase: {fileID: 11400000, guid: c533740bd7dd64c40b8c592ad7fcf2c3, type: 2}
     _waitToPlay: 1
     _useDefault: 1
@@ -4603,8 +4603,8 @@ MonoBehaviour:
   OnGameOverSFX:
     sfxType: 0
     sfxToPlay: {fileID: 11400000, guid: 0892a7c65ccd1428fb5a91268536f5f7, type: 2}
-    _showSettings: 0
-    _editSettings: 0
+    _showSettings: 1
+    _editSettings: 1
     _sfxBase: {fileID: 11400000, guid: 0892a7c65ccd1428fb5a91268536f5f7, type: 2}
     _waitToPlay: 1
     _useDefault: 1
@@ -7297,11 +7297,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2780924441375574460, guid: 44f460a1858114717964ca24026198f9,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 971d73dca1487457f9dcec30857fa3ba, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a53f3562885334d7fbf885e00c37fc56, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.799
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -13089,7 +13089,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1302949005
 Transform:
   m_ObjectHideFlags: 0
@@ -13116,16 +13116,16 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -6168299858955622650, guid: 44f460a1858114717964ca24026198f9,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 971d73dca1487457f9dcec30857fa3ba, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 7731545d532234858a289330d33fd87a, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
@@ -14347,9 +14347,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2780924441375574460, guid: 44f460a1858114717964ca24026198f9,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 0f42f6e487ffa41208e5537820484b31, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 81dc36b2c4b8b4e7ab00a3274296b174, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.7
+  m_Volume: 0.843
   m_Pitch: 1
   Loop: 1
   Mute: 0
