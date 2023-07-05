@@ -179,7 +179,7 @@ Material:
     - _Segmented: 1
     - _SelfShadingSize: 0.55
     - _SelfShadingSizeExtra: 0.6
-    - _ShadowEdgeSize: 0.025
+    - _ShadowEdgeSize: 0.05
     - _ShadowEdgeSizeExtra: 0.05
     - _ShnIntense: 0.237
     - _ShnOverlap: 0
@@ -205,7 +205,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 0.9502317, b: 0.75, a: 1}
-    - _ColorDim: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+    - _ColorDim: {r: 0, g: 0, b: 0, a: 0.5019608}
     - _ColorDimCurve: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _ColorDimExtra: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _ColorDimSteps: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}

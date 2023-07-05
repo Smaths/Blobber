@@ -1,21 +1,21 @@
 using System.Collections;
 using DG.Tweening;
 using Managers;
-using Pathfinding;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace Blobs
 {
     public enum BlobType { Good, Bad }
-    public enum BlobAIState { Idle, Wander, Attack, Paused, Dead }
+    public enum BlobState { Idle, Patrol, Attack, Paused, Dead }
 
     [RequireComponent(typeof(NavMeshAgent))]
-    public class BlobAI : MonoBehaviour
+    public class Blob : MonoBehaviour
     {
+        #region Fields
         private const float AnimationTime = 0.3f;
         private const int MaxColliders = 6;
         [BoxGroup("Dependencies")]
@@ -24,11 +24,9 @@ namespace Blobs
 
         [Title("Blob AI", "Brains for blobs characters good and bad.", TitleAlignments.Split)]
         [SerializeField] private BlobType _blobType;
-        [SerializeField] private BlobAIState _currentState;
-        private BlobAIState _previousState;
-        [SerializeField] private int _pointValue = 5;
+        [SerializeField] private BlobState _currentState;
+        private BlobState _previousState;
         [SerializeField] private float _speed = 4f;
-        private NavMeshAgent _agent;
 
         [Header("Transformation")]
         [SuffixLabel("second(s)")] [HideIf("_blobType", BlobType.Bad)]
@@ -42,6 +40,12 @@ namespace Blobs
         [SerializeField] private float _transformationTime = 1.5f;
         private float _transformationTimeTrigger;
 
+        [Header("Masks")]
+        [Tooltip("Select ground layer to check if random wander point is on the walkable ground.")]
+        [SerializeField] private LayerMask _groundMask;
+        [Tooltip("Select layers for the character to avoid when finding a random wander position.")]
+        [SerializeField] private LayerMask _avoidMask;
+
         [Header("Sight")]
         [Tooltip("Rate in seconds that the character will scan for targets that are on the 'Sight Mask' layer.")]
         [SuffixLabel("second(s)")] [MinValue(0.01f)]
@@ -52,23 +56,18 @@ namespace Blobs
         [SerializeField] private LayerMask _sightMask;
         private bool _hadTarget;
 
-        [FormerlySerializedAs("_wanderRange")]
-        [Header("Wander")]
+        [Header("Patrol")]
         [SuffixLabel("meter(s)")] [MinValue(0)]
-        [SerializeField] private float _wanderRadius = 4f;
+        [SerializeField] private float _searchRadius = 4f;
         [LabelText("Distance Threshold")]
         [SuffixLabel("meter(s)")] [MinValue(0.01f)]
-        [Tooltip("Range the character can be from random wander position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
-        [SerializeField] private float _wanderDistanceThreshold = 0.25f;
-        [SuffixLabel("second(s)")]
-        [Tooltip("How long the character will wait before finding a new wander position.")]
-        [SerializeField] private Vector2 _wanderWaitTime = new(2f, 4f);
-        [Tooltip("Select ground layer to check if random wander point is on the walkable ground.")]
-        [SerializeField] private LayerMask _groundMask;
-        [Tooltip("Select layers for the character to avoid when finding a random wander position.")]
-        [SerializeField] private LayerMask _avoidMask;
-        private bool _hasWanderPoint;
-        private bool _isWaitingAtWanderPoint;
+        [Tooltip("Range the character can be from randomly selected target position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
+        [SerializeField] private float _patrolDistanceThreshold = 0.25f;
+        [SuffixLabel("second(s)")] [MinValue(0)]
+        [Tooltip("How long the character will wait before finding a new position.")]
+        [SerializeField] private Vector2 _patrolWaitTime = new(2f, 4f);
+        private bool _hasPatrolPoint;
+        private bool _isWaitingAtPatrolPoint;
 
         [Header("Meshes")]
         [Required] [ChildGameObjectsOnly]
@@ -85,6 +84,7 @@ namespace Blobs
         private static readonly int MainTex = Shader.PropertyToID("_MainTex");
         [ChildGameObjectsOnly]
         [SerializeField] private GameObject _deathFX;
+        private ParticleSystem _deathPS;
 
         [Header("Info")]
         [SerializeField] [DisplayAsString] private bool _isDestroying;
@@ -99,23 +99,29 @@ namespace Blobs
 
         [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
-        private Collider[] _searchColliders;
-        private Collider[] _wanderColliders;
 
-        #region Events
-        [Header("Events")]
-        public UnityEvent<BlobAIState> OnBlobStateChange;
-        public UnityEvent OnGainedTarget;
-        public UnityEvent OnLostTarget;
-        public UnityEvent OnIdle;
-        public UnityEvent OnWander;
-        public UnityEvent OnAttack;
-        public UnityEvent OnTransform;
-        public UnityEvent OnPause;
-        public UnityEvent OnDeath;
+        private NavMeshAgent _agent;
+        private Collider[] _searchColliders;
+        private Collider[] _cachedPatrolColliders;
+        private Vector3 _originalScale;
         #endregion
 
-        public BlobType Type => _blobType;
+        #region Public Properties
+        public BlobType BlobType => _blobType;
+        public bool IsTransformed => _isTransformed;
+        #endregion
+
+        #region Events
+        [FoldoutGroup("Events", false)] public UnityEvent<BlobState> OnBlobStateChange;
+        [FoldoutGroup("Events")] public UnityEvent OnGainedTarget;
+        [FoldoutGroup("Events")] public UnityEvent OnLostTarget;
+        [FoldoutGroup("Events")] public UnityEvent OnIdle;
+        [FoldoutGroup("Events")] public UnityEvent OnWander;
+        [FoldoutGroup("Events")] public UnityEvent OnAttack;
+        [FoldoutGroup("Events")] public UnityEvent OnTransform;
+        [FoldoutGroup("Events")] public UnityEvent OnPause;
+        [FoldoutGroup("Events")] public UnityEvent OnDeath;
+        #endregion
 
         #region Lifecycle
         private void OnDrawGizmosSelected()
@@ -141,6 +147,7 @@ namespace Blobs
             _playerBlob ??= FindObjectOfType<PlayerController>().gameObject;
             _blobMaterial ??= _blobMesh.GetComponent<Renderer>().materials[0];
             _faceMaterial ??= _blobMesh.GetComponent<Renderer>().materials[1];
+            _originalScale = transform.localScale;
 
             // Update the blob's face
             if (_faceData != null && _faceMaterial)
@@ -152,7 +159,6 @@ namespace Blobs
             _agent.speed = _speed;
             _isDestroying = false;
             _isTransforming = false;
-            _deathFX.gameObject.SetActive(false);
 
             if (_blobType == BlobType.Good)
             {
@@ -164,8 +170,17 @@ namespace Blobs
             }
         }
 
+        private void OnDisable()
+        {
+            // Cleanup Death FX
+            _deathFX.gameObject.SetActive(false);
+            transform.localScale = _originalScale;
+        }
+
         private void Start()
         {
+            _deathPS = _deathFX.GetComponent<ParticleSystem>();
+
             if (_playerBlob == null) _playerBlob = FindObjectOfType<PlayerController>().gameObject;
 
             switch (_blobType)
@@ -177,21 +192,21 @@ namespace Blobs
                     break;
             }
 
-            SetState(BlobAIState.Idle);
+            SetState(BlobState.Idle);
         }
 
         private void Update()
         {
             if (_isDestroying) return; // Guard
             if (!_agent) return;
-            if (_currentState == BlobAIState.Paused) return;
+            if (_currentState == BlobState.Paused) return;
 
             if (_blobType == BlobType.Good)
                 TransformationCheck();
 
             if (_isTransformed) return; // Prevent movement when good blob has transformed to bad.
             if (!_hasTarget)
-                Wander();
+                Patrol();
         }
         #endregion
 
@@ -201,7 +216,7 @@ namespace Blobs
             if (!isActiveAndEnabled) return;
 
             _agent.speed = 0;
-            SetState(BlobAIState.Paused);
+            SetState(BlobState.Paused);
         }
 
         public void Enable()
@@ -213,7 +228,8 @@ namespace Blobs
         }
         #endregion
 
-        private void SetState(BlobAIState newState)
+        #region State
+        private void SetState(BlobState newState)
         {
             if (newState == _currentState) return; // Prevent redundant state sets
 
@@ -229,23 +245,24 @@ namespace Blobs
 
             switch (newState)
             {
-                case BlobAIState.Idle:
+                case BlobState.Idle:
                     OnIdle?.Invoke();
                     break;
-                case BlobAIState.Wander:
+                case BlobState.Patrol:
                     OnWander?.Invoke();
                     break;
-                case BlobAIState.Attack:
+                case BlobState.Attack:
                     OnAttack?.Invoke();
                     break;
-                case BlobAIState.Dead:
+                case BlobState.Dead:
                     OnDeath?.Invoke();
                     break;
-                case BlobAIState.Paused:
+                case BlobState.Paused:
                     OnPause?.Invoke();
                     break;
             }
         }
+        #endregion
 
         #region Collider Trigger
         private void OnTriggerEnter(Collider other)
@@ -253,26 +270,49 @@ namespace Blobs
             if (_isDestroying) return; // guard statement
             _isDestroying = true;
 
-            int points = _isTransformed ? -_pointValue : _pointValue; // Invert points if blob is transformed
-            ScoreManager.instance.AddPoints(points, transform.position);
+            ScoreManager.instance.AddPoints(this);
 
-            SetState(BlobAIState.Dead);
+            SetState(BlobState.Dead);
 
-            // Animation
-            transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), AnimationTime, 0);
-            transform.DOScale(Vector3.zero, AnimationTime);
+            DoDeath();
+        }
+
+        private void DoDeath()
+        {
+            // Create mesh animation sequence
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), AnimationTime, 0));
+            sequence.Append(transform.DOScale(Vector3.zero, AnimationTime));
+
+            // Determine death fx duration
+            float deathDuration = _deathPS.main.duration >= sequence.Duration()
+                ? _deathPS.main.duration
+                : sequence.Duration();
 
             // Play death FX
+            sequence.Play();
             if (_blobType == BlobType.Bad || _isTransformed)
                 _deathFX.gameObject.SetActive(true);
 
-            // Object pooling
-            if (BlobManager.instanceExists)
-                BlobManager.Instance.OnBlobReturnToPool(this);
+            // Return to pool after death FX are complete
+            StartCoroutine(ReturnToPoolAfterDelay(deathDuration + 0.01f));
+        }
+
+        private IEnumerator ReturnToPoolAfterDelay(float time)
+        {
+            yield return new WaitForSeconds(time);
+
+            if (!BlobManager.instanceExists)
+            {
+                Debug.LogWarning($"{nameof(BlobManager)} singleton doesn't exist, unable to return {name} to object pool.");
+                yield break;
+            }
+
+            BlobManager.Instance.OnBlobReturnToPool(this);
         }
         #endregion
 
-        #region Search for Player
+        #region Search
         private IEnumerator SearchForPlayerCoroutine()
         {
             while (!_isDestroying)
@@ -286,7 +326,7 @@ namespace Blobs
                     // No target found
                     _hasTarget = false;
 
-                    SetState(BlobAIState.Wander);
+                    SetState(BlobState.Patrol);
 
                     if (_hadTarget)
                     {
@@ -303,7 +343,7 @@ namespace Blobs
 
                     _agent.SetDestination(_targetDestination);
 
-                    SetState(BlobAIState.Attack);
+                    SetState(BlobState.Attack);
 
                     OnGainedTarget?.Invoke();
                 }
@@ -313,47 +353,47 @@ namespace Blobs
         }
         #endregion
 
-        #region Wander
-        private void Wander()
+        #region Patrol
+        private void Patrol()
         {
-            if (!_hasWanderPoint)
-                SearchForWanderPoint();
+            if (!_hasPatrolPoint)
+                SearchForPatrolPoint();
 
-            if (_hasWanderPoint)
+            if (_hasPatrolPoint)
                 _agent.SetDestination(_targetDestination);
 
             Vector3 distance = transform.position - _targetDestination;
             if (_showDebug) print($"(distance to wander point: {distance.magnitude})");
 
             // Wander point reached
-            if (distance.magnitude < _wanderDistanceThreshold && _isWaitingAtWanderPoint == false)
+            if (distance.magnitude < _patrolDistanceThreshold && _isWaitingAtPatrolPoint == false)
             {
-                _isWaitingAtWanderPoint = true;
+                _isWaitingAtPatrolPoint = true;
 
-                float randomWaitTime = Random.Range(_wanderWaitTime.x, _wanderWaitTime.y);
+                float randomWaitTime = Random.Range(_patrolWaitTime.x, _patrolWaitTime.y);
 
-                StartCoroutine(ResetWanderAfterDelayCoroutine(randomWaitTime));
+                StartCoroutine(ResetPatrolAfterDelayCoroutine(randomWaitTime));
             }
         }
 
-        private IEnumerator ResetWanderAfterDelayCoroutine(float delayTime)
+        private IEnumerator ResetPatrolAfterDelayCoroutine(float delayTime)
         {
             yield return new WaitForSeconds(delayTime);
 
-            _isWaitingAtWanderPoint = false;
-            _hasWanderPoint = false;
+            _isWaitingAtPatrolPoint = false;
+            _hasPatrolPoint = false;
         }
 
         // ---
         // NOTE: Not working, but would be great if it did.
-        private void GetNewWanderPoint()
+        private void GetNewPatrolPoint()
         {
             int walkableLayerMask = NavMesh.GetAreaFromName("Walkable"); // Replace "Walkable" with the actual name of your walkable NavMesh layer
-            Vector3 randomPosition = RandomNavSphere(transform.position, _wanderRadius, walkableLayerMask);
+            Vector3 randomPosition = RandomNavSphere(transform.position, _searchRadius, walkableLayerMask);
 
             print($"{gameObject.name} - Random Position: {randomPosition}");
             
-            _hasWanderPoint = true;
+            _hasPatrolPoint = true;
             _targetDestination = randomPosition;
         }
 
@@ -368,23 +408,23 @@ namespace Blobs
         }
         // ---
 
-        private void SearchForWanderPoint()
+        private void SearchForPatrolPoint()
         {
-            float randomX = Random.Range(-_wanderRadius, _wanderRadius);
-            float randomZ = Random.Range(-_wanderRadius, _wanderRadius);
+            float randomX = Random.Range(-_searchRadius, _searchRadius);
+            float randomZ = Random.Range(-_searchRadius, _searchRadius);
 
             Vector3 cachedPosition = transform.position;
             var randomPosition = new Vector3(cachedPosition.x + randomX, cachedPosition.y, cachedPosition.z + randomZ);
 
-            // Check - random wander position is NOT inside another collider
-            _wanderColliders ??= new Collider[MaxColliders];
-            int numColliders = Physics.OverlapBoxNonAlloc(randomPosition, Vector3.one * 0.5f, _wanderColliders, Quaternion.identity, _avoidMask);
+            // Check - random position is NOT inside another collider
+            _cachedPatrolColliders ??= new Collider[MaxColliders];
+            int numColliders = Physics.OverlapBoxNonAlloc(randomPosition, Vector3.one * 0.5f, _cachedPatrolColliders, Quaternion.identity, _avoidMask);
             if (numColliders > 0)
             {
                 return;
             }
 
-            // Check - random wander position is above the ground terrain
+            // Check - random position is above the ground terrain
             if (!Physics.Raycast(randomPosition, Vector3.down, 2f, _groundMask)) return;
 
             if (_showDebug)
@@ -395,29 +435,29 @@ namespace Blobs
                 Debug.DrawLine(transform.position, randomPosition, Color.red, 1f);
             }
 
-            _hasWanderPoint = true;
+            _hasPatrolPoint = true;
             _targetDestination = randomPosition;
         }
         #endregion
 
         #region Face
-        private void UpdateFace(BlobAIState state)
+        private void UpdateFace(BlobState state)
         {
             switch (state)
             {
-                case BlobAIState.Idle:
+                case BlobState.Idle:
                     SetFace(_faceData.Idleface);
                     break;
-                case BlobAIState.Wander:
+                case BlobState.Patrol:
                     SetFace(_faceData.WalkFace);
                     break;
-                case BlobAIState.Attack:
+                case BlobState.Attack:
                     SetFace(_faceData.attackFace);
                     break;
-                case BlobAIState.Dead:
+                case BlobState.Dead:
                     SetFace(_faceData.damageFace);
                     break;
-                case BlobAIState.Paused:
+                case BlobState.Paused:
                 default:
                     break;
             }

@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ObjectPooling;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utility;
 
 namespace Blobs
@@ -15,26 +17,26 @@ namespace Blobs
         [Title("Good Blobs", horizontalLine: false)]
         [AssetsOnly] [Required]
         [SerializeField] private GameObject _goodBlobPrefab;
+        [SceneObjectsOnly]
         [SerializeField] private GameObject _goodBlobContainer;
-        [HorizontalGroup("Good"), LabelText("Start Count")]
-        [SerializeField] private int _defaultCapacity_Good = 19;
-        [HorizontalGroup("Good"), LabelText("Max")]
-        [SerializeField] private int _maxCapacity_Good = 20;
+        [LabelText("Count")] [SuffixLabel("blob(s)")]
+        [SerializeField] private int _startCount_Good = 19;
 
         [Title("Bad Blobs", horizontalLine: false)]
         [AssetsOnly] [Required]
         [SerializeField] private GameObject _badBlobPrefab;
+        [SceneObjectsOnly]
         [SerializeField] private GameObject _badBlobContainer;
-        [HorizontalGroup("Bad"), LabelText("Start Count")]
-        [SerializeField] private int _defaultCapacity_Bad = 15;
-        [HorizontalGroup("Bad"), LabelText("Max")]
-        [SerializeField] private int _maxCapacity_Bad = 16;
+        [LabelText("Count")] [SuffixLabel("blob(s)")]
+        [SerializeField] private int _startCount_Bad = 15;
 
         [Title("Spawn Points")]
         [SerializeField] private ItemDistributor<Transform> _spawnPoints;
 
         [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
+
+        private const int PoolBufferAmount = 5; // Additional objects created in pool (inactive on start)
 
         #region Lifecycle
         private void OnValidate()
@@ -52,43 +54,49 @@ namespace Blobs
         private void Start()
         {
             // Create pools
-            PoolManager.Instance.CreatePool(_goodBlobPrefab, _maxCapacity_Good, _goodBlobContainer.transform);
-            PoolManager.Instance.CreatePool(_badBlobPrefab, _maxCapacity_Bad, _badBlobContainer.transform);
+            PoolManager.Instance.CreatePool(_goodBlobPrefab, _startCount_Good + PoolBufferAmount, _goodBlobContainer.transform);
+            PoolManager.Instance.CreatePool(_badBlobPrefab, _startCount_Bad + PoolBufferAmount, _badBlobContainer.transform);
 
             // Spawn objects
-            for (int i = 0; i < _defaultCapacity_Good; i++)
+            for (int i = 0; i < _startCount_Good; i++)
                 PoolManager.Instance.SpawnFromPool(_goodBlobPrefab, RandomSpawnPointPosition());
-            for (int i = 0; i < _defaultCapacity_Bad; i++)
+            for (int i = 0; i < _startCount_Bad; i++)
                 PoolManager.Instance.SpawnFromPool(_badBlobPrefab, RandomSpawnPointPosition());
         }
         #endregion
 
         #region Blob Event Handlers
-        public void OnBlobReturnToPool(BlobAI blob)
+        public void OnBlobReturnToPool(Blob blob)
         {
 #if UNITY_EDITOR
-            if (_showDebug) print($"{gameObject.name} - ({blob.Type}) {blob.name} returned to pool");
+            if (_showDebug) print($"{gameObject.name} - ({blob.BlobType}) {blob.name} returned to pool");
 #endif
 
-            switch (blob.Type)
+            switch (blob.BlobType)
             {
                 case BlobType.Good:
                     PoolManager.Instance.ReturnToPool(_goodBlobPrefab, blob.gameObject);
-                    PoolManager.Instance.SpawnFromPool(_goodBlobPrefab, RandomSpawnPointPosition());
+                    StartCoroutine(SpawnAfterDelayCoroutine(_goodBlobPrefab, 2f));
                     break;
                 case BlobType.Bad:
                     PoolManager.Instance.ReturnToPool(_badBlobPrefab, blob.gameObject);
-                    PoolManager.Instance.SpawnFromPool(_badBlobPrefab, RandomSpawnPointPosition());
+                    StartCoroutine(SpawnAfterDelayCoroutine(_badBlobPrefab, 2f));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        private IEnumerator SpawnAfterDelayCoroutine(GameObject prefab, float time)
+        {
+            yield return new WaitForSeconds(time);
+            PoolManager.Instance.SpawnFromPool(prefab, RandomSpawnPointPosition());
+        }
         #endregion
 
         public void EnableBlobs()
         {
-            BlobAI[] blobs = FindObjectsOfType<BlobAI>();
+            Blob[] blobs = FindObjectsOfType<Blob>();
             foreach (var blob in blobs)
             {
                 blob.Enable();
@@ -97,7 +105,7 @@ namespace Blobs
 
         public void DisableBlobs()
         {
-            BlobAI[] blobs = FindObjectsOfType<BlobAI>();
+            Blob[] blobs = FindObjectsOfType<Blob>();
             foreach (var blob in blobs)
             {
                 blob.Disable();
@@ -108,7 +116,7 @@ namespace Blobs
         [Button(ButtonSizes.Medium, Icon = SdfIconType.Search)] [PropertyOrder(4)]
         private void FindSpawnPoints()
         {
-            List<Transform> spawnPoints = transform.GetComponentsInChildren<Transform>().ToList();
+            List<Transform> spawnPoints = transform.GetComponentsInChildren<Transform>().Where(sp => sp.gameObject.activeInHierarchy).ToList();
             _spawnPoints = new ItemDistributor<Transform>(spawnPoints);
         }
 

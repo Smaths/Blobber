@@ -1,4 +1,6 @@
+using System;
 using System.Globalization;
+using Blobs;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -14,27 +16,32 @@ namespace Managers
     {
         public static ScoreManager instance;
 
-        [Title("Score", "Main brain for handling score and publishing related events.")]
+        [Title("Score Manager", "Main brain for handling score and publishing related events.")]
         // Editor fields
         [Tooltip("Current points of the player, game over if points go below 0.")]
         [SerializeField] private int _points;
         [SerializeField, ReadOnly] private bool _gameIsOver;
 
-        [Header("Popups")]
-        [SerializeField] private Canvas _canvas;
-        [SerializeField] private GameObject _popupPrefab;
+        [Header("Settings")]
+        [SuffixLabel("point(s)")]
+        [SerializeField] private int _goodBlobValue = 100;
+        [SuffixLabel("point(s)")]
+        [SerializeField] private int _badBlobValue = -200;
+
+        [BoxGroup("In-Game Popup")][SerializeField] private Canvas _canvas;
+        [BoxGroup("In-Game Popup")][SerializeField] private GameObject _popupPrefab;
         [SuffixLabel("second(s)"), MinValue(0.25f)]
-        [SerializeField] private float _popupDuration = 3f;
+        [BoxGroup("In-Game Popup")][SerializeField] private float _popupDuration = 3f;
+
         private Vector3 _popupLocation;
         private Camera _camera;
-        private Color _goodColor = new (0.749f, 0.753f, 0.247f, 1.0f);
-        private Color _badColor = new (0.682f, 0.298f, 0.294f, 1.0f);
+        private readonly Color _goodColor = new (0.749f, 0.753f, 0.247f, 1.0f);
+        private readonly Color _badColor = new (0.682f, 0.298f, 0.294f, 1.0f);
 
-        [Title("Events")]
-        public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
-        public UnityEvent<int> OnScoreIncrease;
-        public UnityEvent<int> OnScoreDecrease;
-        public UnityEvent OnScoreIsZero;
+        [FoldoutGroup("Events", false)] public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
+        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreIncrease;
+        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreDecrease;
+        [FoldoutGroup("Events")] public UnityEvent OnScoreIsZero;
 
         #region Public Properties
         public int Points => _points;
@@ -55,11 +62,24 @@ namespace Managers
         }
         #endregion
 
-        #region Public Methods
+        #region Modify Score
+        public void AddPoints(Blob blob)
+        {
+            int points = blob.BlobType switch
+            {
+                BlobType.Good => blob.IsTransformed ? _badBlobValue : _goodBlobValue,
+                BlobType.Bad => _badBlobValue,
+                _ => throw new ArgumentOutOfRangeException(nameof(blob.BlobType))
+            };
+
+            AddPoints(points);
+            CreateScorePopup(points, blob.transform.position);
+        }
+
+        // More generic method without dependency on `Blob` class
         public void AddPoints(int value, Vector3 popupLocation)
         {
             AddPoints(value);
-
             CreateScorePopup(value, popupLocation);
         }
 
@@ -76,19 +96,20 @@ namespace Managers
                     OnScoreDecrease?.Invoke(value);
                     break;
             }
+
             ScoreChanged?.Invoke(value, _points);
 
-            // Score hit 0 - End game
+            // End game
             if (_points <= 0)
             {
                 _points = 0;
-
                 OnScoreIsZero?.Invoke();
             }
         }
         #endregion
 
-        private void CreateScorePopup(int value, Vector3 popupLocation)
+        // Popup
+        private void CreateScorePopup(int value, Vector3 worldPosition)
         {
             GameObject popUp = Instantiate(_popupPrefab, _canvas.transform);
 
@@ -97,7 +118,7 @@ namespace Managers
             label.text = value.ToString(CultureInfo.CurrentCulture);
 
             // Set location
-            Vector3 rectLocation = _camera.WorldToScreenPoint(popupLocation);
+            Vector3 rectLocation = _camera.WorldToScreenPoint(worldPosition);
             var rectTransform = popUp.GetComponent<RectTransform>();
             rectTransform.position = rectLocation;
 
