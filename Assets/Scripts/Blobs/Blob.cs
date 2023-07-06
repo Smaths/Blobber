@@ -6,18 +6,18 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Blobs
 {
     public enum BlobType { Good, Bad }
-    public enum BlobState { Idle, Patrol, Attack, Paused, Dead }
 
     [RequireComponent(typeof(NavMeshAgent))]
     public class Blob : MonoBehaviour
     {
         #region Fields
-        private const float AnimationTime = 0.3f;
+        private const float _animationTime = 0.3f;
         private const int MaxColliders = 6;
         [BoxGroup("Dependencies")]
         [SceneObjectsOnly]
@@ -46,6 +46,7 @@ namespace Blobs
         [SerializeField] private LayerMask _groundMask;
         [Tooltip("Select layers for the character to avoid when finding a random wander position.")]
         [SerializeField] private LayerMask _avoidMask;
+        [SerializeField] private LayerMask _sightMask;
 
         [Header("Sight")]
         [Tooltip("Rate in seconds that the character will scan for targets that are on the 'Sight Mask' layer.")]
@@ -54,12 +55,12 @@ namespace Blobs
         [Tooltip("How far the blob can see.")]
         [SuffixLabel("meter(s)")] [MinValue(0.01f)]
         [SerializeField] private float _sightRange = 4f;
-        [SerializeField] private LayerMask _sightMask;
         private bool _hadTarget;
 
+        [FormerlySerializedAs("_searchRadius")]
         [Header("Patrol")]
         [SuffixLabel("meter(s)")] [MinValue(0)]
-        [SerializeField] private float _searchRadius = 4f;
+        [SerializeField] private float _patrolRadius = 4f;
         [LabelText("Distance Threshold")]
         [SuffixLabel("meter(s)")] [MinValue(0.01f)]
         [Tooltip("Range the character can be from randomly selected target position before searching for a new one. Lower numbers are strict, higher numbers are more accommodating.")]
@@ -67,8 +68,6 @@ namespace Blobs
         [SuffixLabel("second(s)")] [MinValue(0)]
         [Tooltip("How long the character will wait before finding a new position.")]
         [SerializeField] private Vector2 _patrolWaitTime = new(2f, 4f);
-        private bool _hasPatrolPoint;
-        private bool _isWaitingAtPatrolPoint;
 
         [Header("Meshes")]
         [Required] [ChildGameObjectsOnly]
@@ -101,15 +100,26 @@ namespace Blobs
         [Space] [PropertyOrder(100)]
         [SerializeField] private bool _showDebug;
 
-        private NavMeshAgent _agent;
+        private NavMeshAgent _navMeshAgent;
         private Collider[] _searchColliders;
         private Collider[] _cachedPatrolColliders;
         private Vector3 _originalScale;
         #endregion
 
         #region Public Properties
+        public NavMeshAgent NavMeshAgent => _navMeshAgent;
         public BlobType BlobType => _blobType;
+        public LayerMask GroundMask => _groundMask;
+        public LayerMask SightMask => _sightMask;
+        public LayerMask AvoidMask => _avoidMask;
+        public GameObject PlayerBlob => _playerBlob;
         public bool IsTransformed => _isTransformed;
+        public float PatrolRadius => _patrolRadius;
+        public float PatrolDistanceThreshold => _patrolDistanceThreshold;
+        public Vector2 PatrolWaitTime => _patrolWaitTime;
+        public float SightRange => _sightRange;
+        public float AnimationTime => _animationTime;
+        public GameObject DeathFX => _deathFX;
         #endregion
 
         #region Events
@@ -134,7 +144,7 @@ namespace Blobs
 
         private void OnValidate()
         {
-            _agent ??= GetComponent<NavMeshAgent>();
+            _navMeshAgent ??= GetComponent<NavMeshAgent>();
             _playerBlob ??= FindObjectOfType<PlayerController>().gameObject;
 
             // Update the blob's face
@@ -144,7 +154,7 @@ namespace Blobs
 
         private void Awake()
         {
-            _agent ??= GetComponent<NavMeshAgent>();
+            _navMeshAgent ??= GetComponent<NavMeshAgent>();
             _playerBlob ??= FindObjectOfType<PlayerController>().gameObject;
             _blobMaterial ??= _blobMesh.GetComponent<Renderer>().materials[0];
             _faceMaterial ??= _blobMesh.GetComponent<Renderer>().materials[1];
@@ -157,7 +167,7 @@ namespace Blobs
 
         private void OnEnable()
         {
-            _agent.speed = _speed;
+            _navMeshAgent.speed = _speed;
             _isDestroying = false;
             _isTransforming = false;
 
@@ -189,7 +199,7 @@ namespace Blobs
                 case BlobType.Good:
                     break;
                 case BlobType.Bad:
-                    StartCoroutine(SearchForPlayerCoroutine());
+                    // StartCoroutine(SearchForPlayerCoroutine());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -200,16 +210,16 @@ namespace Blobs
 
         private void Update()
         {
-            if (_isDestroying) return; // Guard
-            if (!_agent) return;
-            if (_currentState == BlobState.Paused) return;
-
-            if (_blobType == BlobType.Good)
-                TransformationCheck();
-
-            if (_isTransformed) return; // Prevent movement when good blob has transformed to bad.
-            if (!_hasTarget)
-                Patrol();
+            // if (_isDestroying) return; // Guard
+            // if (!_agent) return;
+            // if (_currentState == BlobState.Paused) return;
+            //
+            // if (_blobType == BlobType.Good)
+            //     TransformationCheck();
+            //
+            // if (_isTransformed) return; // Prevent movement when good blob has transformed to bad.
+            // if (!_hasTarget)
+            //     Patrol();
         }
         #endregion
 
@@ -218,7 +228,7 @@ namespace Blobs
         {
             if (!isActiveAndEnabled) return;
 
-            _agent.speed = 0;
+            _navMeshAgent.speed = 0;
             SetState(BlobState.Paused);
         }
 
@@ -226,7 +236,7 @@ namespace Blobs
         {
             if (!isActiveAndEnabled) return;
 
-            _agent.speed = _speed;
+            _navMeshAgent.speed = _speed;
             SetState(_previousState);
         }
         #endregion
@@ -254,7 +264,7 @@ namespace Blobs
                 case BlobState.Patrol:
                     OnWander?.Invoke();
                     break;
-                case BlobState.Attack:
+                case BlobState.Chase:
                     OnAttack?.Invoke();
                     break;
                 case BlobState.Dead:
@@ -286,8 +296,8 @@ namespace Blobs
         {
             // Create mesh animation sequence
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), AnimationTime, 0));
-            sequence.Append(transform.DOScale(Vector3.zero, AnimationTime));
+            sequence.Append(transform.DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), _animationTime, 0));
+            sequence.Append(transform.DOScale(Vector3.zero, _animationTime));
 
             // Determine death fx duration
             float deathDuration = _deathPS.main.duration >= sequence.Duration()
@@ -346,102 +356,15 @@ namespace Blobs
                     _hadTarget = true;
                     _targetDestination = _searchColliders[0].transform.position;
 
-                    _agent.SetDestination(_targetDestination);
+                    _navMeshAgent.SetDestination(_targetDestination);
 
-                    SetState(BlobState.Attack);
+                    SetState(BlobState.Chase);
 
                     OnGainedTarget?.Invoke();
                 }
 
                 yield return new WaitForSeconds(_searchRate);
             }
-        }
-        #endregion
-
-        #region Patrol
-        private void Patrol()
-        {
-            if (!_hasPatrolPoint)
-                SearchForPatrolPoint();
-
-            if (_hasPatrolPoint)
-                _agent.SetDestination(_targetDestination);
-
-            Vector3 distance = transform.position - _targetDestination;
-            if (_showDebug) print($"(distance to wander point: {distance.magnitude})");
-
-            // Wander point reached
-            if (distance.magnitude < _patrolDistanceThreshold && _isWaitingAtPatrolPoint == false)
-            {
-                _isWaitingAtPatrolPoint = true;
-
-                float randomWaitTime = Random.Range(_patrolWaitTime.x, _patrolWaitTime.y);
-
-                StartCoroutine(ResetPatrolAfterDelayCoroutine(randomWaitTime));
-            }
-        }
-
-        private IEnumerator ResetPatrolAfterDelayCoroutine(float delayTime)
-        {
-            yield return new WaitForSeconds(delayTime);
-
-            _isWaitingAtPatrolPoint = false;
-            _hasPatrolPoint = false;
-        }
-
-        // ---
-        // NOTE: Not working, but would be great if it did.
-        private void GetNewPatrolPoint()
-        {
-            int walkableLayerMask = NavMesh.GetAreaFromName("Walkable"); // Replace "Walkable" with the actual name of your walkable NavMesh layer
-            Vector3 randomPosition = RandomNavSphere(transform.position, _searchRadius, walkableLayerMask);
-
-            print($"{gameObject.name} - Random Position: {randomPosition}");
-            
-            _hasPatrolPoint = true;
-            _targetDestination = randomPosition;
-        }
-
-        private Vector3 RandomNavSphere(Vector3 origin, float radius, int layerMask)
-        {
-            Vector3 randomDirection = Random.insideUnitSphere * radius;
-            randomDirection += origin;
-
-            NavMesh.SamplePosition(new Vector3(randomDirection.x, origin.y, randomDirection.z), out NavMeshHit navHit, radius, layerMask);
-
-            return navHit.position;
-        }
-        // ---
-
-        private void SearchForPatrolPoint()
-        {
-            float randomX = Random.Range(-_searchRadius, _searchRadius);
-            float randomZ = Random.Range(-_searchRadius, _searchRadius);
-
-            Vector3 cachedPosition = transform.position;
-            var randomPosition = new Vector3(cachedPosition.x + randomX, cachedPosition.y, cachedPosition.z + randomZ);
-
-            // Check - random position is NOT inside another collider
-            _cachedPatrolColliders ??= new Collider[MaxColliders];
-            int numColliders = Physics.OverlapBoxNonAlloc(randomPosition, Vector3.one * 0.5f, _cachedPatrolColliders, Quaternion.identity, _avoidMask);
-            if (numColliders > 0)
-            {
-                return;
-            }
-
-            // Check - random position is above the ground terrain
-            if (!Physics.Raycast(randomPosition, Vector3.down, 2f, _groundMask)) return;
-
-            if (_showDebug)
-            {
-                var debugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                debugObject.transform.localScale = Vector3.one * 0.2f;
-                Destroy(debugObject, 1f);
-                Debug.DrawLine(transform.position, randomPosition, Color.red, 1f);
-            }
-
-            _hasPatrolPoint = true;
-            _targetDestination = randomPosition;
         }
         #endregion
 
@@ -456,7 +379,7 @@ namespace Blobs
                 case BlobState.Patrol:
                     SetFace(_faceData.WalkFace);
                     break;
-                case BlobState.Attack:
+                case BlobState.Chase:
                     SetFace(_faceData.attackFace);
                     break;
                 case BlobState.Dead:
@@ -535,5 +458,10 @@ namespace Blobs
             return randomDuration;
         }
         #endregion
+
+        public float GetDeathAnimationDuration()
+        {
+            return _deathPS.main.duration >= _animationTime ? _deathPS.main.duration : _animationTime;;
+        }
     }
 }
