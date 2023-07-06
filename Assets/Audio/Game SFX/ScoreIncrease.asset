@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: ScoreIncrease
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: ffa6d99c4713d453da2c817bbb20727f, type: 3}
-  - {fileID: 8300000, guid: b3895ea2448ef442b86d4f5c7fe8cf85, type: 3}
-  - {fileID: 8300000, guid: 19fef0f2327e744c1917d7d2014e3658, type: 3}
-  - {fileID: 8300000, guid: 751404c7d636c46f29981bd5f890854b, type: 3}
-  - {fileID: 8300000, guid: a6112131e122c49cabeb37952aec1abc, type: 3}
-  - {fileID: 8300000, guid: 3b9e7f17105124ca98e95fc58dcbdfe5, type: 3}
-  - {fileID: 8300000, guid: 1ae0217fbf83147e3914501c687e015c, type: 3}
-  - {fileID: 8300000, guid: ef70ef42132be4d3393bfac9c0c23d47, type: 3}
-  - {fileID: 8300000, guid: 155b3193a36d34e08a91f468a881c595, type: 3}
+  - {fileID: 8300000, guid: 373683c46a7c644ba84a0373e6d8ef4c, type: 3}
+  - {fileID: 8300000, guid: 7ca6dc7736020482c822a05ca563b2a2, type: 3}
+  - {fileID: 8300000, guid: f808018935735470bbe6b3e199a905eb, type: 3}
+  - {fileID: 8300000, guid: 8799a36eddb7346468078be5ca7213e5, type: 3}
+  - {fileID: 8300000, guid: 0ec3b753f2bd142109661ff199b5ef0f, type: 3}
+  - {fileID: 8300000, guid: 2a1039238f68e4ab4a75c49bc1058793, type: 3}
+  - {fileID: 8300000, guid: 1bffadcc0b9c841f19320a9d3487f56c, type: 3}
+  - {fileID: 8300000, guid: a177f004eea6048f9ab5238d7a4095c8, type: 3}
+  - {fileID: 8300000, guid: ddf10bbe84dd14ef4b49d9794f6e3c1d, type: 3}
   - {fileID: 8300000, guid: 3447489d706e14133be2fa1405c72794, type: 3}
   playType: 1
   volume: 1

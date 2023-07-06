@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: BoostActivated
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: 622f02f4b1652440aad1ed0702db305d, type: 3}
-  - {fileID: 8300000, guid: 2766d705f1cc34dfdb44776218ec44c9, type: 3}
-  - {fileID: 8300000, guid: c129ccf20234841ff84e814280bb96ca, type: 3}
-  - {fileID: 8300000, guid: a5921feadf18d48609e9e23a19c1213e, type: 3}
-  - {fileID: 8300000, guid: 8a3504fe9e3b2473ba6c9d002dde106b, type: 3}
-  - {fileID: 8300000, guid: be81a5d9efde84d488b933a32db67b94, type: 3}
-  - {fileID: 8300000, guid: 68450b23c64cf4b2e96a79cf4676d909, type: 3}
+  - {fileID: 8300000, guid: fe270c4bbe7dc473a9b67639602d4352, type: 3}
+  - {fileID: 8300000, guid: 1ba0eeebe99cf44c99f5c70d909c89e2, type: 3}
+  - {fileID: 8300000, guid: 18644588164f74d09af5b394d14871f7, type: 3}
+  - {fileID: 8300000, guid: b984a6ba4d72148d0890c2a23804842f, type: 3}
+  - {fileID: 8300000, guid: 7d1a1ca5f20034df8b53994e736a164d, type: 3}
+  - {fileID: 8300000, guid: 081624fa7330a45988cfc19e0a8d7407, type: 3}
+  - {fileID: 8300000, guid: f264687b4f4ec41eebfe503b121abec8, type: 3}
   playType: 1
   volume: 1
-  volumeVariation: 0.02
+  volumeVariation: 0
   pitch: 1
   pitchVariation: 0.05
   delay: 0
