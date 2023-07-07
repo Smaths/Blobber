@@ -178,7 +178,7 @@ Transform:
   m_GameObject: {fileID: 5701229110129656692}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5122452813696366826}
@@ -324,7 +324,7 @@ Transform:
   m_GameObject: {fileID: 7410522363830894211}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5912513365959862802}
@@ -435,8 +435,9 @@ MonoBehaviour:
   _patrolRadius: 4
   _patrolDistanceThreshold: 0.25
   _patrolWaitTime: {x: 2, y: 4}
-  _blobMesh: {fileID: 2221890846040173535}
-  _hat: {fileID: 6605536760363992709}
+  _blob: {fileID: 7898370912276849721}
+  _blobRenderer: {fileID: 8910481996025860512}
+  _hat: {fileID: 5827732697542794303}
   _goodBlobColor: {r: 0.749, g: 0.753, b: 0.247, a: 1}
   _badBlobColor: {r: 0.682, g: 0.298, b: 0.294, a: 1}
   _deathFX: {fileID: 5053720873294688094}

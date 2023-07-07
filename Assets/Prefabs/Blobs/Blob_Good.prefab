@@ -224,9 +224,9 @@ MonoBehaviour:
   _patrolRadius: 4
   _patrolDistanceThreshold: 0.25
   _patrolWaitTime: {x: 2, y: 4}
-  _blobMesh: {fileID: 4162230051727053169}
-  _hat: {fileID: 695295321727330795}
-  _blobRig: {fileID: 8438615724494573756}
+  _blob: {fileID: 5371155676846694039}
+  _blobRenderer: {fileID: 6683042729723538190}
+  _hat: {fileID: 211105982673859409}
   _goodBlobColor: {r: 0.7490196, g: 0.7529412, b: 0.24705882, a: 1}
   _badBlobColor: {r: 0.68235296, g: 0.29803923, b: 0.29411766, a: 1}
   _deathFX: {fileID: 2710812742892477839}
@@ -516,12 +516,6 @@ PrefabInstance:
 --- !u!4 &211105982673859409 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 627289267751688272, guid: 55602126ae3364ed2901f2466ba46877,
-    type: 3}
-  m_PrefabInstance: {fileID: 745745437196888833}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &695295321727330795 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 288024696299012842, guid: 55602126ae3364ed2901f2466ba46877,
     type: 3}
   m_PrefabInstance: {fileID: 745745437196888833}
   m_PrefabAsset: {fileID: 0}

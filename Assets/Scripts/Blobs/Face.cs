@@ -19,7 +19,7 @@ namespace Blobs
 
         private void Awake()
         {
-            _faceMaterial ??= GetComponent<Blob>().BlobMesh.GetComponent<Renderer>().materials[1];
+            _faceMaterial ??= GetComponent<Blob>().BlobRenderer.materials[1];
             _stateManager ??= GetComponent<BlobStateManager>();
         }
 

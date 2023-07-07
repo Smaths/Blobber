@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Blobs
@@ -41,7 +40,7 @@ namespace Blobs
         [Tooltip("Select layers for the character to use for chasing other things down.")]
         [SerializeField] private LayerMask _sightMask;
 
-        [Header("Sight")]
+        [Title("Sight", "Will start to chase players in range", TitleAlignments.Split, false)]
         [Tooltip("How far the blob can see.")]
         [SuffixLabel("meter(s)")] [MinValue(0.01f)]
         [SerializeField] private float _sightRange = 4f;
@@ -57,19 +56,20 @@ namespace Blobs
         [Tooltip("How long the character will wait before finding a new position.")]
         [SerializeField] private Vector2 _patrolWaitTime = new(2f, 4f);
 
-        [Header("Meshes")]
+        [Header("Transforms")]
         [Required] [ChildGameObjectsOnly]
-        [SerializeField] private GameObject _blobMesh;
-        [ChildGameObjectsOnly]
-        [SerializeField] private GameObject _hat;
-        [FormerlySerializedAs("_blobRig")]
-        [ChildGameObjectsOnly, Required]
-        [SerializeField] private Transform _blobTransform;
+        [SerializeField] private Transform _blob;
+        [Required] [ChildGameObjectsOnly]
+        [SerializeField] private SkinnedMeshRenderer _blobRenderer;
+        [Optional] [ChildGameObjectsOnly]
+        [SerializeField] private Transform _hat;
 
-        [Header("Visuals")]
+        [Header("Colors")]
         [SerializeField] private Color _goodBlobColor = new(0.749f, 0.753f, 0.247f, 1.0f);
         [SerializeField] private Color _badBlobColor = new(0.682f, 0.298f, 0.294f, 1.0f);
         private Material _blobMaterial;
+
+        [Header("Death FX")]
         [ChildGameObjectsOnly]
         [SerializeField] private GameObject _deathFX;
         private ParticleSystem _deathPS;
@@ -100,21 +100,23 @@ namespace Blobs
         public float SightRange => _sightRange;
         public float AnimationTime => _animationTime;
         public float TransformationTime => _transformationTime;
-        public GameObject DeathFX => _deathFX;
+        public Transform BlobTransform => _blob;
+        public SkinnedMeshRenderer BlobRenderer => _blobRenderer;
+        public Transform Hat => _hat;
         public Material BlobMaterial => _blobMaterial;
-        public GameObject BlobMesh => _blobMesh;
-        public GameObject Hat => _hat;
         public Color GoodBlobColor => _goodBlobColor;
         public Color BadBlobColor => _badBlobColor;
-
-        public Transform BlobTransform => _blobTransform;
+        public GameObject DeathFX => _deathFX;
         #endregion
 
         #region Lifecycle
         private void OnDrawGizmosSelected()
         {
             // Draw the search radius gizmo in the Unity Editor
-            Gizmos.color = Color.yellow;
+            Gizmos.color = new Color(0.343f, 0.681f, 0.569f);
+            Gizmos.DrawWireSphere(transform.position, _patrolRadius);
+
+            Gizmos.color = new Color(0.581f, 0.229f, 0.237f);
             Gizmos.DrawWireSphere(transform.position, _sightRange);
         }
 
@@ -122,7 +124,7 @@ namespace Blobs
         {
             _deathPS ??= _deathFX.GetComponent<ParticleSystem>();
             _navMeshAgent ??= GetComponent<NavMeshAgent>();
-            _blobMaterial ??= _blobMesh.GetComponent<Renderer>().materials[0];
+            _blobMaterial ??= _blobRenderer.materials[0];
         }
         #endregion
 

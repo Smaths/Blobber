@@ -24,6 +24,9 @@ namespace StateMachine
         private BlobDeadState _deadState;
         private BlobPausedState _pausedState;
 
+        private float _transformTimer;
+        private IEnumerator _transformCoroutine;
+
         #region Public Properties
         public Blob Blob { get; private set; }
         public bool IsTransformed { get; private set; }
@@ -62,7 +65,9 @@ namespace StateMachine
 
             // Transformation
             if (Blob.BlobType == BlobType.Good)
-                StartCoroutine(DoTransform());
+            {
+                SetNewTransformationTimer();
+            }
 
             // Initial state
             _currentState = _previousState = Blob.BlobType switch
@@ -99,6 +104,9 @@ namespace StateMachine
         private void Update()
         {
             _currentState.UpdateState();
+
+            if (TransformationTimerCheck())
+                SwitchState(BlobState.Transforming);
         }
         #endregion
 
@@ -115,7 +123,9 @@ namespace StateMachine
             _currentState.ExitState();
 
             if (_currentState != _transformingState)
+            {
                 _previousState = _currentState;
+            }
 
             _currentState = newState switch
             {
@@ -202,21 +212,45 @@ namespace StateMachine
         public void SetTransformed(bool isTransformed)
         {
             IsTransformed = isTransformed;
+
+            if (!isTransformed)
+                SetNewTransformationTimer();
         }
 
-        private IEnumerator DoTransform()
+        private void SetNewTransformationTimer()
         {
-            while (isActiveAndEnabled)
-            {
-                var waitForSeconds = new WaitForSeconds(Blob.GetTransformationInterval(IsTransformed));
-                yield return waitForSeconds;
-
-                // Don't switch if blob is dead
-                if (_currentState == _deadState) continue;
-
-                SwitchState(BlobState.Transforming);
-            }
+            _transformTimer = Time.time + Blob.GetTransformationInterval(IsTransformed);
         }
+
+        private bool TransformationTimerCheck()
+        {
+            // Guards
+            if (_currentState == _transformingState) return false;
+            if (_currentState == _deadState) return false;
+
+            if (Time.time < _transformTimer) return false; // Timer running
+            // Timer complete
+            return true;
+        }
+
+        // private IEnumerator TransformCoroutine()
+        // {
+        //     while (isActiveAndEnabled)
+        //     {
+        //         yield return new WaitForSeconds(Blob.GetTransformationInterval(IsTransformed));;
+        //
+        //         // Don't switch if blob is dead or transforming
+        //         if (_currentState == _deadState || _currentState == _transformingState) continue;
+        //
+        //         SwitchState(BlobState.Transforming);
+        //     }
+        // }
+        //
+        // public void RestartTransformationTimer()
+        // {
+        //     StopCoroutine(TransformCoroutine());
+        //     StartCoroutine(TransformCoroutine());
+        // }
         #endregion
     }
 }
