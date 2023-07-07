@@ -11,10 +11,7 @@ namespace StateMachine
         public BlobChaseState(BlobStateManager context) : base(context) { }
 
         #region Required State Methods
-        public override void EnterState()
-        {
-            context.Blob.NavMeshAgent.speed = context.Blob.Speed;
-        }
+        public override void EnterState() { }
 
         public override void UpdateState()
         {

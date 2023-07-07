@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ObjectPooling;
 using Sirenix.OdinInspector;
+using StateMachine;
 using UnityEngine;
 using Utility;
 
@@ -14,6 +15,7 @@ namespace Blobs
     {
         [Title("Blob Manager")]
         [Tooltip("Additional number of objects spawned for object pooling. They are inactive on start.")]
+        [MinValue(0)] [SuffixLabel("object(s)")]
         [SerializeField] private int _poolBufferAmount = 1; // Additional objects created in pool (inactive on start)
         [Title("Good Blob Spawner", horizontalLine: false)]
         [LabelText("Count")] [SuffixLabel("blob(s)")]
@@ -72,9 +74,9 @@ namespace Blobs
 
         public void ReturnToPool(Blob blob)
         {
-#if UNITY_EDITOR
-            if (_showDebug) Debug.Log($"{gameObject.name} - {blob.name} ({blob.gameObject.GetInstanceID()}) returned to pool", transform);
-#endif
+// #if UNITY_EDITOR
+//             if (_showDebug) Debug.Log($"{gameObject.name} - {blob.name} ({blob.gameObject.GetInstanceID()}) returned to pool", transform);
+// #endif
             GameObject prefab = blob.BlobType switch
             {
                 BlobType.Good => _goodBlobPrefab,
@@ -92,31 +94,27 @@ namespace Blobs
 
             GameObject foo = PoolManager.Instance.SpawnFromPool(prefab, RandomSpawnPointPosition());
 
-#if UNITY_EDITOR
-            if (_showDebug) Debug.Log($"{gameObject.name} - {foo.name} ({foo.GetInstanceID()}) spawned from pool", transform);
-#endif
+// #if UNITY_EDITOR
+//             if (_showDebug) Debug.Log($"{gameObject.name} - {foo.name} ({foo.GetInstanceID()}) spawned from pool", transform);
+// #endif
         }
         #endregion
 
+        #region Public Methods
         public void EnableBlobs()
         {
-            // TODO: Reimplement using blob state manager
-            Blob[] blobs = FindObjectsOfType<Blob>();
-            foreach (var blob in blobs)
-            {
-                // blob.Enable();
-            }
+            BlobStateManager[] blobs = FindObjectsOfType<BlobStateManager>();
+            foreach (BlobStateManager blob in blobs)
+                blob.ReturnToPreviousState();
         }
 
         public void DisableBlobs()
         {
-            // TODO: Reimplement using blob state manager
-            Blob[] blobs = FindObjectsOfType<Blob>();
-            foreach (var blob in blobs)
-            {
-                // blob.Disable();
-            }
+            BlobStateManager[] blobs = FindObjectsOfType<BlobStateManager>();
+            foreach (BlobStateManager blob in blobs)
+                blob.SwitchState(BlobState.Paused);
         }
+        #endregion
 
         #region Spawn Points
         [Button(ButtonSizes.Medium, Icon = SdfIconType.Search)] [PropertyOrder(4)]

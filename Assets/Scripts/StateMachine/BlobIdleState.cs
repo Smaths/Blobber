@@ -10,7 +10,6 @@ namespace StateMachine
         #region Required State Methods
         public override void EnterState()
         {
-            context.Blob.NavMeshAgent.speed = 0;
             context.Blob.NavMeshAgent.ResetPath();
         }
 

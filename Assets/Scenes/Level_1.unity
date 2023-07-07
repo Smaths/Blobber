@@ -1754,7 +1754,7 @@ MonoBehaviour:
   _goodBlobPrefab: {fileID: 4789807253655699573, guid: b4dc5bf41d2c8478280a696fb328a0d2,
     type: 3}
   _goodBlobContainer: {fileID: 181035319}
-  _startCount_Bad: 1
+  _startCount_Bad: 0
   _badBlobPrefab: {fileID: 8738743235114916857, guid: a2bf9732e03944e098d613f7b5648422,
     type: 3}
   _badBlobContainer: {fileID: 1893031214}
@@ -9669,7 +9669,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1216950227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10068,7 +10068,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1255619234
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,14 +11,13 @@ namespace Blobs
     public class Blob : MonoBehaviour
     {
         #region Fields
+        [SuffixLabel("point(s)")]
         [SerializeField] private int _points;
-        private const float _animationTime = 0.3f;
-        [BoxGroup("Dependencies")]
-        [SceneObjectsOnly]
-        [SerializeField] private GameObject _playerBlob;
+        [SerializeField] private BlobState _initialState;
 
         [Title("Blob AI", "Brains for blobs characters good and bad.", TitleAlignments.Split)]
         [SerializeField] private BlobType _blobType;
+        [MinValue(0)]
         [SerializeField] private float _speed = 4f;
 
         [Header("Transformation")]
@@ -62,19 +61,21 @@ namespace Blobs
         [Required] [ChildGameObjectsOnly]
         [SerializeField] private SkinnedMeshRenderer _blobRenderer;
         [Optional] [ChildGameObjectsOnly]
-        [SerializeField] private Transform _hat;
+        [SerializeField] private Transform _headAccessory;
 
         [Header("Colors")]
         [SerializeField] private Color _goodBlobColor = new(0.749f, 0.753f, 0.247f, 1.0f);
         [SerializeField] private Color _badBlobColor = new(0.682f, 0.298f, 0.294f, 1.0f);
-        private Material _blobMaterial;
 
         [Header("Death FX")]
         [ChildGameObjectsOnly]
         [SerializeField] private GameObject _deathFX;
-        private ParticleSystem _deathPS;
+        [SerializeField] private ParticleSystem _deathPS;
 
+        private GameObject _playerBlob;
         private NavMeshAgent _navMeshAgent;
+        private const float _animationTime = 0.3f;
+        private Material _blobMaterial;
         #endregion
 
         #region Public Properties
@@ -102,10 +103,11 @@ namespace Blobs
         public float TransformationTime => _transformationTime;
         public Transform BlobTransform => _blob;
         public SkinnedMeshRenderer BlobRenderer => _blobRenderer;
-        public Transform Hat => _hat;
+        public Transform HeadAccessory => _headAccessory;
         public Material BlobMaterial => _blobMaterial;
         public Color GoodBlobColor => _goodBlobColor;
         public Color BadBlobColor => _badBlobColor;
+        public BlobState InitialState => _initialState;
         public GameObject DeathFX => _deathFX;
         #endregion
 
@@ -122,17 +124,30 @@ namespace Blobs
 
         private void Awake()
         {
-            _deathPS ??= _deathFX.GetComponent<ParticleSystem>();
             _navMeshAgent ??= GetComponent<NavMeshAgent>();
             _blobMaterial ??= _blobRenderer.materials[0];
+            _deathPS ??= _deathFX.GetComponent<ParticleSystem>();
+        }
+
+        private void OnDisable()
+        {
+            // Reset for object pooling
+            _navMeshAgent.ResetPath();
+            _deathFX.gameObject.SetActive(false); // Disable explosion
+
+            if (_blobType == BlobType.Good)
+            {
+                _headAccessory.transform.localScale = Vector3.zero; // Hide horns on start
+                _blobMaterial.color = _goodBlobColor;
+            }
         }
         #endregion
 
-        // Public Methods
+        #region Public Methods
         public float GetTransformationInterval(bool isTransformed)
         {
-            float randomMin = isTransformed ? _transformedDuration.x : _untransformedDuration.x;
-            float randomMax = isTransformed ? _transformedDuration.y : _untransformedDuration.y;
+            float randomMin = isTransformed ?   _untransformedDuration.x : _transformedDuration.x;
+            float randomMax = isTransformed ? _untransformedDuration.y : _transformedDuration.y ;
             float randomDuration = Random.Range(randomMin, randomMax);
             return randomDuration;
         }
@@ -141,5 +156,6 @@ namespace Blobs
         {
             return _deathPS.main.duration >= _animationTime ? _deathPS.main.duration : _animationTime;;
         }
+        #endregion
     }
 }

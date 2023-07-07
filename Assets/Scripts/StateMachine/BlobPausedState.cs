@@ -10,18 +10,19 @@ namespace StateMachine
         #region Required State Methods
         public override void EnterState()
         {
-            context.Blob.NavMeshAgent.speed = 0;
-            context.Blob.NavMeshAgent.ResetPath();
+            // Stop along current path
+            context.Blob.NavMeshAgent.isStopped = true;
         }
 
         public override void UpdateState() { }
 
-        public override void OnTriggerEnter(Collider other)
-        {
-            context.SwitchState(BlobState.Dead);
-        }
+        public override void OnTriggerEnter(Collider other) { }
 
-        public override void ExitState() { }
+        public override void ExitState()
+        {
+            // Continue along current path
+            context.Blob.NavMeshAgent.isStopped = false;
+        }
         #endregion
     }
 }

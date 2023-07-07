@@ -5,24 +5,28 @@ namespace StateMachine
 {
     public class BlobTransformingState : BlobBaseState
     {
+        private Sequence _transformSequence;
+
         // Constructor
         public BlobTransformingState(BlobStateManager context) : base(context) { }
 
         #region Required State Methods
         public override void EnterState()
         {
-            context.Blob.NavMeshAgent.speed = 0;
-            context.Blob.NavMeshAgent.ResetPath();
-            
-            string transform = context.IsTransformed ? "Good" : "Bad";
-            Debug.Log($"Enter Transform - Will transform to {transform}");
-            context.Blob.NavMeshAgent.speed = 0;
-            context.Blob.NavMeshAgent.ResetPath();
+            context.Blob.NavMeshAgent.isStopped = true;
 
-            // Animate transformation
-            Sequence sequence = TransformationSequence(context.Blob.TransformationTime);
-            sequence.OnComplete(OnTransformationComplete);
-            sequence.Play();
+            // Continue animation if paused
+            if (_transformSequence != null && !_transformSequence.IsComplete() && !_transformSequence.IsPlaying())
+            {
+                _transformSequence.Play();
+                return;
+            }
+
+            // Start new animation sequence.
+            _transformSequence = context.IsTransformed
+                ? TransformToGoodSequence(context.Blob.TransformationTime)
+                : TransformToBadSequence(context.Blob.TransformationTime);
+            _transformSequence.Play();
         }
 
         public override void UpdateState() { }
@@ -30,43 +34,56 @@ namespace StateMachine
         public override void OnTriggerEnter(Collider other)
         {
             context.SwitchState(BlobState.Dead);
+            _transformSequence = null;
         }
 
         public override void ExitState()
         {
-            Debug.Log("Exit Transform");
+            context.Blob.NavMeshAgent.isStopped = false;
+
+            // Exiting because paused
+            if (_transformSequence.IsPlaying())
+                _transformSequence.Pause();
+            else
+                _transformSequence = null;
+
         }
         #endregion
 
         #region Transformation
-        private Sequence TransformationSequence(float time)
+        private Sequence TransformToBadSequence(float time)
         {
             float stageOneTime = time * 0.75f;
             float stageTwoTime = time * 0.25f;
 
             Sequence sequence = DOTween.Sequence();
-            sequence.Insert(0,context.Blob.BlobTransform.DOShakeRotation(stageOneTime, new Vector3(0, 45, 0), 5, 0, false));
-            if (context.IsTransformed)
+            sequence.Insert(0,context.BlobTransform.DOShakeRotation(stageOneTime, new Vector3(0, 45, 0), 5, 0, false));
+            sequence.Insert(1, context.BlobTransform.DOPunchScale(new Vector3(0, -0.1f, 0), stageTwoTime, 3));
+            sequence.Insert(1,context.Blob.BlobMaterial.DOColor(context.Blob.BadBlobColor, stageTwoTime));
+            sequence.Insert(1,context.Blob.HeadAccessory.DOScale(0.8f, stageTwoTime).OnComplete(() =>
             {
-                sequence.Insert(1, context.Blob.BlobTransform.DOPunchScale(new Vector3(0, -0.1f, 0), stageTwoTime, 3));
-                sequence.Insert(1,context.Blob.BlobMaterial.DOColor(context.Blob.GoodBlobColor, stageTwoTime));
-                sequence.Insert(1,context.Blob.Hat.DOScale(0, stageTwoTime));
-            }
-            else
-            {
-                sequence.Insert(1, context.Blob.BlobTransform.DOPunchScale(new Vector3(0, -0.1f, 0), stageTwoTime, 3));
-                sequence.Insert(1,context.Blob.BlobMaterial.DOColor(context.Blob.BadBlobColor, stageTwoTime));
-                sequence.Insert(1,context.Blob.Hat.DOScale(0.8f, stageTwoTime));
-            }
+                context.SetTransformed(!context.IsTransformed);
+            }));
             sequence.AppendInterval(1.0f);   // Short delay after transformation is complete
+            sequence.OnComplete(() => context.ReturnToPreviousState());
             return sequence;
         }
 
-        private void OnTransformationComplete()
+        // Modified from the transformation to bad sequence to benefit the player
+        private Sequence TransformToGoodSequence(float time)
         {
-            context.SetTransformed(!context.IsTransformed);
-            context.ReturnToPreviousState();
-            Debug.Log("Transform Complete");
+            float stageOneTime = time * 0.75f;
+            float stageTwoTime = time * 0.25f;
+
+            Sequence sequence = DOTween.Sequence();
+            sequence.Insert(0,context.BlobTransform.DOShakeRotation(stageOneTime, new Vector3(0, 45, 0), 5, 0, false));
+            sequence.Insert(1, context.BlobTransform.DOPunchScale(new Vector3(0, -0.1f, 0), stageTwoTime, 3));
+            sequence.Insert(1,context.Blob.BlobMaterial.DOColor(context.Blob.GoodBlobColor, stageTwoTime));
+            sequence.Insert(1,context.Blob.HeadAccessory.DOScale(0, stageTwoTime));
+            sequence.InsertCallback(1, () => context.SetTransformed(!context.IsTransformed));
+            sequence.AppendInterval(1.0f);   // Short delay after transformation is complete
+            sequence.OnComplete(() => context.ReturnToPreviousState());
+            return sequence;
         }
         #endregion
     }

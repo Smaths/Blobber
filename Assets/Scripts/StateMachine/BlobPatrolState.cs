@@ -20,7 +20,6 @@ namespace StateMachine
         public override void EnterState()
         {
             _hasPatrolPoint = false;
-            context.Blob.NavMeshAgent.speed = context.Blob.Speed;
         }
 
         public override void UpdateState()
@@ -49,10 +48,7 @@ namespace StateMachine
             context.SwitchState(BlobState.Dead);
         }
 
-        public override void ExitState()
-        {
-            Debug.Log($"{context.gameObject.name} Exit Patrol State");
-        }
+        public override void ExitState() { }
         #endregion
 
         #region Patrol

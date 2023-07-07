@@ -1,3 +1,4 @@
+using System;
 using ScriptableObjects;
 using Sirenix.OdinInspector;
 using StateMachine;
@@ -12,8 +13,6 @@ namespace Blobs
         private Material _faceMaterial;
         private static readonly int MainTex = Shader.PropertyToID("_MainTex");
         private BlobStateManager _stateManager;
-
-        public Material FaceMaterial => _faceMaterial;
 
         #region Lifecycle
 
@@ -52,8 +51,15 @@ namespace Blobs
                     SetFace(_faceData.DamageFace);
                     break;
                 case BlobState.Paused:
-                default:
                     break;
+                case BlobState.Wander:
+                    SetFace(_faceData.WalkFace);
+                    break;
+                case BlobState.Transforming:
+                    SetFace(_faceData.DamageFace);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
 

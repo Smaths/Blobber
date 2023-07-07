@@ -18,8 +18,14 @@ namespace StateMachine
         #region Required State Methods
         public override void EnterState()
         {
-            _hasPatrolPoint = false;
-            context.Blob.NavMeshAgent.speed = context.Blob.Speed;
+            if (context.Blob.NavMeshAgent.isStopped)
+            {
+                context.Blob.NavMeshAgent.isStopped = false;
+            }
+            else
+            {
+                _hasPatrolPoint = false;
+            }
         }
 
         public override void UpdateState()

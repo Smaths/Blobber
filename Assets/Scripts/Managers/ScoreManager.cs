@@ -105,7 +105,7 @@ namespace Managers
             rectTransform.DOPunchScale(Vector3.one * 1.5f, _popupDuration, 4, 0.25f);
             label.color = value > 0 ? _goodColor : _badColor;
 
-            Destroy(popUp, _popupDuration + 0.01f);
+            Destroy(popUp, _popupDuration);
         }
     }
 }
