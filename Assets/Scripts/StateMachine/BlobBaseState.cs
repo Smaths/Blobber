@@ -15,8 +15,7 @@ namespace StateMachine
         // Abstract methods
         public abstract void EnterState();
         public abstract void UpdateState();
-        public abstract void FixedUpdateState();
+        public abstract void OnTriggerEnter(Collider other);
         public abstract void ExitState();
-        public abstract void OnCollisionEnter(Collision other);
     }
 }

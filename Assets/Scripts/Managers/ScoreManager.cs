@@ -1,33 +1,24 @@
-using System;
 using System.Globalization;
-using Blobs;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility;
 using Random = UnityEngine.Random;
 
 // Script execution order modified.
 
 namespace Managers
 {
-    public class ScoreManager : MonoBehaviour
+    public class ScoreManager : Singleton<ScoreManager>
     {
-        public static ScoreManager instance;
-
         #region Fields
         [Title("Score Manager", "Main brain for handling score and publishing related events.")]
         // Editor fields
         [Tooltip("Current points of the player, game over if points go below 0.")]
         [SerializeField] private int _points;
         [SerializeField, ReadOnly] private bool _gameIsOver;
-
-        [Header("Settings")]
-        [SuffixLabel("point(s)")]
-        [SerializeField] private int _goodBlobValue = 100;
-        [SuffixLabel("point(s)")]
-        [SerializeField] private int _badBlobValue = -200;
 
         [BoxGroup("In-Game Popup")][SerializeField] private Canvas _canvas;
         [BoxGroup("In-Game Popup")][SerializeField] private GameObject _popupPrefab;
@@ -53,13 +44,6 @@ namespace Managers
         #endregion
 
         #region Lifecycle
-        private void Awake()
-        {
-            // Singleton setup - destroy on scene unload/load
-            if (instance == null) instance = this;
-            else Destroy(gameObject);
-        }
-
         private void Start()
         {
             _camera = Camera.main;
@@ -67,19 +51,6 @@ namespace Managers
         #endregion
 
         #region Modify Score
-        public void AddPoints(Blob blob)
-        {
-            int points = blob.BlobType switch
-            {
-                BlobType.Good => blob.IsTransformed ? _badBlobValue : _goodBlobValue,
-                BlobType.Bad => _badBlobValue,
-                _ => throw new ArgumentOutOfRangeException(nameof(blob.BlobType))
-            };
-
-            AddPoints(points);
-            CreateScorePopup(points, blob.transform.position);
-        }
-
         // More generic method without dependency on `Blob` class
         public void AddPoints(int value, Vector3 popupLocation)
         {

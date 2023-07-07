@@ -7,7 +7,6 @@ namespace Managers
 {
     public class LevelInputManager : MonoBehaviour
     {
-        [SerializeField] private ScoreManager _scoreManager;
         [SerializeField] private GameTimer _gameTimer;
         [SerializeField] private PlayerController _playerController;
 
@@ -56,7 +55,7 @@ namespace Managers
         // Actions
         private void OnPausePerformed(InputAction.CallbackContext context)
         {
-            if (ScoreManager.instance.GameIsOver) return;
+            if (ScoreManager.Instance.GameIsOver) return;
             _gameTimer.TogglePause();
         }
 

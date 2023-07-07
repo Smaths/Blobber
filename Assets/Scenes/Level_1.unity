@@ -1750,11 +1750,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poolBufferAmount: 1
-  _startCount_Good: 40
+  _startCount_Good: 5
   _goodBlobPrefab: {fileID: 4789807253655699573, guid: b4dc5bf41d2c8478280a696fb328a0d2,
     type: 3}
   _goodBlobContainer: {fileID: 181035319}
-  _startCount_Bad: 15
+  _startCount_Bad: 1
   _badBlobPrefab: {fileID: 8738743235114916857, guid: a2bf9732e03944e098d613f7b5648422,
     type: 3}
   _badBlobContainer: {fileID: 1893031214}
@@ -3753,7 +3753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &569276735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4112,8 +4112,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _points: 0
   _gameIsOver: 0
-  _goodBlobValue: 100
-  _badBlobValue: -200
   _canvas: {fileID: 1202955780}
   _popupPrefab: {fileID: 2225145639059729187, guid: 4781d23797ddf4799b1d3e829e6e9000,
     type: 3}
@@ -13075,7 +13073,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9505fcee58554b53a61b9dcd474e5bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scoreManager: {fileID: 645142068}
   _gameTimer: {fileID: 1567788134}
   _playerController: {fileID: 1939840379}
   _currentPointerPosition: {x: 0, y: 0}
@@ -18095,6 +18092,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ReceiveGI
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_DrawInstanced
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_SplatMapDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_DrawTreesAndFoliage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_BakeLightProbesForTrees
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_PreserveTreePrototypeLayers
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
+        type: 3}
+      propertyPath: m_TreeMotionVectorModeOverride
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6314015459740216413, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
         type: 3}

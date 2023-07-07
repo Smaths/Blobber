@@ -3,18 +3,17 @@ using UnityEngine.AI;
 
 namespace StateMachine
 {
-    public class BlobPatrolState : BlobBaseState
+    public class BlobWanderState : BlobBaseState
     {
         private bool _hasPatrolPoint;
         private Vector3 _targetDestination;
-        private const int MaxColliders = 10;
         private Collider[] _cachedPatrolColliders;
-        private Collider[] _cachedSearchColliders;
         private float _patrolWaitTimer;
+        private const int MaxColliders = 10;
         private bool _showDebug;
 
         // Constructor
-        public BlobPatrolState(BlobStateManager context) : base(context) { }
+        public BlobWanderState(BlobStateManager context) : base(context) { }
 
         #region Required State Methods
         public override void EnterState()
@@ -25,8 +24,6 @@ namespace StateMachine
 
         public override void UpdateState()
         {
-            SearchForPlayer();
-
             if (PatrolWaitCheck() == false) return; // Guard
 
             if (!_hasPatrolPoint) SearchForPatrolPoint();
@@ -49,13 +46,10 @@ namespace StateMachine
             context.SwitchState(BlobState.Dead);
         }
 
-        public override void ExitState()
-        {
-            Debug.Log($"{context.gameObject.name} Exit Patrol State");
-        }
+        public override void ExitState() { }
         #endregion
 
-        #region Patrol
+        #region Patrol/Wander
         private bool PatrolWaitCheck()
         {
             if (Time.time < _patrolWaitTimer) return false; // Timer running
@@ -98,23 +92,8 @@ namespace StateMachine
         }
         #endregion
 
-        #region Search for Player
-        private void SearchForPlayer()
-        {
-            _cachedSearchColliders ??= new Collider[MaxColliders];
-            int numColliders = Physics.OverlapSphereNonAlloc(context.transform.position, context.Blob.SightRange,
-                _cachedSearchColliders, context.Blob.SightMask);
-            if (numColliders > 0)
-            {
-                // Target found
-                context.SwitchState(BlobState.Chase);
-            }
-            // No target found
-        }
-        #endregion
-
         // ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-        #region Unused Patrol Code - Not working, but would be great if it did as it directly accesses NavMesh.
+        #region Unused Patrol Code - Not working, but would be great if it did.
         private void GetNewPatrolPoint()
         {
             Vector3 randomPosition = RandomNavSphere(context.transform.position, context.Blob.PatrolRadius);

@@ -80,9 +80,9 @@ namespace UI
 
         private void SubmitScoreToLeaderboard()
         {
-            if (LootLockerTool.instanceExists && ScoreManager.instance.GameIsOver && ScoreManager.instance.Points > 0)
+            if (LootLockerTool.instanceExists && ScoreManager.Instance.GameIsOver && ScoreManager.Instance.Points > 0)
             {
-                LootLockerTool.Instance.SubmitScore(ScoreManager.instance.Points);
+                LootLockerTool.Instance.SubmitScore(ScoreManager.Instance.Points);
             }
         }
     }

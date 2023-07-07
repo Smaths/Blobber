@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Face", order = 1)]
-public class Face :ScriptableObject
+namespace Plugins.Kawaii_Slimes.Scripts.AI
 {
-    public Texture Idleface, WalkFace, jumpFace, attackFace,damageFace;
+    // [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Face", order = 1)]
+    public class Face :ScriptableObject
+    {
+        public Texture Idleface, WalkFace, jumpFace, attackFace,damageFace;
+    }
 }

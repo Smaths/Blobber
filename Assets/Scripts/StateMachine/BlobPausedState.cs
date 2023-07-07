@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace StateMachine
 {
-    public class BlobIdleState : BlobBaseState
+    public class BlobPausedState : BlobBaseState
     {
         // Constructor
-        public BlobIdleState(BlobStateManager context) : base(context) { }
+        public BlobPausedState(BlobStateManager context) : base(context) { }
 
         #region Required State Methods
         public override void EnterState()

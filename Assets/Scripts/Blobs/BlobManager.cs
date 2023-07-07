@@ -75,20 +75,15 @@ namespace Blobs
 #if UNITY_EDITOR
             if (_showDebug) Debug.Log($"{gameObject.name} - {blob.name} ({blob.gameObject.GetInstanceID()}) returned to pool", transform);
 #endif
-
-            switch (blob.BlobType)
+            GameObject prefab = blob.BlobType switch
             {
-                case BlobType.Good:
-                    PoolManager.Instance.ReturnToPool(_goodBlobPrefab, blob.gameObject);
-                    StartCoroutine(SpawnAfterDelayCoroutine(_goodBlobPrefab, 2f));
-                    break;
-                case BlobType.Bad:
-                    PoolManager.Instance.ReturnToPool(_badBlobPrefab, blob.gameObject);
-                    StartCoroutine(SpawnAfterDelayCoroutine(_badBlobPrefab, 2f));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                BlobType.Good => _goodBlobPrefab,
+                BlobType.Bad => _badBlobPrefab,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            PoolManager.Instance.ReturnToPool(prefab, blob.gameObject);
+            StartCoroutine(SpawnAfterDelayCoroutine(prefab, 2f));
         }
 
         private IEnumerator SpawnAfterDelayCoroutine(GameObject prefab, float time)
@@ -105,19 +100,21 @@ namespace Blobs
 
         public void EnableBlobs()
         {
+            // TODO: Reimplement using blob state manager
             Blob[] blobs = FindObjectsOfType<Blob>();
             foreach (var blob in blobs)
             {
-                blob.Enable();
+                // blob.Enable();
             }
         }
 
         public void DisableBlobs()
         {
+            // TODO: Reimplement using blob state manager
             Blob[] blobs = FindObjectsOfType<Blob>();
             foreach (var blob in blobs)
             {
-                blob.Disable();
+                // blob.Disable();
             }
         }
 
@@ -131,9 +128,7 @@ namespace Blobs
 
         private Vector3 RandomSpawnPointPosition()
         {
-            return _spawnPoints.Count > 0
-                ? _spawnPoints.GetNextItem().position
-                : Vector3.zero;
+            return _spawnPoints.Count > 0 ? _spawnPoints.GetNextItem().position : Vector3.zero;
         }
         #endregion
     }
