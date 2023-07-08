@@ -1,4 +1,5 @@
 ﻿
+using Plugins.Kawaii_Slimes.Scripts.AI;
 using UnityEngine;
 using UnityEngine.AI;
 public enum SlimeAnimationState { Idle,Walk,Jump,Attack,Damage}

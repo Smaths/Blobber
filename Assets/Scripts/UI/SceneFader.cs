@@ -3,13 +3,12 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Utility;
 
 namespace UI
 {
-    public class SceneFader : MonoBehaviour
+    public class SceneFader : Singleton<SceneFader>
     {
-        public static SceneFader instance;
-
         // Editor Fields
         [Header("UI Elements")]
         [SerializeField] private Canvas _canvas;
@@ -36,13 +35,6 @@ namespace UI
         public UnityEvent OnFadeToLevel;
 
         #region Lifecycle
-        private void Awake()
-        {
-            // Singleton setup
-            if (instance != null) return;
-            instance = this;
-        }
-
         private void Start()
         {
             _canvas.enabled = false;
@@ -58,7 +50,7 @@ namespace UI
         public void FadeToStart(bool animated = true)
         {
             OnFadeToStart?.Invoke();
-            instance.FadeTo(_startSceneName);
+            FadeTo(_startSceneName);
         }
 
         public void FadeToGame()
@@ -75,6 +67,7 @@ namespace UI
         public void FadeToCurrentScene()
         {
             Scene scene = SceneManager.GetActiveScene();
+            DOTween.Clear();
             FadeOut(scene.name);
         }
 

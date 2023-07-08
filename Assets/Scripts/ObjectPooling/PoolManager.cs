@@ -49,7 +49,11 @@ namespace ObjectPooling
             return null;
         }
 
-        // Return an object to the pool
+        /// <summary>
+        ///     Return an object to the pool.
+        /// </summary>
+        /// <param name="prefab">Name used as key for accessing the correct pool.</param>
+        /// <param name="go">Object to be returned to pool.</param>
         public void ReturnToPool(GameObject prefab, GameObject go)
         {
             if (_pools.TryGetValue(prefab.name, out ObjectPool pool))

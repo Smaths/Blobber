@@ -3,7 +3,12 @@ guid: d901206271d8c99408246a49a016ac29
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - Idleface: {fileID: 2800000, guid: 2e0e5994249a31640bf4045362e1333e, type: 3}
+  - WalkFace: {fileID: 2800000, guid: 16b3c3cf239b741e3b197f6053950130, type: 3}
+  - jumpFace: {fileID: 2800000, guid: 16b3c3cf239b741e3b197f6053950130, type: 3}
+  - attackFace: {instanceID: 0}
+  - damageFace: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
