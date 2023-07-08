@@ -46,9 +46,9 @@ namespace UI
 
         private void SetTimeLabel()
         {
-            if (GameTimer.instance)
+            if (GameTimer.Instance)
             {
-                _timeLabel.text = GameTimer.instance.CurrentTime;
+                _timeLabel.text = GameTimer.Instance.CurrentTime;
             }
         }
 
@@ -62,7 +62,7 @@ namespace UI
         {
             _canvasGroup.interactable = false;
             OnRetryTapped?.Invoke();
-            SceneFader.instance.FadeToCurrentScene();
+            SceneFader.Instance.FadeToCurrentScene();
         }
 
         public void Leaderboard_Tapped()
@@ -74,7 +74,7 @@ namespace UI
         {
             _canvasGroup.interactable = false;
             OnQuitTapped?.Invoke();
-            SceneFader.instance.FadeToStart();
+            SceneFader.Instance.FadeToStart();
         }
         #endregion
 

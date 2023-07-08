@@ -81,14 +81,14 @@ namespace UI
                 _setupCanvas.GetComponent<UI_PlayerSetup>().OnSubmit.AddListener(
                     delegate
                     {
-                        SceneFader.instance.FadeToGame();
+                        SceneFader.Instance.FadeToGame();
                     }
                 );
             }
             else
             {
                 // Player name is set already, go to next scene.
-                SceneFader.instance.FadeToGame();;
+                SceneFader.Instance.FadeToGame();;
             }
 
             OnPlayTapped?.Invoke();

@@ -91,21 +91,20 @@ namespace Managers
             // Set text
             var label = popUp.GetComponent<TMP_Text>();
             label.text = value.ToString(CultureInfo.CurrentCulture);
+            label.color = value > 0 ? _goodColor : _badColor;
 
             // Set location
-            Vector3 rectLocation = _camera.WorldToScreenPoint(worldPosition);
+            Vector3 screenPosition = _camera.WorldToScreenPoint(worldPosition);
             var rectTransform = popUp.GetComponent<RectTransform>();
-            rectTransform.position = rectLocation;
+            rectTransform.position = screenPosition;
 
             // Animate
             float randomX = Random.Range(-200f, 200f);
-            rectTransform.DOLocalMove(new Vector3(randomX, 200f, 1), _popupDuration)
-                .SetRelative(true)
-                .SetEase(Ease.OutQuint);
-            rectTransform.DOPunchScale(Vector3.one * 1.5f, _popupDuration, 4, 0.25f);
-            label.color = value > 0 ? _goodColor : _badColor;
-
-            Destroy(popUp, _popupDuration);
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(rectTransform.DOLocalMove(new Vector3(randomX, 200f, 1), _popupDuration).SetRelative(true).SetEase(Ease.OutQuint));
+            sequence.Join(rectTransform.DOPunchScale(Vector3.one * 1.5f, _popupDuration, 4, 0.25f));
+            sequence.OnComplete(() => Destroy(popUp));
+            sequence.Play();
         }
     }
 }

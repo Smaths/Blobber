@@ -13,25 +13,35 @@ namespace Blobs
     [RequireComponent(typeof(PoolManager))]
     public class BlobManager : Singleton<BlobManager>
     {
-        [Title("Blob Manager")]
+        [TitleGroup("Blob Manager", "Spawn blobs from object pool.", TitleAlignments.Split)]
         [Tooltip("Additional number of objects spawned for object pooling. They are inactive on start.")]
         [MinValue(0)] [SuffixLabel("object(s)")]
         [SerializeField] private int _poolBufferAmount = 1; // Additional objects created in pool (inactive on start)
-        [Title("Good Blob Spawner", horizontalLine: false)]
-        [LabelText("Count")] [SuffixLabel("blob(s)")]
-        [SerializeField] private int _startCount_Good = 19;
-        [AssetsOnly] [Required]
-        [SerializeField] private GameObject _goodBlobPrefab;
-        [SceneObjectsOnly]
-        [SerializeField] private GameObject _goodBlobContainer;
 
-        [Title("Bad Blob Spawner", horizontalLine: false)]
-        [LabelText("Count")] [SuffixLabel("blob(s)")]
+        [TitleGroup("Good Blob Spawner", horizontalLine: false)]
+
+        [SceneObjectsOnly] [LabelText("Container")]
+        [Tooltip("Good blobs are placed here when spawned to keep the scene hierarchy clean.")]
+        [SerializeField] private Transform _goodBlobContainer;
+
+        [HorizontalGroup("Good Blob Spawner/Good")] [LabelText("Count")] [SuffixLabel("blob(s)")] [MinValue(0)]
+        [SerializeField] private int _startCount_Good = 19;
+
+        [HorizontalGroup("Good Blob Spawner/Good")] [AssetsOnly] [Required] [PreviewField(height:56), HideLabel]
+        [SerializeField] private GameObject _goodBlobPrefab;
+
+
+        [TitleGroup("Bad Blob Spawner", horizontalLine: false)]
+
+        [SceneObjectsOnly] [LabelText("Container")]
+        [Tooltip("Good blobs are placed here when spawned to keep the scene hierarchy clean.")]
+        [SerializeField] private Transform _badBlobContainer;
+
+        [HorizontalGroup("Bad Blob Spawner/Bad")] [LabelText("Count")] [SuffixLabel("blob(s)")] [MinValue(0)]
         [SerializeField] private int _startCount_Bad = 15;
-        [AssetsOnly] [Required]
+
+        [HorizontalGroup("Bad Blob Spawner/Bad")] [AssetsOnly] [Required] [PreviewField(height:56), HideLabel]
         [SerializeField] private GameObject _badBlobPrefab;
-        [SceneObjectsOnly]
-        [SerializeField] private GameObject _badBlobContainer;
 
         [Title("Spawn Points")]
         [SerializeField] private ItemDistributor<Transform> _spawnPoints;
@@ -62,8 +72,8 @@ namespace Blobs
         private void CreateBlobPools()
         {
             // Create pools
-            PoolManager.Instance.CreatePool(_badBlobPrefab, _startCount_Bad + _poolBufferAmount, _badBlobContainer.transform);
-            PoolManager.Instance.CreatePool(_goodBlobPrefab, _startCount_Good + _poolBufferAmount, _goodBlobContainer.transform);
+            PoolManager.Instance.CreatePool(_badBlobPrefab, _startCount_Bad + _poolBufferAmount, _badBlobContainer);
+            PoolManager.Instance.CreatePool(_goodBlobPrefab, _startCount_Good + _poolBufferAmount, _goodBlobContainer);
 
             // Spawn objects
             for (int i = 0; i < _startCount_Good; i++)
@@ -113,6 +123,18 @@ namespace Blobs
             BlobStateManager[] blobs = FindObjectsOfType<BlobStateManager>();
             foreach (BlobStateManager blob in blobs)
                 blob.SwitchState(BlobState.Paused);
+        }
+
+        [ButtonGroup("Spawn")] [PropertyOrder(50)]
+        public void SpawnGoodBlob()
+        {
+            PoolManager.Instance.SpawnFromPool(_goodBlobPrefab, RandomSpawnPointPosition());
+        }
+
+        [ButtonGroup("Spawn")] [PropertyOrder(50)]
+        public void SpawnBadBlob()
+        {
+            PoolManager.Instance.SpawnFromPool(_badBlobPrefab, RandomSpawnPointPosition());
         }
         #endregion
 

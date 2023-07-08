@@ -30,6 +30,8 @@ namespace StateMachine
 
         public override void UpdateState()
         {
+            if (context.IsTransformed) return;
+
             if (PatrolWaitCheck() == false) return; // Guard
 
             if (!_hasPatrolPoint) SearchForPatrolPoint();

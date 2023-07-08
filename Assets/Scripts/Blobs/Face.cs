@@ -22,12 +22,12 @@ namespace Blobs
             _stateManager ??= GetComponent<BlobStateManager>();
         }
 
-        private void OnEnable()
+        private void Start()
         {
             _stateManager.OnStateChanged.AddListener(SwitchFace);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _stateManager.OnStateChanged.RemoveListener(SwitchFace);
         }

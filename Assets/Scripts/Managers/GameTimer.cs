@@ -2,15 +2,14 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility;
 
 // Script execution order modified.
 
 namespace Managers
 {
-    public class GameTimer : MonoBehaviour
+    public class GameTimer : Singleton<GameTimer>
     {
-        public static GameTimer instance;
-
         // Editor fields
         [Header("Time Settings")]
         [LabelText("Countdown Duration")]
@@ -52,13 +51,6 @@ namespace Managers
                 string timeString = $"{t.Minutes}m{t.Seconds}s";
                 OnTimeChanged?.Invoke(timeString);
             }
-        }
-
-        private void Awake()
-        {
-            // Singleton setup
-            if (instance != null) return;
-            instance = this;
         }
 
         private void Start()
@@ -108,7 +100,9 @@ namespace Managers
 
         private void OnTimerFinished()
         {
-            Debug.Log("Countdown finished!");
+#if UNITY_EDITOR
+            Debug.Log($"{gameObject.name} - Countdown Finished. Game is over.");
+#endif
             OnCountdownCompleted?.Invoke();
         }
     }
