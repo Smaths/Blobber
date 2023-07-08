@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Utility
 {
@@ -7,11 +9,12 @@ namespace Utility
     ///     Represents a distributor that provides a random distribution of items from the remaining options.
     /// </summary>
     /// <typeparam name="T">The type of items to distribute.</typeparam>
+    [Serializable]
     public class ItemDistributor<T>
     {
-        private readonly List<T> _items;
+        [SerializeField] private List<T> _items;
         private List<T> _remainingItems;
-        private readonly Random _random;
+        private Random _random;
 
         public int Count => _items.Count;
         public int RemainingCount => _remainingItems.Count;

@@ -11,17 +11,17 @@ namespace UI
 
         private void OnEnable()
         {
-            if (GameTimer.instance)
+            if (GameTimer.Instance)
             {
-                GameTimer.instance.OnTimeChanged.AddListener(SetTimeLabel);
+                GameTimer.Instance.OnTimeChanged.AddListener(SetTimeLabel);
             }
         }
 
         private void OnDisable()
         {
-            if (GameTimer.instance)
+            if (GameTimer.Instance)
             {
-                GameTimer.instance.OnTimeChanged.RemoveListener(SetTimeLabel);
+                GameTimer.Instance.OnTimeChanged.RemoveListener(SetTimeLabel);
             }
         }
 

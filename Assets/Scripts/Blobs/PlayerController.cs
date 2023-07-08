@@ -43,7 +43,7 @@ namespace Blobs {
         [SerializeField] [DisplayAsString] private bool _isBoosting;
 
         [Header("Faces :D")]
-        [SerializeField] private global::Face _faceData;
+        [SerializeField] private global::Plugins.Kawaii_Slimes.Scripts.AI.Face _faceData;
         [SerializeField] private Material _faceMaterial;
         private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
@@ -170,23 +170,23 @@ namespace Blobs {
 
         private void OnEnable()
         {
-            if (ScoreManager.instance)
+            if (ScoreManager.Instance)
             {
-                ScoreManager.instance.ScoreChanged.AddListener(ResizeOnScoreDidChange);
-                ScoreManager.instance.OnScoreIncrease.AddListener(OnScoreDidIncrease);
-                ScoreManager.instance.OnScoreDecrease.AddListener(OnScoreDidDecrease);
-                ScoreManager.instance.OnScoreIsZero.AddListener(OnDidDie);
+                ScoreManager.Instance.ScoreChanged.AddListener(ResizeOnScoreDidChange);
+                ScoreManager.Instance.OnScoreIncrease.AddListener(OnScoreDidIncrease);
+                ScoreManager.Instance.OnScoreDecrease.AddListener(OnScoreDidDecrease);
+                ScoreManager.Instance.OnScoreIsZero.AddListener(OnDidDie);
             }
         }
 
         private void OnDisable()
         {
-            if (ScoreManager.instance)
+            if (ScoreManager.Instance)
             {
-                ScoreManager.instance.ScoreChanged.RemoveListener(ResizeOnScoreDidChange);
-                ScoreManager.instance.OnScoreIncrease.RemoveListener(OnScoreDidIncrease);
-                ScoreManager.instance.OnScoreDecrease.RemoveListener(OnScoreDidDecrease);
-                ScoreManager.instance.OnScoreIsZero.RemoveListener(OnDidDie);
+                ScoreManager.Instance.ScoreChanged.RemoveListener(ResizeOnScoreDidChange);
+                ScoreManager.Instance.OnScoreIncrease.RemoveListener(OnScoreDidIncrease);
+                ScoreManager.Instance.OnScoreDecrease.RemoveListener(OnScoreDidDecrease);
+                ScoreManager.Instance.OnScoreIsZero.RemoveListener(OnDidDie);
             }
         }
         #endregion

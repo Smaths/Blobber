@@ -14,12 +14,7 @@ namespace UI
         public Image Indicator => _image;
 
         #region Lifecycle
-        private void OnValidate()
-        {
-            _image ??= GetComponent<Image>();
-        }
-
-        private void Awake()
+        private void Start()
         {
             _image ??= GetComponent<Image>();
         }
@@ -42,7 +37,10 @@ namespace UI
             _image.color = _filledColor;
             _image.fillAmount = 100f;
 
-            _image.transform.DOPunchScale(Vector3.one * 0.8f, 0.5f, 3, 0.5f);
+            if (!Application.isPlaying)
+            {
+                _image.transform.DOPunchScale(Vector3.one * 0.8f, 0.5f, 3, 0.5f);
+            }
         }
     }
 }
