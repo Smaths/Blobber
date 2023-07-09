@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102682c3d6f4ab78af725eb54a096a1, type: 3}
   m_Name: ScoreDecrease
   m_EditorClassIdentifier: 
-  clip: {fileID: 0}
-  volume: 1
+  clips:
+  - {fileID: 8300000, guid: f4de17395642f47f287db224809dd06c, type: 3}
+  - {fileID: 8300000, guid: cb983bc0a7aa54d32b6908bec1780b06, type: 3}
+  - {fileID: 8300000, guid: f89c55f09f8424c7abf88425532c336d, type: 3}
+  - {fileID: 8300000, guid: c6d5af65806e24ee4a215640c90f5a54, type: 3}
+  - {fileID: 8300000, guid: 6746345e95e0a40abb905b5c4afe88ef, type: 3}
+  - {fileID: 8300000, guid: 3b8aacc74a46b4e17a122be3671ac7ee, type: 3}
+  - {fileID: 8300000, guid: df68b1a140e5d4d22a365466a2ecb6bf, type: 3}
+  - {fileID: 8300000, guid: d382097b6b77145c795a3e3cd5339538, type: 3}
+  playType: 1
+  volume: 0.595
   volumeVariation: 0.05
   pitch: 1
   pitchVariation: 0.05
+  delay: 0

@@ -15,6 +15,7 @@ MonoBehaviour:
   clips: []
   playType: 0
   volume: 1
-  volumeVariation: 0.05
+  volumeVariation: 0
   pitch: 1
-  pitchVariation: 0.05
+  pitchVariation: 0
+  delay: 0

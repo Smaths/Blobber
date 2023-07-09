@@ -15,7 +15,7 @@ namespace Managers
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(this); // Persist the object on scene unload
+                // DontDestroyOnLoad(this); // Persist the object on scene unload
             }
             else
             {
