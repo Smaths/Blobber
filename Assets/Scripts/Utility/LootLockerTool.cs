@@ -114,7 +114,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.LogWarning($"<color=red>––LootLocker––Get Top Scores Failed: {response.Error}</color>");
+                    Debug.LogWarning($"<color=ECAB34>––LootLocker––Get Top Scores Failed: {response.Error}</color>");
                 }
             });
         }
@@ -154,8 +154,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.LogWarning(
-                        $"<color=red>––LootLocker––Leaderboard Get Member Rank Failed: {response.Error}</color>");
+                    Debug.LogWarning( $"<color=red>––LootLocker––Leaderboard Get Member Rank Failed: {response.Error}</color>");
                 }
             });
         }
@@ -168,7 +167,7 @@ namespace Utility
                 {
 #if UNITY_EDITOR
                     Debug.Log(
-                        $"<color=#ECAB35>––LootLocker––Successfully retrieved player name: {response.name}</color>");
+                        $"<color=#58AE91>––LootLocker––Successfully retrieved player name: {response.name}</color>");
 #endif
 
                     _playerName = response.name;
@@ -190,7 +189,7 @@ namespace Utility
                 {
 #if UNITY_EDITOR
                     Debug.Log(
-                        $"<color=#ECAB35>––LootLocker––Successfully set player name:{_playerName}({_memberID})</color>");
+                        $"<color=#58AE91>––LootLocker––Successfully set player name:{_playerName}({_memberID})</color>");
 #endif
 
                     _playerName = playerName;
