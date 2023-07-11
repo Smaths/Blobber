@@ -170,7 +170,7 @@ namespace Blobs {
 
         private void OnEnable()
         {
-            if (ScoreManager.Instance)
+            if (ScoreManager.instanceExists)
             {
                 ScoreManager.Instance.ScoreChanged.AddListener(ResizeOnScoreDidChange);
                 ScoreManager.Instance.OnScoreIncrease.AddListener(OnScoreDidIncrease);
@@ -181,7 +181,7 @@ namespace Blobs {
 
         private void OnDisable()
         {
-            if (ScoreManager.Instance)
+            if (ScoreManager.instanceExists)
             {
                 ScoreManager.Instance.ScoreChanged.RemoveListener(ResizeOnScoreDidChange);
                 ScoreManager.Instance.OnScoreIncrease.RemoveListener(OnScoreDidIncrease);

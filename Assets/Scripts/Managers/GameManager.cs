@@ -7,20 +7,13 @@ namespace Managers
 {
     public class GameManager : MonoBehaviour
     {
-        public static GameManager instance;
+        public static GameManager Instance;
 
         #region Lifecycle
         private void Awake()
         {
-            if (instance == null)
-            {
-                instance = this;
-                // DontDestroyOnLoad(this); // Persist the object on scene unload
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
         }
         #endregion
     }

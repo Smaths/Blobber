@@ -83,3 +83,7 @@ AkWwiseProjectData.asset
 IncrementalSoundBankData.xml
 PluginInfo.xml
 SoundbanksInfo.xml
+
+
+# Asset Hunter
+*.ahbuildinfo

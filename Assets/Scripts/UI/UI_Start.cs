@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using Utility;
 
 namespace UI
@@ -49,7 +50,7 @@ namespace UI
         {
             if (LootLockerTool.instanceExists)
             {
-                LootLockerTool.Instance.OnPlayerNameSet.AddListener(SetPlayerNameLabel);
+                LootLockerTool.Instance.OnPlayerNameUpdated.AddListener(SetPlayerNameLabel);
             }
 
             _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
@@ -59,7 +60,7 @@ namespace UI
         {
             if (LootLockerTool.instanceExists)
             {
-                LootLockerTool.Instance.OnPlayerNameSet.RemoveListener(SetPlayerNameLabel);
+                LootLockerTool.Instance.OnPlayerNameUpdated.RemoveListener(SetPlayerNameLabel);
             }
         }
         #endregion

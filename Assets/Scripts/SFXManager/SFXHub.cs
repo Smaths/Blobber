@@ -30,46 +30,54 @@ namespace SFXManager
         #region Score Manager
         public void OnScoreDecreaseEvent()
         {
-            OnScoreDecreaseSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnScoreDecreaseSFX?.PlaySFX();
         }
 
         public void OnScoreIncreaseEvent()
         {
-            OnScoreIncreaseSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnScoreIncreaseSFX?.PlaySFX();
         }
 
         public void OnScoreIsZero()
         {
-            OnDeadSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnDeadSFX?.PlaySFX();
         }
         #endregion
 
         #region Player
         public void OnBoostActivatedEvent()
         {
-            OnBoostActivatedSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnBoostActivatedSFX?.PlaySFX();
         }
         #endregion
 
         #region Game Timer
         public void OnGameStartEvent()
         {
-            OnGameStartSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnGameStartSFX?.PlaySFX();
         }
 
         public void OnGamePauseEvent()
         {
-            OnGamePauseSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnGamePauseSFX?.PlaySFX();
         }
 
         public void OnGameResumeEvent()
         {
-            OnGameResumeSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnGameResumeSFX?.PlaySFX();
         }
 
         public void OnGameOverEvent()
         {
-            OnGameOverSFX?.PlaySFX();
+            if (isActiveAndEnabled)
+                OnGameOverSFX?.PlaySFX();
         }
         #endregion
     }

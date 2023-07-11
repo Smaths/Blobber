@@ -82,7 +82,7 @@ namespace UI
         {
             if (LootLockerTool.instanceExists && ScoreManager.Instance.GameIsOver && ScoreManager.Instance.Points > 0)
             {
-                LootLockerTool.Instance.SubmitScore(ScoreManager.Instance.Points);
+                LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
             }
         }
     }

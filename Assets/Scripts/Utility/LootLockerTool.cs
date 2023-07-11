@@ -58,14 +58,14 @@ namespace Utility
             {
                 if (response.success)
                 {
+                    if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
+
                     GetPlayerData();
                     GetTopScores();
-
-                    if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
                 }
                 else
                 {
-                    Debug.LogWarning("<color=ECAB34>––LootLocker––Error starting Lootlocker session</color>");
+                    Debug.LogWarning($"<color=ECAB34>––LootLocker––Error starting Lootlocker session {response.Error}</color>");
                 }
             });
         }

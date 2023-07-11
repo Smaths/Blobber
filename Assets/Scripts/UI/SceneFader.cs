@@ -10,31 +10,40 @@ namespace UI
     public class SceneFader : Singleton<SceneFader>
     {
         // Editor Fields
-        [Header("UI Elements")]
-        [SerializeField] private Canvas _canvas;
-        [SerializeField] private CanvasGroup _canvasGroup;
-
-        [Header("Fade Times")]
-        [MinValue(0)] [SuffixLabel("s")]
-        [Title("Settings")]
+        [TitleGroup("Animation Times")]
+        [HorizontalGroup("Animation Times/Times", LabelWidth = 60)] [LabelText("Fade In")] [MinValue(0)] [SuffixLabel("second(s)")]
         [SerializeField] private float _fadeInTime = 2.0f;
-        [MinValue(0)] [SuffixLabel("s")]
+        [HorizontalGroup("Animation Times/Times", LabelWidth = 60)] [LabelText("Fade Out")] [MinValue(0)] [SuffixLabel("second(s)")]
         [SerializeField] private float _fadeOutTime = 3.0f;
 
-        [Header("Scene Names")]
+        [Title("Scene Names")]
+        [LabelText("Start")]
         [SerializeField] private string _startSceneName = "Start";
+        [LabelText("Game")]
         [SerializeField] private string _gameSceneName = "Level_1";
+        [LabelText("Tutorial")]
         [SerializeField] private string _tutorialSceneName = "Tutorial";
 
-        [Header("Public Events")]
-        public UnityEvent OnFadeInStarted;
-        public UnityEvent OnFadeInCompleted;
-        public UnityEvent OnFadeOutStarted;
-        public UnityEvent OnFadeOutCompleted;
-        public UnityEvent OnFadeToStart;
-        public UnityEvent OnFadeToLevel;
+        private Canvas _canvas;
+        private CanvasGroup _canvasGroup;
+
+        #region Events
+        [FoldoutGroup("Public Events", false)] public UnityEvent OnFadeInStarted;
+        [FoldoutGroup("Public Events")]public UnityEvent OnFadeInCompleted;
+        [FoldoutGroup("Public Events")]public UnityEvent OnFadeOutStarted;
+        [FoldoutGroup("Public Events")]public UnityEvent OnFadeOutCompleted;
+        [FoldoutGroup("Public Events")]public UnityEvent OnFadeToStart;
+        [FoldoutGroup("Public Events")]public UnityEvent OnFadeToLevel;
+        #endregion
 
         #region Lifecycle
+        protected override void Awake()
+        {
+            base.Awake();
+            _canvas ??= GetComponentInChildren<Canvas>(true);
+            _canvasGroup ??= _canvas.GetComponent<CanvasGroup>();
+        }
+
         private void Start()
         {
             _canvas.enabled = false;
@@ -71,12 +80,10 @@ namespace UI
             FadeOut(scene.name);
         }
 
-        public void FadeTo(string sceneName, bool animated = true)
+        private void FadeTo(string sceneName, bool animated = true)
         {
-            if (animated)
-                FadeOut(sceneName);
-            else
-                SceneManager.LoadScene(sceneName);
+            if (animated) FadeOut(sceneName);
+            else SceneManager.LoadScene(sceneName);
         }
         #endregion
 
