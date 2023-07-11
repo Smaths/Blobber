@@ -11,21 +11,17 @@ namespace Managers
         [SerializeField] private GameTimer _gameTimer;
         [SerializeField] private PlayerController _playerController;
 
-        [Title("Pointer Settings")]
+        [Title("Pointer")]
         [ReadOnly]
-        [SerializeField]
-        private Vector2 _currentPointerPosition;
-        [Title("Misc Settings")]
+        [SerializeField] private Vector2 _currentPointerPosition;
         [DisplayAsString]
-        [SerializeField]
-        private bool _isOverUIObject;
+        [SerializeField] private bool _isOverUIObject;
 
         private GameInputActions _gameInputActions;
 
         // Public Properties
         public bool IsOverUIObject => _isOverUIObject;
         public Vector2 CurrentPointerPosition => _currentPointerPosition;
-        public GameInputActions InputActions => _gameInputActions;
 
         #region Lifecycle
         protected override void Awake()
@@ -59,7 +55,10 @@ namespace Managers
         // Actions
         private void OnPausePerformed(InputAction.CallbackContext context)
         {
-            if (ScoreManager.Instance.GameIsOver) return;
+            // Don't show pause as other UI screens are present when points depleted and/or time is up.
+            if (ScoreManager.Instance.ArePointsDepleted) return;
+            if (GameTimer.Instance.IsTimeUp) return;
+
             _gameTimer.TogglePause();
         }
 

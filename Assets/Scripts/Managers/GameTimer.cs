@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using Utility;
 
 // Script execution order modified.
-
 namespace Managers
 {
     public class GameTimer : Singleton<GameTimer>
@@ -19,16 +18,8 @@ namespace Managers
         [SerializeField, DisplayAsString] private float _currentTime; // Current time remaining
         [SerializeField, ReadOnly] private bool _isPaused;
 
-        [Title("Events")]
-        public UnityEvent<string> OnTimeChanged;
-        public UnityEvent OnPause;
-        public UnityEvent OnResume;
-        public UnityEvent OnPreCountdownStarted;
-        public UnityEvent OnCountdownStarted;
-        public UnityEvent OnCountdownCompleted;
-
-        // Public properties
-        public string CurrentTime
+        #region Properties
+        public string CurrentTimeFormatted
         {
             get
             {
@@ -39,8 +30,19 @@ namespace Managers
                 return timeString;
             }
         }
-
         public bool IsPaused => _isPaused;
+        public bool IsTimeUp => _currentTime <= 0;
+        #endregion
+
+        #region Events
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent<string> OnTimeChanged;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnPause;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnResume;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnPreCountdownStarted;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnCountdownStarted;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnCountdownCompleted;
+        #endregion
 
         #region Lifecycle
         private void OnValidate()
@@ -85,6 +87,7 @@ namespace Managers
         }
         #endregion
 
+        #region Public Methods
         public void Stop()
         {
             _isPaused = true;
@@ -97,12 +100,16 @@ namespace Managers
             if (_isPaused) OnPause?.Invoke();
             else OnResume?.Invoke();
         }
+        #endregion
 
         private void OnTimerFinished()
         {
 #if UNITY_EDITOR
             Debug.Log($"{gameObject.name} - Countdown Finished. Game is over.");
 #endif
+
+            GameManager.Instance.IsGameOver = true;
+
             OnCountdownCompleted?.Invoke();
         }
     }

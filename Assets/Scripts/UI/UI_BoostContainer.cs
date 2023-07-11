@@ -14,7 +14,8 @@ namespace UI
         [SerializeField] private UI_Boost[] _indicators;
         private UI_Boost _activeIndicator;
 
-        public UnityEvent OnBoostTapped;
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events")]public UnityEvent OnBoostTapped;
 
         #region Lifecycle
         private void OnValidate()
@@ -29,15 +30,14 @@ namespace UI
         private void Start()
         {
             if (_playerController)
-            {
                 _currentBoostCount = _playerController.BoostCount;
-                SetBoostIndicators(_playerController.BoostCount);
-            }
+
+            SetBoostIndicators(_currentBoostCount);
         }
 
         private void Update()
         {
-            if (_playerController == null) return;
+            if (_playerController == null) FindPlayerController();
             // Don't do any work if player boost charges are at max count.
             if (_playerController.BoostCount >= _playerController.MaxBoostCount) return;
             if (_activeIndicator == null) return;
@@ -69,6 +69,11 @@ namespace UI
 
             if (activeCount >= _indicators.Length) _activeIndicator = null;
             else _activeIndicator = _indicators[activeCount];
+        }
+
+        private PlayerController FindPlayerController()
+        {
+            return _playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
     }
 }

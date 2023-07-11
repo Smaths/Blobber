@@ -3,6 +3,7 @@ using Managers;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using Utility;
 
 namespace UI
 {
@@ -30,9 +31,7 @@ namespace UI
         private void SetScoreLabel()
         {
             if (ScoreManager.Instance)
-            {
-                _label.text = ScoreManager.Instance.Points.ToString(CultureInfo.CurrentCulture);
-            }
+                _label.text = ScoreManager.Instance.PointsFormatted;
         }
     }
 }

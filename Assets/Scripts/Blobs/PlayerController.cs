@@ -15,7 +15,6 @@ namespace Blobs {
     {
         // Editor fields
         [BoxGroup("Dependencies")]
-        [SerializeField] private Camera _playerCamera;
         [SerializeField] private TMP_Text _nameLabel;
         [SerializeField] private GameObject _mesh;
 
@@ -63,6 +62,7 @@ namespace Blobs {
         public UnityEvent OnBoostChargeAdded;
 
         // Private fields
+        private Camera _playerCamera;
         private PlayerState _previousState;
         private CharacterController _controller;
         private Renderer _blobRenderer;

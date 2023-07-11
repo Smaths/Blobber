@@ -3,7 +3,6 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 // Lootlocker source: https://docs.lootlocker.com/players/authentication/guest-login
 // Script execution order modified.
@@ -137,6 +136,15 @@ namespace Utility
 
         public void SubmitPlayerScore(int score)
         {
+
+            if (score <= 0)
+            {
+#if UNITY_EDITOR
+                Debug.Log($"––LootLocker––Score is 0 and was not submitted to leaderboard.");
+#endif
+                return;
+            }
+
             string memberID = _memberID.IsNullOrWhitespace() ? "Test" : _memberID;
 
             LootLockerSDKManager.SubmitScore(memberID, score, _leaderboardKey, response =>
@@ -144,7 +152,7 @@ namespace Utility
                 if (response.statusCode == 200)
                 {
 #if UNITY_EDITOR
-                    Debug.Log($"<color=#58AE91>––LootLocker––Submit Score Successful––––\nmemberID: {memberID}| player name: {_playerName} | score: {score} | leaderboardKey: {_leaderboardKey}</color>");
+                    Debug.Log($"<color=#58AE91>––LootLocker––Submit Score Successful–memberID: {memberID} | player name: {_playerName} | score: {score} | leaderboard: {_leaderboardKey}</color>");
 #endif
                 }
                 else
@@ -183,7 +191,7 @@ namespace Utility
                 {
                     _playerName = playerName;
 #if UNITY_EDITOR
-                    Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name:{_playerName} ({_memberID})</color>");
+                    Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_memberID})</color>");
 #endif
                     OnPlayerNameUpdated?.Invoke(playerName);
                 }

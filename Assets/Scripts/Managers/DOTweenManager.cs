@@ -14,6 +14,11 @@ namespace Managers
             FindAnimationsInScene();
         }
 
+        private void Start()
+        {
+            DOTween.SetTweensCapacity(200, 200);
+        }
+
         #region Public Methods
         public void PauseAnimations()
         {

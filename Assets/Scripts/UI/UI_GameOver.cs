@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using Utility;
 
 namespace UI
 {
@@ -15,18 +14,16 @@ namespace UI
         [SerializeField] private CanvasGroup _canvasGroup;
 
         [SerializeField] private TMP_Text _timeLabel;
+        [SerializeField] private TMP_Text _scoreLabel;
 
         [Header("Fade Time")]
         [SerializeField] private float _fadeInTime = 0.3f;
 
-        [FoldoutGroup("Events", false)]
-        public UnityEvent OnResumeTapped;
-        [FoldoutGroup("Events")]
-        public UnityEvent OnRetryTapped;
-        [FoldoutGroup("Events")]
-        public UnityEvent OnLeaderBoardTapped;
-        [FoldoutGroup("Events")]
-        public UnityEvent OnQuitTapped;
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnResumeTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnRetryTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnLeaderBoardTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnQuitTapped;
 
         private void OnValidate()
         {
@@ -39,17 +36,8 @@ namespace UI
             _canvasGroup.alpha = 0;
             _canvasGroup.DOFade(1f, _fadeInTime);
 
-            SetTimeLabel();
-
-            SubmitScoreToLeaderboard();
-        }
-
-        private void SetTimeLabel()
-        {
-            if (GameTimer.Instance)
-            {
-                _timeLabel.text = GameTimer.Instance.CurrentTime;
-            }
+            _scoreLabel.text = ScoreManager.Instance.PointsFormatted;
+            _timeLabel.text = GameTimer.Instance.CurrentTimeFormatted;
         }
 
         #region Button Events
@@ -57,7 +45,10 @@ namespace UI
         {
             OnResumeTapped?.Invoke();
             gameObject.SetActive(false);
+            if (GameTimer.instanceExists)
+                GameTimer.Instance.TogglePause();
         }
+
         public void Retry_Tapped()
         {
             _canvasGroup.interactable = false;
@@ -77,13 +68,5 @@ namespace UI
             SceneFader.Instance.FadeToStart();
         }
         #endregion
-
-        private void SubmitScoreToLeaderboard()
-        {
-            if (LootLockerTool.instanceExists && ScoreManager.Instance.GameIsOver && ScoreManager.Instance.Points > 0)
-            {
-                LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
-            }
-        }
     }
 }

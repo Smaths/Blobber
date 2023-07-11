@@ -120,9 +120,11 @@ namespace Blobs
 
         public void DisableBlobs()
         {
-            BlobStateManager[] blobs = FindObjectsOfType<BlobStateManager>();
-            foreach (BlobStateManager blob in blobs)
-                blob.SwitchState(BlobState.Paused);
+            GameObject[] blobs = GameObject.FindGameObjectsWithTag("Blob");
+            foreach (GameObject blob in blobs)
+            {
+                blob.GetComponent<BlobStateManager>().SwitchState(BlobState.Paused);
+            }
         }
 
         [ButtonGroup("Spawn")] [PropertyOrder(50)]

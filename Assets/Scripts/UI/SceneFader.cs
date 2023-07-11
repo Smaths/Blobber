@@ -29,11 +29,11 @@ namespace UI
 
         #region Events
         [FoldoutGroup("Public Events", false)] public UnityEvent OnFadeInStarted;
-        [FoldoutGroup("Public Events")]public UnityEvent OnFadeInCompleted;
-        [FoldoutGroup("Public Events")]public UnityEvent OnFadeOutStarted;
-        [FoldoutGroup("Public Events")]public UnityEvent OnFadeOutCompleted;
-        [FoldoutGroup("Public Events")]public UnityEvent OnFadeToStart;
-        [FoldoutGroup("Public Events")]public UnityEvent OnFadeToLevel;
+        [FoldoutGroup("Public Events")] public UnityEvent OnFadeInCompleted;
+        [FoldoutGroup("Public Events")] public UnityEvent OnFadeOutStarted;
+        [FoldoutGroup("Public Events")] public UnityEvent OnFadeOutCompleted;
+        [FoldoutGroup("Public Events")] public UnityEvent OnFadeToStart;
+        [FoldoutGroup("Public Events")] public UnityEvent OnFadeToLevel;
         #endregion
 
         #region Lifecycle
