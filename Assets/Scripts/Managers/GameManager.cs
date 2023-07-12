@@ -10,15 +10,7 @@ namespace Managers
 
         [SerializeField] private bool _isGameOver;
 
-        public bool IsGameOver
-        {
-            get => _isGameOver;
-            set
-            {
-                _isGameOver = value;
-                LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
-            }
-        }
+        public bool IsGameOver => _isGameOver;
 
         #region Lifecycle
         private void Awake()
@@ -26,6 +18,39 @@ namespace Managers
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
+
+        private void OnEnable()
+        {
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnCountdownCompleted.AddListener(SetGameOver);
+            }
+
+            if (ScoreManager.instanceExists)
+            {
+                ScoreManager.Instance.OnScoreIsZero.AddListener(SetGameOver);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnCountdownCompleted.RemoveListener(SetGameOver);
+            }
+
+            if (ScoreManager.instanceExists)
+            {
+                ScoreManager.Instance.OnScoreIsZero.RemoveListener(SetGameOver);
+            }
+        }
         #endregion
+
+        private void SetGameOver()
+        {
+            _isGameOver = true;
+
+            LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
+        }
     }
 }

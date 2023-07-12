@@ -2169,12 +2169,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poolBufferAmount: 1
+  _shouldDisableOnStart: 1
   _goodBlobContainer: {fileID: 181035321}
-  _startCount_Good: 35
+  _startCount_Good: 45
   _goodBlobPrefab: {fileID: 4789807253655699573, guid: b4dc5bf41d2c8478280a696fb328a0d2,
     type: 3}
   _badBlobContainer: {fileID: 1893031215}
-  _startCount_Bad: 12
+  _startCount_Bad: 15
   _badBlobPrefab: {fileID: 8738743235114916857, guid: a2bf9732e03944e098d613f7b5648422,
     type: 3}
   _spawnPoints:
@@ -5634,18 +5635,6 @@ MonoBehaviour:
       - m_Target: {fileID: 488410408}
         m_TargetAssemblyTypeName: SFXManager.SFXHub, Assembly-CSharp
         m_MethodName: OnScoreIsZero
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 182761260}
-        m_TargetAssemblyTypeName: Blobs.BlobManager, Assembly-CSharp
-        m_MethodName: DisableBlobs
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15023,6 +15012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1567788133}
   - component: {fileID: 1567788134}
+  - component: {fileID: 1567788135}
   m_Layer: 0
   m_Name: Game Timer
   m_TagString: Untagged
@@ -15057,12 +15047,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50ff91d980ff4d479ac7599fd4926b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _countdownTimerDuration: 60
+  _countdownDuration: 60
   _currentTime: 0
   _isPaused: 0
-  OnTimeChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  _preCountdownDuration: 3
   OnPause:
     m_PersistentCalls:
       m_Calls:
@@ -15081,18 +15069,6 @@ MonoBehaviour:
       - m_Target: {fileID: 358264842}
         m_TargetAssemblyTypeName: DOTweenManager, Assembly-CSharp
         m_MethodName: PauseAnimations
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 182761260}
-        m_TargetAssemblyTypeName: BlobManager, Assembly-CSharp
-        m_MethodName: DisableBlobs
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15165,18 +15141,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 182761260}
-        m_TargetAssemblyTypeName: BlobManager, Assembly-CSharp
-        m_MethodName: EnableBlobs
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 362481089}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -15213,7 +15177,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPreCountdownTimeChanged:
+    m_PersistentCalls:
+      m_Calls: []
   OnPreCountdownStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPreCountdownCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCountdownTimeChanged:
     m_PersistentCalls:
       m_Calls: []
   OnCountdownStarted:
@@ -15238,18 +15211,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: LevelInputManager, Assembly-CSharp
         m_MethodName: EnablePlayerInput
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 182761260}
-        m_TargetAssemblyTypeName: BlobManager, Assembly-CSharp
-        m_MethodName: DisableBlobs
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -15294,6 +15255,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &1567788135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567788132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d1bda8ef1f64c8a9f53f4b39a0708f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _duration: 0
+  _currentTime: 0
+  _currentSecond: 0
 --- !u!1 &1568913710
 GameObject:
   m_ObjectHideFlags: 0
@@ -16719,8 +16695,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameTimer: {fileID: 1567788134}
   _playerController: {fileID: 1939840379}
-  _currentPointerPosition: {x: 0, y: 0}
   _isOverUIObject: 0
+  _currentPointerPosition: {x: 0, y: 0}
 --- !u!1001 &1739414067
 PrefabInstance:
   m_ObjectHideFlags: 0

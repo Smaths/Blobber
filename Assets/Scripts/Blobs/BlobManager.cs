@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Managers;
 using ObjectPooling;
 using Sirenix.OdinInspector;
 using StateMachine;
@@ -11,15 +12,17 @@ using Utility;
 namespace Blobs
 {
     [RequireComponent(typeof(PoolManager))]
-    public class BlobManager : Singleton<BlobManager>
+    public class BlobManager : Utility.Singleton<BlobManager>
     {
         [TitleGroup("Blob Manager", "Spawn blobs from object pool.", TitleAlignments.Split)]
         [Tooltip("Additional number of objects spawned for object pooling. They are inactive on start.")]
         [MinValue(0)] [SuffixLabel("object(s)")]
         [SerializeField] private int _poolBufferAmount = 1; // Additional objects created in pool (inactive on start)
+        [LabelText("Disable On Start")]
+        [Tooltip("Disable blobs on level start, usually re-enabled when pre-countdown is complete.")]
+        [SerializeField] private bool _shouldDisableOnStart = true;
 
         [TitleGroup("Good Blob Spawner", horizontalLine: false)]
-
         [SceneObjectsOnly] [LabelText("Container")]
         [Tooltip("Good blobs are placed here when spawned to keep the scene hierarchy clean.")]
         [SerializeField] private Transform _goodBlobContainer;
@@ -30,9 +33,7 @@ namespace Blobs
         [HorizontalGroup("Good Blob Spawner/Good")] [AssetsOnly] [Required] [PreviewField(height:56), HideLabel]
         [SerializeField] private GameObject _goodBlobPrefab;
 
-
         [TitleGroup("Bad Blob Spawner", horizontalLine: false)]
-
         [SceneObjectsOnly] [LabelText("Container")]
         [Tooltip("Good blobs are placed here when spawned to keep the scene hierarchy clean.")]
         [SerializeField] private Transform _badBlobContainer;
@@ -62,9 +63,46 @@ namespace Blobs
             FindSpawnPoints();
         }
 
+        private void OnEnable()
+        {
+            // Attach events
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnCountdownStarted.AddListener(EnableBlobs);
+                GameTimer.Instance.OnCountdownCompleted.AddListener(DisableBlobs);
+                GameTimer.Instance.OnPause.AddListener(DisableBlobs);
+                GameTimer.Instance.OnResume.AddListener(EnableBlobs);
+            }
+
+            if (ScoreManager.instanceExists)
+            {
+                ScoreManager.Instance.OnScoreIsZero.AddListener(DisableBlobs);
+            }
+        }
+
+        private void OnDisable()
+        {
+            // Detach events
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnCountdownStarted.RemoveListener(EnableBlobs);
+                GameTimer.Instance.OnCountdownCompleted.RemoveListener(DisableBlobs);
+                GameTimer.Instance.OnPause.RemoveListener(DisableBlobs);
+                GameTimer.Instance.OnResume.RemoveListener(EnableBlobs);
+            }
+
+            if (ScoreManager.instanceExists)
+            {
+                ScoreManager.Instance.OnScoreIsZero.RemoveListener(DisableBlobs);
+            }
+        }
+
         private void Start()
         {
             CreateBlobPools();
+
+            if (_shouldDisableOnStart)
+                DisableBlobs();
         }
         #endregion
 
@@ -104,26 +142,66 @@ namespace Blobs
 
             GameObject foo = PoolManager.Instance.SpawnFromPool(prefab, RandomSpawnPointPosition());
 
-// #if UNITY_EDITOR
-//             if (_showDebug) Debug.Log($"{gameObject.name} - {foo.name} ({foo.GetInstanceID()}) spawned from pool", transform);
-// #endif
+#if UNITY_EDITOR
+            if (_showDebug) Debug.Log($"{gameObject.name} - {foo.name} ({foo.GetInstanceID()}) spawned from pool", transform);
+#endif
         }
         #endregion
 
         #region Public Methods
         public void EnableBlobs()
         {
-            BlobStateManager[] blobs = FindObjectsOfType<BlobStateManager>();
-            foreach (BlobStateManager blob in blobs)
-                blob.ReturnToPreviousState();
+            List<GameObject> goodBlobs = PoolManager.Instance.GetPoolObjects(_goodBlobPrefab);
+            List<GameObject> badBlobs = PoolManager.Instance.GetPoolObjects(_badBlobPrefab);
+
+            foreach (GameObject blob in goodBlobs)
+            {
+                if (blob.activeInHierarchy == false) continue;
+
+                var stateManager = blob.GetComponent<BlobStateManager>();
+                if(stateManager != null)
+                {
+                    stateManager.ReturnToPreviousState();
+                }
+            }
+
+            foreach (GameObject blob in badBlobs)
+            {
+                if (blob.activeInHierarchy == false) continue;
+
+                var stateManager = blob.GetComponent<BlobStateManager>();
+                if(stateManager != null)
+                {
+                    stateManager.ReturnToPreviousState();
+                }
+            }
         }
 
         public void DisableBlobs()
         {
-            GameObject[] blobs = GameObject.FindGameObjectsWithTag("Blob");
-            foreach (GameObject blob in blobs)
+            List<GameObject> goodBlobs = PoolManager.Instance.GetPoolObjects(_goodBlobPrefab);
+            List<GameObject> badBlobs = PoolManager.Instance.GetPoolObjects(_badBlobPrefab);
+
+            foreach (GameObject blob in goodBlobs)
             {
-                blob.GetComponent<BlobStateManager>().SwitchState(BlobState.Paused);
+                if (blob.activeInHierarchy == false) continue;
+
+                var stateManager = blob.GetComponent<BlobStateManager>();
+                if(stateManager != null)
+                {
+                    stateManager.SwitchState(BlobState.Paused);
+                }
+            }
+
+            foreach (GameObject blob in badBlobs)
+            {
+                if (blob.activeInHierarchy == false) continue;
+
+                var stateManager = blob.GetComponent<BlobStateManager>();
+                if(stateManager != null)
+                {
+                    stateManager.SwitchState(BlobState.Paused);
+                }
             }
         }
 

@@ -728,6 +728,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TimerContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 8311344281443425546, guid: 4b6a84c8eea6a46f686da136929bc411,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -545
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

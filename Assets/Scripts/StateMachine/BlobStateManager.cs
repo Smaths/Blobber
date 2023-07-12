@@ -4,6 +4,7 @@ using Blobs;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public enum BlobState { Idle, Wander, Patrol, Chase, Paused, Transforming, Dead }
 
@@ -38,9 +39,8 @@ namespace StateMachine
         #endregion
 
         #region Events
-        [Space]
-        [Header("Events")]
-        public UnityEvent<BlobState> OnStateChanged;
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent<BlobState> OnStateChanged;
         #endregion
 
         #region Lifecycle
@@ -64,11 +64,6 @@ namespace StateMachine
 
         private void OnEnable()
         {
-            IsTransformed = false; // Reset transformed state
-
-            // Transformation
-            if (_shouldTransform) ResetTransformationTimer();
-
             // Initial state
             _currentState = _previousState = Blob.BlobType switch
             {
@@ -80,6 +75,13 @@ namespace StateMachine
             _currentState.EnterState();
 
             InvokeEvents(_currentState);
+
+            // Transformation
+            IsTransformed = false; // Reset transformed state
+            if (_shouldTransform) ResetTransformationTimer(Random.Range(0, 3f));
+
+            // DeathFX
+            Blob.DeathFX.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -153,9 +155,14 @@ namespace StateMachine
             IsTransformed = isTransformed;
         }
 
+        private void ResetTransformationTimer(float extraTime)
+        {
+            _transformTimer = Time.time + Blob.GetTransformationInterval(IsTransformed) + Blob.TransformationDuration + extraTime;
+        }
+
         private void ResetTransformationTimer()
         {
-            _transformTimer = Time.time + Blob.GetTransformationInterval(IsTransformed) + Blob.TransformationTime;
+            _transformTimer = Time.time + Blob.GetTransformationInterval(IsTransformed) + Blob.TransformationDuration;
         }
 
         private bool TransformationTimerCheck()
@@ -183,9 +190,7 @@ namespace StateMachine
         private void SetPreviousState(BlobBaseState currentState)
         {
             if (currentState != _transformingState && currentState != _pausedState)
-            {
                 _previousState = currentState;
-            }
         }
         private void InvokeEvents(BlobBaseState state)
         {

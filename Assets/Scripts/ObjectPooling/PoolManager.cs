@@ -1,21 +1,17 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Utility;
 
 namespace ObjectPooling
 {
-    public class PoolManager : MonoBehaviour
+    public class PoolManager : Singleton<PoolManager>
     {
-        // Singleton instance
-        public static PoolManager Instance;
-
         private Dictionary<string, ObjectPool> _pools;
 
-        private void Awake()
+        protected override void Awake()
         {
-            // Create the singleton instance
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+            base.Awake();
 
             // Initialize the dictionary
             _pools = new Dictionary<string, ObjectPool>();
@@ -38,14 +34,11 @@ namespace ObjectPooling
 
         public GameObject SpawnFromPool(GameObject prefab, Vector3 position, Quaternion rotation)
         {
-            if (_pools.TryGetValue(prefab.name, out ObjectPool pool))
-            {
-                return pool.SpawnFromPool(position, rotation);
-            }
+            if (_pools.TryGetValue(prefab.name, out ObjectPool pool)) return pool.SpawnFromPool(position, rotation);
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             Debug.LogWarning("No object pool found for " + prefab.name);
-            #endif
+#endif
             return null;
         }
 
@@ -62,11 +55,21 @@ namespace ObjectPooling
             }
             else
             {
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                 Debug.LogWarning("No object pool found for " + prefab.name);
-                #endif
+#endif
             }
         }
-    }
 
+        public List<GameObject> GetPoolObjects(GameObject prefab)
+        {
+            if (_pools.TryGetValue(prefab.name, out ObjectPool pool))
+                return pool.PoolObjects;
+
+#if UNITY_EDITOR
+            Debug.LogWarning("No object pool found for " + prefab.name);
+#endif
+            return null;
+        }
+    }
 }

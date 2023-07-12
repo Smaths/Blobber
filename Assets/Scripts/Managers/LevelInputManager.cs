@@ -11,11 +11,11 @@ namespace Managers
         [SerializeField] private GameTimer _gameTimer;
         [SerializeField] private PlayerController _playerController;
 
-        [Title("Pointer")]
-        [ReadOnly]
-        [SerializeField] private Vector2 _currentPointerPosition;
+        [Header("Pointer")]
         [DisplayAsString]
         [SerializeField] private bool _isOverUIObject;
+        [ReadOnly]
+        [SerializeField] private Vector2 _currentPointerPosition;
 
         private GameInputActions _gameInputActions;
 
@@ -39,6 +39,12 @@ namespace Managers
             _gameInputActions.Player.Move.performed += OnMovePerformed;
             _gameInputActions.Player.Move.canceled += OnMoveCanceled;
             _gameInputActions.Player.Boost.performed += OnBoostPerformed;
+
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnPreCountdownStarted.AddListener(OnPreCountdownStarted);
+                GameTimer.Instance.OnCountdownStarted.AddListener(OnCountdownStarted);
+            }
         }
 
         private void OnDisable()
@@ -49,17 +55,31 @@ namespace Managers
             _gameInputActions.Player.Move.performed -= OnMovePerformed;
             _gameInputActions.Player.Move.canceled -= OnMoveCanceled;
             _gameInputActions.Player.Boost.performed -= OnBoostPerformed;
+
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnPreCountdownStarted.RemoveListener(OnPreCountdownStarted);
+                GameTimer.Instance.OnCountdownStarted.RemoveListener(OnCountdownStarted);
+            }
         }
         #endregion
 
         // Actions
         private void OnPausePerformed(InputAction.CallbackContext context)
         {
-            // Don't show pause as other UI screens are present when points depleted and/or time is up.
-            if (ScoreManager.Instance.ArePointsDepleted) return;
-            if (GameTimer.Instance.IsTimeUp) return;
+            if (GameManager.Instance.IsGameOver) return;
 
             _gameTimer.TogglePause();
+        }
+
+        private void OnPreCountdownStarted()
+        {
+            EnablePlayerInput(false);
+        }
+
+        private void OnCountdownStarted()
+        {
+            EnablePlayerInput(true);
         }
 
         public void EnablePlayerInput(bool enable)

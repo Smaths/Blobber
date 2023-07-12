@@ -18,7 +18,6 @@ namespace Managers
         // Editor fields
         [Tooltip("Current points of the player, game over if points go below 0.")]
         [SerializeField] private int _points;
-        [FormerlySerializedAs("_gameIsOver")]
         [SerializeField, ReadOnly] private bool _arePointsDepleted;
 
         [BoxGroup("In-Game Popup")][SerializeField] private Canvas _canvas;
@@ -81,8 +80,7 @@ namespace Managers
             if (_points <= 0)
             {
                 _points = 0;
-
-                GameManager.Instance.IsGameOver = true;
+                _arePointsDepleted = true;
 
                 OnScoreIsZero?.Invoke();
             }

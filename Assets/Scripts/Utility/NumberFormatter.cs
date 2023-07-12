@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace Utility
@@ -11,6 +12,14 @@ namespace Utility
 
             string formattedNumber = number.ToString("N0", numberFormat);
             return formattedNumber;
+        }
+
+        public static string FormatCleanTime(float value)
+        {
+            var time = TimeSpan.FromSeconds(value);
+            return time.Minutes <= 0
+                ? $"{time.Seconds}s"
+                : $"{time.Minutes}m{time.Seconds}s";
         }
     }
 }

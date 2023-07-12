@@ -37,7 +37,7 @@ namespace UI
             _canvasGroup.DOFade(1f, _fadeInTime);
 
             _scoreLabel.text = ScoreManager.Instance.PointsFormatted;
-            _timeLabel.text = GameTimer.Instance.CurrentTimeFormatted;
+            _timeLabel.text = GameTimer.Instance.PrettyTime;
         }
 
         #region Button Events
