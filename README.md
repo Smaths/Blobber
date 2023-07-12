@@ -23,12 +23,12 @@ We hope you enjoy this little romp.
 
 <table style="padding:10px">
   <tr>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/5b06535e-c883-44a6-a223-0a3aca838b62"  alt="1" width = 512px height = 290px> </td>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/dc0a3a2c-e451-4802-94fd-16a34df7e93c" align="right" alt="2" width = 512px height = 290px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/5b06535e-c883-44a6-a223-0a3aca838b62" alt="1" width = 512px height = 270px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/dc0a3a2c-e451-4802-94fd-16a34df7e93c" alt="2" width = 512px height = 270px></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/f26d5df6-4567-4b82-a8ae-fbf34e61f825" alt="3" width = 512px height = 290px></td>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/1cc8f6da-9572-42dd-af35-c91ccc8817e3" alt="4" width = 512px height = 290px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/f26d5df6-4567-4b82-a8ae-fbf34e61f825" alt="3" width = 512px height = 270px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/1cc8f6da-9572-42dd-af35-c91ccc8817e3" alt="4" width = 512px height = 270px></td>
   </tr>
 </table>
 
@@ -38,7 +38,8 @@ This was a great project to implement some common game development systems and p
 2. 🤖 **State Machine**: I'm so excited to implement a state machine for the characters in this game. The state machine is improves on the massive character controller classes with nested `if` statements by allowing you to only concern yourself wtih the current state. It's wonderful and something I expect to use significantly going forward.
 3. 📻 **Audio SFX Manager**: This feature was born out of the issue that WWise audio middleware doesn't support WebGL builds (something Jona and I didn't realized until we fully implemeted everything using WWise xD). So I built an audio SFX manager based on the [tutorial from Sirenix's youtube page](https://www.youtube.com/watch?v=bJ3Bu9kpZAA) (company responsible for the popular Odin plugin for Unity game engine).
 4. 🏔 **Unity Terrain**: Finally spent some time learning the main features of the terrain. I'm really pleased with the flexibilty and speed of it. I can iterate quickly, which is really important. My hours making D&D maps for VTT games has come into handy here with blending textures 🦄.
-5. 🧭 **NavMesh AI**: Another native system from Unity that I wanted to explore. This is a really great and simple system for moving the blobs around the map and handing avoidance of obstacles and the like. I feel like I can leverage some of the handy API calls even better to improve the logic of my blobs. 
+5. 🧭 **NavMesh AI**: Another native system from Unity that I wanted to explore. This is a really great and simple system for moving the blobs around the map and handing avoidance of obstacles and the like. I feel like I can leverage some of the handy API calls even better to improve the logic of my blobs.
+6. 📈 **Leaderboards**: The initial game jam was sponsored by [LootLocker](https://lootlocker.com/) who provide a really convenient SDK to help implement and host leaderboard data into your Unity game. I found it really easy to work with and has a bunch more features I'd like to explore for storing player data. 
 
 ## Credits
 | Person | Role| 
