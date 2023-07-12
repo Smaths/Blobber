@@ -5,11 +5,16 @@ namespace ObjectPooling
 {
     public class ObjectPool
     {
+        // Private fields
         private readonly GameObject _prefab;
         private readonly int _poolSize;
-        private readonly List<GameObject> _poolObjects;
+        [SerializeField] private readonly List<GameObject> _poolObjects;
         private readonly Transform _container;
 
+        // Public Properties
+        public List<GameObject> PoolObjects => _poolObjects;
+
+        // Constructor
         public ObjectPool(GameObject prefab, int initialPoolSize, Transform container = null)
         {
             _prefab = prefab;

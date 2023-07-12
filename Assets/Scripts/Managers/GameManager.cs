@@ -1,27 +1,56 @@
 using UnityEngine;
+using Utility;
 
-// Persistant game object source: https://pavcreations.com/data-persistence-or-how-to-save-load-game-data-in-unity/
 // Script execution order modified.
-
 namespace Managers
 {
     public class GameManager : MonoBehaviour
     {
-        public static GameManager instance;
+        public static GameManager Instance;
+
+        [SerializeField] private bool _isGameOver;
+
+        public bool IsGameOver => _isGameOver;
 
         #region Lifecycle
         private void Awake()
         {
-            if (instance == null)
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
+        }
+
+        private void OnEnable()
+        {
+            if (GameTimer.instanceExists)
             {
-                instance = this;
-                // DontDestroyOnLoad(this); // Persist the object on scene unload
+                GameTimer.Instance.OnCountdownCompleted.AddListener(SetGameOver);
             }
-            else
+
+            if (ScoreManager.instanceExists)
             {
-                Destroy(gameObject);
+                ScoreManager.Instance.OnScoreIsZero.AddListener(SetGameOver);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameTimer.instanceExists)
+            {
+                GameTimer.Instance.OnCountdownCompleted.RemoveListener(SetGameOver);
+            }
+
+            if (ScoreManager.instanceExists)
+            {
+                ScoreManager.Instance.OnScoreIsZero.RemoveListener(SetGameOver);
             }
         }
         #endregion
+
+        private void SetGameOver()
+        {
+            _isGameOver = true;
+
+            LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
+        }
     }
 }

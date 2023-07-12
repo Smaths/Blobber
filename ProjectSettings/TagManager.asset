@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Collection
   - FxTemporaire
+  - Blob
   layers:
   - Default
   - TransparentFX

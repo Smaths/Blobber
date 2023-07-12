@@ -1,109 +1,135 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using Utility;
 
 // Script execution order modified.
-
 namespace Managers
 {
+    [RequireComponent(typeof(Timer))]
     public class GameTimer : Singleton<GameTimer>
     {
         // Editor fields
         [Header("Time Settings")]
         [LabelText("Countdown Duration")]
         [SuffixLabel("second(s)"), MinValue(1)]
-        [SerializeField] private float _countdownTimerDuration = 60f;
+        [SerializeField] private float _countdownDuration = 60f;
         [SuffixLabel("second(s)")]
         [SerializeField, DisplayAsString] private float _currentTime; // Current time remaining
         [SerializeField, ReadOnly] private bool _isPaused;
 
-        [Title("Events")]
-        public UnityEvent<string> OnTimeChanged;
-        public UnityEvent OnPause;
-        public UnityEvent OnResume;
-        public UnityEvent OnPreCountdownStarted;
-        public UnityEvent OnCountdownStarted;
-        public UnityEvent OnCountdownCompleted;
+        [SuffixLabel("second(s)")] [MinValue(0)]
+        [SerializeField] private float _preCountdownDuration = 3f;
 
-        // Public properties
-        public string CurrentTime
-        {
-            get
-            {
-                TimeSpan current = TimeSpan.FromSeconds(_currentTime);
-                string timeString = current.Minutes <= 0
-                    ? $"{current.Seconds}s"
-                    : $"{current.Minutes}m{current.Seconds}s";
-                return timeString;
-            }
-        }
+        private Timer _timer;
 
+        #region Properties
         public bool IsPaused => _isPaused;
+        public bool IsTimeUp => _currentTime <= 0;
+        public string PrettyTime => NumberFormatter.FormatCleanTime(_timer.InvertedDuration);
+        #endregion
+
+        #region Events
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnPause;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnResume;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent<string> OnPreCountdownTimeChanged;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnPreCountdownStarted;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnPreCountdownCompleted;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent<string> OnCountdownTimeChanged;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnCountdownStarted;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnCountdownCompleted;
+        #endregion
 
         #region Lifecycle
         private void OnValidate()
         {
-            if (Application.isEditor)
-            {
-                TimeSpan t = TimeSpan.FromSeconds(_countdownTimerDuration);
-                string timeString = $"{t.Minutes}m{t.Seconds}s";
-                OnTimeChanged?.Invoke(timeString);
-            }
+            if (Application.isPlaying == false)
+                OnCountdownTimeChanged?.Invoke(NumberFormatter.FormatCleanTime(_currentTime));
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _timer ??= GetComponent<Timer>();
         }
 
         private void Start()
         {
-            _currentTime = _countdownTimerDuration;
-            OnCountdownStarted?.Invoke();
-        }
-
-        private void Update()
-        {
-            if (_isPaused) return;
-            if (_currentTime <= 0f) return;  // Time ended
-
-            // Decrement time (ignore application timescale).
-            _currentTime -= Time.deltaTime;
-
-            TimeSpan current = TimeSpan.FromSeconds(_currentTime);
-
-            string timeString = current.Minutes <= 0
-                ? $"{current.Seconds}s"
-                : $"{current.Minutes}m{current.Seconds}s";
-
-            // print($"{gameObject.name} - OnTimeChanged:{timeString}");
-            OnTimeChanged?.Invoke(timeString);
-
-            // Check if the countdown has reached zero
-            if (_currentTime <= 0f)
-            {
-                _currentTime = 0f;
-                OnTimerFinished();
-            }
+            StartPreCountdownTimer();;
         }
         #endregion
 
-        public void Stop()
-        {
-            _isPaused = true;
-        }
-
+        #region Public Methods
         public void TogglePause()
         {
             _isPaused = !_isPaused;
 
-            if (_isPaused) OnPause?.Invoke();
-            else OnResume?.Invoke();
+            if (_isPaused)
+            {
+                _timer.Resume();
+                OnPause?.Invoke();
+            }
+            else
+            {
+                _timer.Pause();
+                OnResume?.Invoke();
+            }
+        }
+        #endregion
+
+        #region Timers
+        // Pre-countdown countdown
+        private void StartPreCountdownTimer()
+        {
+            _timer.secondChanged += OnPreCountdownDidUpdate;
+            _timer.timerCompleted += OnPreCountdownDidComplete;
+            _timer.StartTimer(_preCountdownDuration);
+
+            OnPreCountdownStarted?.Invoke();
         }
 
-        private void OnTimerFinished()
+        private void OnPreCountdownDidUpdate(int seconds)
+        {
+            OnPreCountdownTimeChanged?.Invoke(PrettyTime);
+        }
+
+        private void OnPreCountdownDidComplete()
         {
 #if UNITY_EDITOR
-            Debug.Log($"{gameObject.name} - Countdown Finished. Game is over.");
+            Debug.Log($"{gameObject.name} - Pre-countdown Finished. Game Start.");
+#endif
+            // Remove pre-countdown events
+            _timer.secondChanged -= OnPreCountdownDidUpdate;
+            _timer.timerCompleted -= OnPreCountdownDidComplete;
+
+            OnPreCountdownCompleted?.Invoke();
+
+            StartPrimaryCountdownTimer();
+        }
+
+        // Primary countdown
+        private void StartPrimaryCountdownTimer()
+        {
+            _timer.secondChanged += OnCountdownDidUpdate;
+            _timer.timerCompleted += OnCountdownDidComplete;
+            _timer.StartTimer(_countdownDuration);
+
+            OnCountdownStarted?.Invoke();
+        }
+
+        private void OnCountdownDidUpdate(int seconds)
+        {
+            OnCountdownTimeChanged?.Invoke(PrettyTime);
+        }
+
+        private void OnCountdownDidComplete()
+        {
+#if UNITY_EDITOR
+            Debug.Log($"{gameObject.name} - Primary countdown Finished. Game is over.");
 #endif
             OnCountdownCompleted?.Invoke();
         }
+        #endregion
     }
 }

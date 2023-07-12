@@ -728,6 +728,7 @@ MonoBehaviour:
   _canvas: {fileID: 4467934416039635265}
   _canvasGroup: {fileID: 4467934416039635262}
   _timeLabel: {fileID: 5436066756981405784}
+  _scoreLabel: {fileID: 4467934414452669783}
   _fadeInTime: 0.3
   OnResumeTapped:
     m_PersistentCalls:

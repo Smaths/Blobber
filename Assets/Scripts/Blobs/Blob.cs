@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Blobs
@@ -27,9 +28,10 @@ namespace Blobs
         [SuffixLabel("second(s)")] [HideIf("_blobType", BlobType.Bad)]
         [Tooltip("The duration the character stays in the transformed state.")]
         [SerializeField] private Vector2 _transformedDuration = new(3f, 4f);
+        [FormerlySerializedAs("_transformationTime")]
         [SuffixLabel("second(s)")] [HideIf("_blobType", BlobType.Bad)]
         [Tooltip("Rate at which the character transforms from one state to the other.")]
-        [SerializeField] private float _transformationTime = 0.25f;
+        [SerializeField] private float _transformationDuration = 0.25f;
 
         [Header("Masks")]
         [Tooltip("Select ground layer to check if random wander point is on the walkable ground.")]
@@ -100,7 +102,7 @@ namespace Blobs
         public Vector2 PatrolWaitTime => _patrolWaitTime;
         public float SightRange => _sightRange;
         public float AnimationTime => _animationTime;
-        public float TransformationTime => _transformationTime;
+        public float TransformationDuration => _transformationDuration;
         public Transform BlobTransform => _blob;
         public SkinnedMeshRenderer BlobRenderer => _blobRenderer;
         public Transform HeadAccessory => _headAccessory;
@@ -115,11 +117,11 @@ namespace Blobs
         private void OnDrawGizmosSelected()
         {
             // Draw the search radius gizmo in the Unity Editor
+            Vector3 position = transform.position;
             Gizmos.color = new Color(0.343f, 0.681f, 0.569f);
-            Gizmos.DrawWireSphere(transform.position, _patrolRadius);
-
+            Gizmos.DrawWireSphere(position, _patrolRadius);
             Gizmos.color = new Color(0.581f, 0.229f, 0.237f);
-            Gizmos.DrawWireSphere(transform.position, _sightRange);
+            Gizmos.DrawWireSphere(position, _sightRange);
         }
 
         private void Awake()
@@ -154,6 +156,7 @@ namespace Blobs
 
         public float GetDeathAnimationDuration()
         {
+            // Pick longer time between animation time and death animation.
             return _deathPS.main.duration >= _animationTime ? _deathPS.main.duration : _animationTime;;
         }
         #endregion

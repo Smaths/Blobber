@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 5291235113792741783}
   m_Layer: 6
   m_Name: Blob_Good
-  m_TagString: Untagged
+  m_TagString: Blob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

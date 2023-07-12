@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 221605379153140632}
   - component: {fileID: 1856076470659719665}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Void
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a72c3fedfc3d1494fb0b8cfc7cc16ed6, type: 2}
+  - {fileID: 2100000, guid: 9260ea6ff6b1e4085a4b7e9403aac518, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,9 +92,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157411745754310813}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
@@ -161,12 +169,12 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 571f2130742ba4a299193ff9887d19a4, type: 2}
-  - {fileID: 2100000, guid: 772214ff250a344c89e70c831255c3f3, type: 2}
-  - {fileID: 2100000, guid: ff83d46ba622f41e08949852d4261cba, type: 2}
-  - {fileID: 2100000, guid: 40e52f65867064e3b859c32be0cc65e6, type: 2}
-  - {fileID: 2100000, guid: 397b7d83a5e8f4ca1933fe39854388e7, type: 2}
-  - {fileID: 2100000, guid: 26ca9048c637d4f2e9b1b40087c55e25, type: 2}
+  - {fileID: 2100000, guid: 57eaa35781f85474facfad7f6c8b90e3, type: 2}
+  - {fileID: 2100000, guid: 08a4d98e9c92e427db166c129013bacb, type: 2}
+  - {fileID: 2100000, guid: fc5bba8713d8a42158d97e73355936b0, type: 2}
+  - {fileID: 2100000, guid: 8c54ff6adc6ac4080be219af25025a75, type: 2}
+  - {fileID: 2100000, guid: adbd49d43947e40dd94ac3e2c83452f0, type: 2}
+  - {fileID: 2100000, guid: 5a89114eb59564eae81d0a02d46e488f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -196,8 +204,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6896388351409898871}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.75
   m_Height: 6.590401
   m_Direction: 1

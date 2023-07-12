@@ -4,11 +4,11 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Utility;
 using Random = UnityEngine.Random;
 
 // Script execution order modified.
-
 namespace Managers
 {
     public class ScoreManager : Singleton<ScoreManager>
@@ -18,7 +18,7 @@ namespace Managers
         // Editor fields
         [Tooltip("Current points of the player, game over if points go below 0.")]
         [SerializeField] private int _points;
-        [SerializeField, ReadOnly] private bool _gameIsOver;
+        [SerializeField, ReadOnly] private bool _arePointsDepleted;
 
         [BoxGroup("In-Game Popup")][SerializeField] private Canvas _canvas;
         [BoxGroup("In-Game Popup")][SerializeField] private GameObject _popupPrefab;
@@ -33,14 +33,16 @@ namespace Managers
 
         #region Public Properties
         public int Points => _points;
-        public bool GameIsOver => _gameIsOver;
+        public string PointsFormatted => NumberFormatter.FormatNumberWithCommas(_points);
+        public bool ArePointsDepleted => _arePointsDepleted;
         #endregion
 
         #region Events
-        [FoldoutGroup("Events", false)] public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
-        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreIncrease;
-        [FoldoutGroup("Events")] public UnityEvent<int> OnScoreDecrease;
-        [FoldoutGroup("Events")] public UnityEvent OnScoreIsZero;
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent<int, int> ScoreChanged;   // Amount changed, new total score
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent<int> OnScoreIncrease;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent<int> OnScoreDecrease;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnScoreIsZero;
         #endregion
 
         #region Lifecycle
@@ -78,6 +80,8 @@ namespace Managers
             if (_points <= 0)
             {
                 _points = 0;
+                _arePointsDepleted = true;
+
                 OnScoreIsZero?.Invoke();
             }
         }

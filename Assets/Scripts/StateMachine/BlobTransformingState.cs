@@ -24,8 +24,8 @@ namespace StateMachine
 
             // Start new animation sequence.
             _transformSequence = context.IsTransformed
-                ? TransformToGoodSequence(context.Blob.TransformationTime)
-                : TransformToBadSequence(context.Blob.TransformationTime);
+                ? TransformToGoodSequence(context.Blob.TransformationDuration)
+                : TransformToBadSequence(context.Blob.TransformationDuration);
             _transformSequence.Play();
         }
 

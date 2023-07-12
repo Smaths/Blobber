@@ -381,7 +381,7 @@ GameObject:
   - component: {fileID: 291035978483762748}
   m_Layer: 6
   m_Name: Blob_Baddy
-  m_TagString: Untagged
+  m_TagString: Blob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -416,7 +416,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _points: -200
-  _playerBlob: {fileID: 0}
   _initialState: 0
   _blobType: 1
   _speed: 2.25
