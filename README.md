@@ -1,7 +1,7 @@
 ![Blobber_Desk_4](https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/626cb5ae-0104-4400-8c47-aa86c07dcaf0)
 
 # Blobber
-The Blobber game was born out of the [ScoreJam #26 game](https://itch.io/jam/scorejam26) game jam hosted on [itch.io](https://itch.io/) 3 day game jam that expanded into a 3 week project due to the fact that it was so darn cute. This was the first game jam for Jonas & Eric duo 🤜💥🤛. It was a great opportunity to implement several intereting systems that we can reuse in future projects. 
+The Blobber game was born out of the [ScoreJam #26 game](https://itch.io/jam/scorejam26) game jam hosted on [itch.io](https://itch.io/) 3 day game jam that expanded into a 3 week project due to the fact that it was so darn cute. This was the first game jam for Jonas & Eric duo 🤜💥🤛. It was a great opportunity to implement several interesting systems that we can reuse in future projects. 
 
 From a game design perspective: we wanted the game to be simple, fast and cute. The goals was to enjoy ourselves and create something with whimsy and delight. It's a short game (60 second rounds), but we're really pleased with the result.
 
@@ -23,7 +23,7 @@ We hope you enjoy this little romp.
 
 ## Screenshots
 
-<table style="padding:10px">
+<table style="padding:5px">
   <tr>
     <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/5b06535e-c883-44a6-a223-0a3aca838b62" alt="Blobber Home Screen" width = 512px></td>
     <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/dc0a3a2c-e451-4802-94fd-16a34df7e93c" alt="Blobber Gameplay Screenshot One" width = 512px></td>
