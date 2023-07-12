@@ -23,12 +23,12 @@ We hope you enjoy this little romp.
 
 <table style="padding:10px">
   <tr>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/5b06535e-c883-44a6-a223-0a3aca838b62" alt="1" width = 512px height = 270px></td>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/dc0a3a2c-e451-4802-94fd-16a34df7e93c" alt="2" width = 512px height = 270px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/5b06535e-c883-44a6-a223-0a3aca838b62" alt="Blobber Home Screen" width = 512px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/dc0a3a2c-e451-4802-94fd-16a34df7e93c" alt="Blobber Gameplay Screenshot One" width = 512px></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/f26d5df6-4567-4b82-a8ae-fbf34e61f825" alt="3" width = 512px height = 270px></td>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/1cc8f6da-9572-42dd-af35-c91ccc8817e3" alt="4" width = 512px height = 270px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/f26d5df6-4567-4b82-a8ae-fbf34e61f825" alt="Blobber Gameplay Screenshot Two" width = 512px></td>
+    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/1cc8f6da-9572-42dd-af35-c91ccc8817e3" alt="Blobber Gameplay Screenshot Three" width = 512px></td>
   </tr>
 </table>
 
