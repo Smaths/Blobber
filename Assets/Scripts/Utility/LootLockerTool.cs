@@ -17,12 +17,12 @@ namespace Utility
         [Tooltip("Number of leaderboard members to download for display in the leaderboard UI. Current needed is 11 members to make UI look nice.")]
         [SerializeField] private int _downloadCount = 11;
         [Tooltip("Lootlocker key, required to correctly connect to the leaderboard data.")]
-        [SerializeField] [ReadOnly] private string _leaderboardKey = "blobber_leaderboard";
+        [SerializeField] private string _leaderboardKey = "live_blobber_leaderboard";
         [LabelText("Leaderboard Member Data")]
         [SerializeField] private LootLockerLeaderboardMember[] _members;
 
         [Title("Player Info")]
-        [SerializeField] private string _playerName;
+        [SerializeField] [ReadOnly] private string _playerName;
         [SerializeField] [ReadOnly] private string _memberID;
         [SerializeField] [ReadOnly] private int _playerID;
         [SerializeField] [ReadOnly] private string _playerPublicUID;
@@ -71,7 +71,7 @@ namespace Utility
         #endregion
 
         #region Scores
-        private void GetTopScores()
+        public void GetTopScores()
         {
             LootLockerSDKManager.GetScoreList(_leaderboardKey, _downloadCount, 0, response =>
             {
@@ -171,7 +171,11 @@ namespace Utility
                 if (response.success)
                 {
                     _playerName = response.name;
-                    Debug.Log($"<color=#58AE91>––LootLocker––Successfully retrieved player name: {response.name}</color>");
+#if UNITY_EDITOR
+                    Debug.Log(string.IsNullOrEmpty(response.name)
+                        ? "<color=#58AE91>––LootLocker––Successfully retrieved player account (no name set)</color>"
+                        : $"<color=#58AE91>––LootLocker––Successfully retrieved player name: {response.name}</color>");
+#endif
                 }
                 else
                 {
@@ -191,7 +195,7 @@ namespace Utility
                 {
                     _playerName = playerName;
 #if UNITY_EDITOR
-                    Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_memberID})</color>");
+                    Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_playerID})</color>");
 #endif
                     OnPlayerNameUpdated?.Invoke(playerName);
                 }

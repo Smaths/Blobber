@@ -210,7 +210,7 @@ MonoBehaviour:
   _speed: 3
   _untransformedDuration: {x: 5, y: 12}
   _transformedDuration: {x: 2, y: 4}
-  _transformationTime: 1.5
+  _transformationDuration: 1.5
   _groundMask:
     serializedVersion: 2
     m_Bits: 256

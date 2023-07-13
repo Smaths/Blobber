@@ -42,8 +42,8 @@ namespace Managers
 
             if (GameTimer.instanceExists)
             {
-                GameTimer.Instance.OnPreCountdownStarted.AddListener(OnPreCountdownStarted);
-                GameTimer.Instance.OnCountdownStarted.AddListener(OnCountdownStarted);
+                GameTimer.Instance.OnPreCountdownStarted.AddListener(DisablePlayerInput);
+                GameTimer.Instance.OnCountdownStarted.AddListener(EnablePlayerInput);
             }
         }
 
@@ -58,34 +58,37 @@ namespace Managers
 
             if (GameTimer.instanceExists)
             {
-                GameTimer.Instance.OnPreCountdownStarted.RemoveListener(OnPreCountdownStarted);
-                GameTimer.Instance.OnCountdownStarted.RemoveListener(OnCountdownStarted);
+                GameTimer.Instance.OnPreCountdownStarted.RemoveListener(DisablePlayerInput);
+                GameTimer.Instance.OnCountdownStarted.RemoveListener(EnablePlayerInput);
             }
         }
         #endregion
 
-        // Actions
-        private void OnPausePerformed(InputAction.CallbackContext context)
-        {
-            if (GameManager.Instance.IsGameOver) return;
-
-            _gameTimer.TogglePause();
-        }
-
-        private void OnPreCountdownStarted()
-        {
-            EnablePlayerInput(false);
-        }
-
-        private void OnCountdownStarted()
-        {
-            EnablePlayerInput(true);
-        }
-
+        #region Public Methods
         public void EnablePlayerInput(bool enable)
         {
             if (enable) _gameInputActions.Player.Enable();
             else _gameInputActions.Player.Disable();
+        }
+        #endregion
+
+        // Actions
+        private void EnablePlayerInput()
+        {
+            _gameInputActions.Player.Enable();
+        }
+
+        private void DisablePlayerInput()
+        {
+            _gameInputActions.Player.Disable();
+        }
+
+        private void OnPausePerformed(InputAction.CallbackContext context)
+        {
+            if (GameTimer.Instance.IsStarted == false) return;
+            if (GameManager.Instance.IsGameOver) return;
+
+            _gameTimer.TogglePause();
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context)
