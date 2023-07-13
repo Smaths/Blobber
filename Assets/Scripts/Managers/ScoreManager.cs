@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using Utility;
 using Random = UnityEngine.Random;
 
@@ -46,9 +45,25 @@ namespace Managers
         #endregion
 
         #region Lifecycle
+        private void OnEnable()
+        {
+            if (GameManager.instanceExists)
+            {
+                OnScoreIsZero.AddListener(GameManager.Instance.SetGameOver);
+            }
+        }
+
         private void Start()
         {
             _camera = Camera.main;
+        }
+
+        private void OnDisable()
+        {
+            if (GameManager.instanceExists)
+            {
+                OnScoreIsZero.RemoveListener(GameManager.Instance.SetGameOver);
+            }
         }
         #endregion
 

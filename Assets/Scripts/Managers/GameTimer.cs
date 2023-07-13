@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -58,9 +59,25 @@ namespace Managers
             _timer ??= GetComponent<Timer>();
         }
 
+        private void OnEnable()
+        {
+            if (GameManager.instanceExists)
+            {
+                OnCountdownCompleted.AddListener(GameManager.Instance.SetGameOver);
+            }
+        }
+
         private void Start()
         {
             StartPreCountdownTimer();;
+        }
+
+        private void OnDisable()
+        {
+            if (GameManager.instanceExists)
+            {
+                OnCountdownCompleted.RemoveListener(GameManager.Instance.SetGameOver);
+            }
         }
         #endregion
 
