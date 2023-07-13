@@ -7,6 +7,8 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/[Ww]ebGL Build/
+/[Ww]ebGL Builds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
@@ -72,18 +74,10 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# Wwise
-.backup*
-.cache*
-*.akd
-*.prof
-*.validationcache
-*.wsettings
-AkWwiseProjectData.asset
-IncrementalSoundBankData.xml
-PluginInfo.xml
-SoundbanksInfo.xml
+# Mac-specific
+.DS_Store
+.AppleDouble
+.LSOverride
 
-
-# Asset Hunter
+# Plugin - Asset Hunter
 *.ahbuildinfo

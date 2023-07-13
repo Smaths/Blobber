@@ -20,14 +20,14 @@ namespace UI
         private CanvasGroup _canvasGroup;
 
         // Public events
-        [Header("Events")]
-        public UnityEvent OnPlayerNameTapped;
-        public UnityEvent OnPlayTapped;
-        public UnityEvent OnTutorialTapped;
-        public UnityEvent OnSettingsTapped;
-        public UnityEvent OnLeaderboardTapped;
-        public UnityEvent OnCreditsTapped;
-        public UnityEvent OnQuitTapped;
+        [TitleGroup("Unity Events")]
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnPlayerNameTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnPlayTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnTutorialTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnSettingsTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnLeaderboardTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnCreditsTapped;
+        [FoldoutGroup("Unity Events/Events")] public UnityEvent OnQuitTapped;
 
         #region Lifecycle
         private void Awake()
@@ -40,7 +40,7 @@ namespace UI
             _canvasGroup.alpha = 1;
 
             if (string.IsNullOrEmpty(LootLockerTool.Instance.PlayerName))
-                _playerNameLabel.text = string.Empty;
+                _playerNameLabel.text = "Change Name";
             else
                 _playerNameLabel.text = LootLockerTool.Instance.PlayerName;
         }
@@ -50,8 +50,11 @@ namespace UI
             if (LootLockerTool.instanceExists)
             {
                 LootLockerTool.Instance.OnPlayerNameUpdated.AddListener(SetPlayerNameLabel);
+                // Fetch leaderboard data again
+                LootLockerTool.Instance.GetTopScores();
             }
 
+            // Disable quit button for WebGL
             _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
         }
 
@@ -135,6 +138,8 @@ namespace UI
         private void SetPlayerNameLabel(string playerName)
         {
             _playerNameLabel.text = playerName;
+
+            if (LootLockerTool.instanceExists) LootLockerTool.Instance.GetTopScores();
         }
     }
 }

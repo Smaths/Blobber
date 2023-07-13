@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d755666260d524641b6279e991118495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isGameOver: 0
 --- !u!114 &81660109286141683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _downloadCount: 11
-  _leaderboardKey: blobber_leaderboard
+  _leaderboardKey: live_blobber_leaderboard
   _members: []
   _playerName: 
   _memberID: 

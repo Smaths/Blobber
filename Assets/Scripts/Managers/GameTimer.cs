@@ -22,10 +22,14 @@ namespace Managers
         [SerializeField] private float _preCountdownDuration = 3f;
 
         private Timer _timer;
+        private bool _isStarted;
+        private bool _isCompleted;
 
         #region Properties
         public bool IsPaused => _isPaused;
-        public bool IsTimeUp => _currentTime <= 0;
+        public bool IsStarted => _isStarted;
+        public bool IsCompleted => _isCompleted;
+        public float CurrentTime => _currentTime;
         public string PrettyTime => NumberFormatter.FormatCleanTime(_timer.InvertedDuration);
         #endregion
 
@@ -63,17 +67,17 @@ namespace Managers
         #region Public Methods
         public void TogglePause()
         {
-            _isPaused = !_isPaused;
-
             if (_isPaused)
             {
+                _isPaused = false;
                 _timer.Resume();
-                OnPause?.Invoke();
+                OnResume?.Invoke();
             }
             else
             {
+                _isPaused = true;
                 _timer.Pause();
-                OnResume?.Invoke();
+                OnPause?.Invoke();
             }
         }
         #endregion
@@ -99,6 +103,8 @@ namespace Managers
 #if UNITY_EDITOR
             Debug.Log($"{gameObject.name} - Pre-countdown Finished. Game Start.");
 #endif
+            _isStarted = true;
+
             // Remove pre-countdown events
             _timer.secondChanged -= OnPreCountdownDidUpdate;
             _timer.timerCompleted -= OnPreCountdownDidComplete;
@@ -128,6 +134,7 @@ namespace Managers
 #if UNITY_EDITOR
             Debug.Log($"{gameObject.name} - Primary countdown Finished. Game is over.");
 #endif
+            _isCompleted = true;
             OnCountdownCompleted?.Invoke();
         }
         #endregion

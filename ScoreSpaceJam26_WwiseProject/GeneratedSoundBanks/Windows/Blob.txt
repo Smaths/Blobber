@@ -1,6 +1,0 @@
-Event	ID	Name			Wwise Object Path	Notes
-	1281810935	Start			\Default Work Unit\Start	
-
-In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	636929756	Attack_Combo_2-2	Y:\Documents\GitHub\ScoreSpaceJam26\ScoreSpaceJam26_WwiseProject\.cache\Windows\SFX\Attack_Combo_2-2_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Attack_Combo_2-2		87596
-
