@@ -46,8 +46,8 @@ This was a great project to implement some common game development systems and p
 ## Credits
 | Person | Role| 
 | --- | --- | 
-| 🧙‍♂️ Eric Wroble | artist*, programmer, game design |
-| 👨‍🚀 Jonas Bengio | sound, game design | 
+| 🧙‍♂️ [Eric Wroble](https://smaths.github.io/Portfolio/) | artist*, programmer, game design |
+| 👨‍🚀 [Jonas Bengio](https://www.jonasbengio.com/) | sound, game design | 
 
 _*Some 3rd party assets used (for example the blobs)._
 
