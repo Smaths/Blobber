@@ -31,12 +31,14 @@ namespace Utility
         [SerializeField] private bool _showDebug;
 
         // Flags
+        public bool _isInitialized;
         private bool _hasAttemptedLeaderboardData;
         private bool _hasAttemptedPlayerData;
 
         #region Public Properties
         public LootLockerLeaderboardMember[] Members => _members;
         public string PlayerName => _playerName;
+        public bool IsInitialized => _isInitialized;
         #endregion
 
         [TitleGroup("Unity Events")]
@@ -58,6 +60,8 @@ namespace Utility
                 if (response.success)
                 {
                     if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
+
+                    _isInitialized = true;
 
                     GetPlayerData();
                     GetTopScores();

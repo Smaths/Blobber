@@ -50,9 +50,11 @@ namespace UI
             if (LootLockerTool.instanceExists)
             {
                 LootLockerTool.Instance.OnPlayerNameUpdated.AddListener(SetPlayerNameLabel);
+            }
+
+            if (LootLockerTool.instanceExists && LootLockerTool.Instance.IsInitialized)
                 // Fetch leaderboard data again
                 LootLockerTool.Instance.GetTopScores();
-            }
 
             // Disable quit button for WebGL
             _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
