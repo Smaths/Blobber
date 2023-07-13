@@ -18,7 +18,7 @@ MonoBehaviour:
   refreshToken: 
   domainKey: tsfp1bkd
   gameID: 0
-  game_version: 0.1.0
+  game_version: 0.1.1
   deviceID: 5d93864b-ac44-43cd-83ae-5d2dad57aecc
   platform: 4
   developmentMode: 1

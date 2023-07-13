@@ -64,7 +64,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.LogWarning($"<color=ECAB34>––LootLocker––Error starting Lootlocker session {response.Error}</color>");
+                    Debug.LogWarning($"<color=ECAB34>––LootLocker––Error starting Lootlocker session at {_leaderboardKey} | error: {response.Error}</color>");
                 }
             });
         }
