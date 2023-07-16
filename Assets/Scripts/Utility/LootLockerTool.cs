@@ -83,8 +83,8 @@ namespace Utility
 
                     _isInitialized = true;
 
-                    GetTopScores();
                     GetPlayerData();
+                    GetTopScores();
                 }
                 else
                 {
@@ -155,9 +155,7 @@ namespace Utility
 
             if (score <= 0)
             {
-#if UNITY_EDITOR
                 Debug.Log($"––LootLocker––Score is 0 and was not submitted to leaderboard.");
-#endif
                 return;
             }
 
@@ -193,6 +191,7 @@ namespace Utility
                     _playerID = response.player.id;
                     _playerPublicUID = response.player.public_uid;
                     _hasPlayerInfo = true;
+                    OnPlayerNameUpdated?.Invoke(_playerName);
 #if UNITY_EDITOR
                     Debug.Log("<color=#58AE91>––LootLocker––Successfully retrieved player data</color>");
 #endif
@@ -219,6 +218,9 @@ namespace Utility
 #if UNITY_EDITOR
                     Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_playerID})</color>");
 #endif
+                    GetTopScores();
+                    GetScoresAroundMember();
+
                     OnPlayerNameUpdated?.Invoke(playerName);
                 }
                 else

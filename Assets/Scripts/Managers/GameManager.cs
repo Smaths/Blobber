@@ -13,6 +13,8 @@ namespace Managers
         {
             _isGameOver = true;
 
+            Debug.Log($"{gameObject.name} - GAME OVER");
+            
             LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
         }
     }

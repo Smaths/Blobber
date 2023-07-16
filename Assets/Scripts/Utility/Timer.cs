@@ -1,12 +1,17 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Utility
 {
     public class Timer : MonoBehaviour
     {
+        [SuffixLabel("second(s)")]
         [SerializeField] private float _duration;
+        [SuffixLabel("second(s)"), ReadOnly]
         [SerializeField] private float _currentTime;
+        [SuffixLabel("second(s)"), ReadOnly]
+        [Tooltip("Seconds as an integer, whole numbers.")]
         [SerializeField] private int _currentSecond;
 
         // Public properties

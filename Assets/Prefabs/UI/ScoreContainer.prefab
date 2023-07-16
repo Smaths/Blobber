@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 256, y: 0}
+  m_SizeDelta: {x: 350, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &9199961888233326559
 CanvasRenderer:
@@ -94,8 +94,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 9199961888266450334}
   - component: {fileID: 9199961888266450320}
   - component: {fileID: 5160706870594972903}
+  - component: {fileID: 2928204852644114237}
   m_Layer: 5
   m_Name: ScoreContainer
   m_TagString: Untagged
@@ -172,12 +173,12 @@ RectTransform:
   - {fileID: 9199961888233326557}
   - {fileID: 9199961888916681337}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 50, y: -50}
-  m_SizeDelta: {x: 1200, y: 80}
+  m_SizeDelta: {x: 1200, y: 96}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &9199961888266450321
 CanvasRenderer:
@@ -365,6 +366,18 @@ MonoBehaviour:
   optionalScrambleMode: 0
   optionalShakeRandomnessMode: 0
   optionalString: 
+--- !u!225 &2928204852644114237
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9199961888266450332}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9199961888916681318
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +414,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 840, y: 0}
+  m_SizeDelta: {x: 824, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &9199961888916681339
 CanvasRenderer:
@@ -431,7 +444,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "1.000.000.000.000.000\x03"
+  m_text: 1.000.000.000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c45eb6ded7b14905812b4e9a2a50318, type: 2}
   m_sharedMaterial: {fileID: 6154284786544456080, guid: 5c45eb6ded7b14905812b4e9a2a50318,
@@ -459,8 +472,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

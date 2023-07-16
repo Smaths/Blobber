@@ -1,6 +1,5 @@
 using System;
 using LootLocker.Requests;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,16 +21,17 @@ namespace UI
         [SerializeField] private Button _nearbyButton;
         [SerializeField] private Button _topButton;
 
-        [Header("Player")]
-        [SerializeField] private GameObject _playerContainer;
-        [SerializeField] private TMP_Text _playerLabel;
-        [SerializeField] private TMP_Text _rankLabel;
-        [SerializeField] private TMP_Text _scoreLabel;
-
         private LootLockerLeaderboardMember[] _topMembers;
         private LootLockerLeaderboardMember[] _nearbyMembers;
 
         private void OnEnable()
+        {
+            SetupUI();
+
+            SwitchPage(_currentPage);
+        }
+
+        private void SetupUI()
         {
             // Get players' scores.
             _topMembers = LootLockerTool.Instance.TopMembers;
@@ -43,10 +43,6 @@ namespace UI
             if (LootLockerTool.Instance.HasPlayerInfo)
             {
                 _nearbyButton.gameObject.SetActive(true);
-                _playerContainer.gameObject.SetActive(true);
-                _playerLabel.text = LootLockerTool.Instance.PlayerName;
-                _rankLabel.text = NumberFormatter.FormatNumberWithCommas(LootLockerTool.Instance.Rank);
-                _scoreLabel.text = NumberFormatter.FormatNumberWithCommas(LootLockerTool.Instance.HighScore);
 
                 _topList.SetSelectedRow(LootLockerTool.Instance.Rank);
                 _nearbyList.SetSelectedRow(LootLockerTool.Instance.Rank);
@@ -55,22 +51,21 @@ namespace UI
             {
                 _currentPage = LeaderBoardPage.Top;
                 _nearbyButton.gameObject.SetActive(false);
-                _playerContainer.gameObject.SetActive(false);
             }
 
             switch (_currentPage)
             {
                 case LeaderBoardPage.Top:
-                    EventSystem.current.SetSelectedGameObject(_topButton.gameObject);;
+                    EventSystem.current.SetSelectedGameObject(_topButton.gameObject);
+                    ;
                     break;
                 case LeaderBoardPage.Nearby:
-                    EventSystem.current.SetSelectedGameObject(_nearbyButton.gameObject);;
+                    EventSystem.current.SetSelectedGameObject(_nearbyButton.gameObject);
+                    ;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            SwitchPage(_currentPage);
         }
 
         public void ShowTopLeaderboard()
