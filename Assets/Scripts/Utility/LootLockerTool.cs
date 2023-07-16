@@ -73,13 +73,11 @@ namespace Utility
                 if (response.success)
                 {
 #if UNITY_EDITOR
-                    if (_showDebug)
-                        Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
+                    if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
 #endif
 
                     _memberID = response.player_id.ToString();
                     _playerID = response.player_id;
-
 
                     _isInitialized = true;
 
