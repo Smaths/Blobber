@@ -1,52 +1,105 @@
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using LootLocker.Requests;
-using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Utility;
 
 namespace UI
 {
     public class UI_Leaderboard : MonoBehaviour
     {
-        [SerializeField] private GameObject _leaderboardContainer;
-        [SerializeField] private GameObject _rowItemPrefab;
-        [SerializeField] private List<UI_ScoreRowItem> _rowItems;
+        private enum LeaderBoardPage
+        {
+            Top,
+            Nearby
+        }
 
-        private LootLockerLeaderboardMember[] _members;
+        [SerializeField] private LeaderBoardPage _currentPage = LeaderBoardPage.Nearby;
+        [SerializeField] private UI_List _topList;
+        [SerializeField] private UI_List _nearbyList;
+        [SerializeField] private Button _nearbyButton;
+        [SerializeField] private Button _topButton;
+
+        private LootLockerLeaderboardMember[] _topMembers;
+        private LootLockerLeaderboardMember[] _nearbyMembers;
 
         private void OnEnable()
         {
-            // Get players' scores.
-            _members = LootLockerTool.Instance.Members;
+            SetupUI();
 
-            if (_members == null || _members.Length == 0) 
+            SwitchPage(_currentPage);
+        }
+
+        private void SetupUI()
+        {
+            // Get players' scores.
+            _topMembers = LootLockerTool.Instance.TopMembers;
+            _nearbyMembers = LootLockerTool.Instance.NearbyMembers;
+            _topList.Initialize(_topMembers);
+            _nearbyList.Initialize(_nearbyMembers);
+
+            // Player info
+            if (LootLockerTool.Instance.HasPlayerInfo)
             {
-                print($"{gameObject.name} - No scoreboard members");
-                return; // guard
+                _nearbyButton.gameObject.SetActive(true);
+
+                _topList.SetSelectedRow(LootLockerTool.Instance.Rank);
+                _nearbyList.SetSelectedRow(LootLockerTool.Instance.Rank);
+            }
+            else
+            {
+                _currentPage = LeaderBoardPage.Top;
+                _nearbyButton.gameObject.SetActive(false);
             }
 
-            // Delete all existing row items.
-            foreach (var item in _rowItems)
-                Destroy(item.gameObject);
-
-            // Create row item for each player's score
-            _rowItems = new List<UI_ScoreRowItem>();
-            foreach (var member in _members)
+            switch (_currentPage)
             {
-                if (member == null) continue;   // Guard
-
-                GameObject go = Instantiate(_rowItemPrefab, _leaderboardContainer.transform);
-                var rowItem = go.GetComponent<UI_ScoreRowItem>();
-                rowItem.Initialize(member);
-                _rowItems.Add(rowItem);
+                case LeaderBoardPage.Top:
+                    EventSystem.current.SetSelectedGameObject(_topButton.gameObject);
+                    ;
+                    break;
+                case LeaderBoardPage.Nearby:
+                    EventSystem.current.SetSelectedGameObject(_nearbyButton.gameObject);
+                    ;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        [Button("Get Row Items")]
-        private void GetRowItemGameObjects()
+        public void ShowTopLeaderboard()
         {
-            _rowItems = GetComponentsInChildren<UI_ScoreRowItem>().ToList();
+            SwitchPage(LeaderBoardPage.Top);
+        }
+
+        public void ShowNearbyLeaderboard()
+        {
+            SwitchPage(LeaderBoardPage.Nearby);
+        }
+
+        private void SwitchPage(LeaderBoardPage newPage)
+        {
+            _currentPage = newPage;
+
+            ShowPage(_currentPage);
+        }
+
+        private void ShowPage(LeaderBoardPage page)
+        {
+            switch (page)
+            {
+                case LeaderBoardPage.Top:
+                    _topList.gameObject.SetActive(true);
+                    _nearbyList.gameObject.SetActive(false);
+                    break;
+                case LeaderBoardPage.Nearby:
+                    _topList.gameObject.SetActive(false);
+                    _nearbyList.gameObject.SetActive(true);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(page), page, null);
+            }
         }
     }
 }

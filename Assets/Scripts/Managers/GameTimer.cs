@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,16 +10,15 @@ namespace Managers
     public class GameTimer : Singleton<GameTimer>
     {
         // Editor fields
-        [Header("Time Settings")]
-        [LabelText("Countdown Duration")]
+        [Title("Time Settings")]
+        [SuffixLabel("second(s)")] [MinValue(0)] [LabelText("Pre-countdown")]
+        [SerializeField] private float _preCountdownDuration = 3f;
+        [LabelText("Countdown")]
         [SuffixLabel("second(s)"), MinValue(1)]
         [SerializeField] private float _countdownDuration = 60f;
         [SuffixLabel("second(s)")]
         [SerializeField, DisplayAsString] private float _currentTime; // Current time remaining
-        [SerializeField, ReadOnly] private bool _isPaused;
-
-        [SuffixLabel("second(s)")] [MinValue(0)]
-        [SerializeField] private float _preCountdownDuration = 3f;
+        [SerializeField, DisplayAsString] private bool _isPaused;
 
         private Timer _timer;
         private bool _isStarted;

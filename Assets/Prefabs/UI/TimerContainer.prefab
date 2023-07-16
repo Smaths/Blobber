@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 2599069758496192458}
   - component: {fileID: 2599069758496192455}
   - component: {fileID: 8350958690072351315}
+  - component: {fileID: 8170562201783179169}
   m_Layer: 5
   m_Name: TimerContainer
   m_TagString: Untagged
@@ -320,6 +321,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _countdownLabel: {fileID: 2599069758289922461}
   _preCountdownLabel: {fileID: 2641915718903456075}
+--- !u!225 &8170562201783179169
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2599069758496192459}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7284216241376285981
 GameObject:
   m_ObjectHideFlags: 0
