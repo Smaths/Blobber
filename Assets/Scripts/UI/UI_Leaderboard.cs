@@ -101,5 +101,10 @@ namespace UI
                     throw new ArgumentOutOfRangeException(nameof(page), page, null);
             }
         }
+
+        public void ResetData()
+        {
+            SetupUI();
+        }
     }
 }

@@ -4426,6 +4426,7 @@ GameObject:
   - component: {fileID: 488410405}
   - component: {fileID: 488410407}
   - component: {fileID: 488410408}
+  - component: {fileID: 488410409}
   - component: {fileID: 488410406}
   m_Layer: 0
   m_Name: SFXManager
@@ -4656,6 +4657,19 @@ MonoBehaviour:
     _waitToPlay: 1
     _useDefault: 1
     _audioSource: {fileID: 0}
+--- !u!114 &488410409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488410404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3512589c0193460b8f3c2af267b067b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 44f460a1858114717964ca24026198f9, type: 2}
 --- !u!1 &489470583 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2344692533952592911, guid: 173569853ef204fadbee0910228b8a8f,
