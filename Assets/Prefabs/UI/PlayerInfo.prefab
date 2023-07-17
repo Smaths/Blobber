@@ -819,10 +819,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2256726435567145066}
+  - component: {fileID: 9062121362964345605}
   - component: {fileID: 7260096142231978980}
   - component: {fileID: 5193716703208631004}
   - component: {fileID: 686244549311254105}
-  - component: {fileID: 9062121362964345605}
   m_Layer: 5
   m_Name: PlayerInfo
   m_TagString: Untagged
@@ -853,6 +853,21 @@ RectTransform:
   m_AnchoredPosition: {x: 300, y: -220}
   m_SizeDelta: {x: 377.5, y: 225.08}
   m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &9062121362964345605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9110861872942704484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbbae8f409d42608ef02b9c36c84578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerLabel: {fileID: 2726329018075403824}
+  _rankValueLabel: {fileID: 4914759145893626613}
+  _scoreValueLabel: {fileID: 2852197174692750665}
 --- !u!114 &7260096142231978980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -917,18 +932,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9062121362964345605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9110861872942704484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3dbbae8f409d42608ef02b9c36c84578, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerLabel: {fileID: 2726329018075403824}
-  _rankValueLabel: {fileID: 4914759145893626613}
-  _scoreValueLabel: {fileID: 2852197174692750665}

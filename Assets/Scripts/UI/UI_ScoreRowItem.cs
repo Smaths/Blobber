@@ -1,6 +1,4 @@
-using System.Globalization;
 using LootLocker.Requests;
-using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +21,14 @@ namespace UI
 
         public void Initialize(LootLockerLeaderboardMember member)
         {
-            _rankLabel.text = member.rank.ToString(CultureInfo.CurrentCulture);
-            _playerName.text = member.player.name.IsNullOrWhitespace() ? "Some blob" : member.player.name;
+            string playerName = member.player.name;
+
+            if (PlayerPrefs.HasKey(PrefKeys.IsInKidMode) && PlayerPrefs.GetInt(PrefKeys.IsInKidMode) != 0)
+                playerName = BadWordFilter.ContainsBadWord(playerName) ? "Blobber" : playerName;
+
+            _playerName.text = string.IsNullOrWhiteSpace(playerName) ? "Some blob" : playerName;
+
+            _rankLabel.text = NumberFormatter.FormatNumberWithCommas(member.rank);
             _scoreLabel.text = NumberFormatter.FormatNumberWithCommas(member.score);
         }
 

@@ -20,9 +20,13 @@ namespace UI
 
             if (_members == null || _members.Length == 0)
             {
+
+
 #if UNITY_EDITOR
                 Debug.Log($"{gameObject.name} - No list members");
 #endif
+
+                
                 ClearRowItems();
                 CreateEmptyList(_missingDataText);
                 return; // guard
