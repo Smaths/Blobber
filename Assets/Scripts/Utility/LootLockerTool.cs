@@ -1,4 +1,3 @@
-using Exclude;
 using LootLocker.Requests;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -21,7 +20,7 @@ namespace Utility
         [Tooltip("Number of leaderboard members to download for display in the leaderboard UI. Current needed is 11 members to make UI look nice.")]
         [SerializeField] private int _downloadCount = 11;
         [Tooltip("Lootlocker key, required to correctly connect to the leaderboard data.")]
-        [SerializeField] private string _leaderboardKey = GameExcludeConstants.LootLockerKey;
+        [SerializeField] private string _leaderboardKey = "production_blobber_leaderboard";
         [LabelText("Leaderboard Member Data")]
         [SerializeField] private LootLockerLeaderboardMember[] _topMembers;
         [SerializeField] private LootLockerLeaderboardMember[] _nearbyMembers;
