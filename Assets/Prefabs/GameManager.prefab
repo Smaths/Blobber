@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isGameOver: 0
+  _isInKidModeDefault: 0
 --- !u!114 &81660109286141683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,13 +72,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3161e2dbca24f58962a2a2a34affc73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isInitialized: 0
   _downloadCount: 11
-  _leaderboardKey: live_blobber_leaderboard
-  _members: []
+  _leaderboardKey: production_blobber_leaderboard
+  _topMembers: []
+  _nearbyMembers: []
   _playerName: 
   _memberID: 
   _playerID: 0
   _playerPublicUID: 
+  _rank: 0
+  _highScore: 0
+  _hasPlayerInfo: 0
   _showDebug: 0
   OnPlayerNameUpdated:
     m_PersistentCalls:
