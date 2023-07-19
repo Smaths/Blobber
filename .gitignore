@@ -81,8 +81,3 @@ crashlytics-build.properties
 
 # Plugin - Asset Hunter
 *.ahbuildinfo
-
-# Private Data
-Assets/Scripts/Exclude.meta
-Assets/Scripts/Exclude/GameExcludeConstants.cs
-Assets/Scripts/Exclude/GameExcludeConstants.cs.meta
