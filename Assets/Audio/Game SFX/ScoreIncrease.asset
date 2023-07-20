@@ -16,9 +16,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 373683c46a7c644ba84a0373e6d8ef4c, type: 3}
   - {fileID: 8300000, guid: 7ca6dc7736020482c822a05ca563b2a2, type: 3}
   - {fileID: 8300000, guid: f808018935735470bbe6b3e199a905eb, type: 3}
-  - {fileID: 8300000, guid: 8799a36eddb7346468078be5ca7213e5, type: 3}
   - {fileID: 8300000, guid: 0ec3b753f2bd142109661ff199b5ef0f, type: 3}
-  - {fileID: 8300000, guid: 2a1039238f68e4ab4a75c49bc1058793, type: 3}
   - {fileID: 8300000, guid: 1bffadcc0b9c841f19320a9d3487f56c, type: 3}
   - {fileID: 8300000, guid: a177f004eea6048f9ab5238d7a4095c8, type: 3}
   - {fileID: 8300000, guid: ddf10bbe84dd14ef4b49d9794f6e3c1d, type: 3}
@@ -26,6 +24,6 @@ MonoBehaviour:
   playType: 1
   volume: 1
   volumeVariation: 0.05
-  pitch: 1.12
-  pitchVariation: 0.15
+  pitch: 1
+  pitchVariation: 0
   delay: 0
