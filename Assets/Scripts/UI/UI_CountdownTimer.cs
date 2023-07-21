@@ -11,20 +11,20 @@ namespace UI
         [SerializeField] private TMP_Text _countdownLabel;
         [SerializeField] private TMP_Text _preCountdownLabel;
 
-        private void Start()
-        {
-            _preCountdownLabel.transform.localScale = Vector3.one;
-        }
-
         private void OnEnable()
         {
             if (GameTimer.instanceExists)
             {
                 GameTimer.Instance.OnPreCountdownStarted.AddListener(OnPreCountdownStarted);
-                GameTimer.Instance.OnPreCountdownTimeChanged.AddListener(SetPreCountdownLabel);
+                GameTimer.Instance.OnPreCountdownTimeChanged.AddListener(OnPreCountdownTimeChanged);
                 GameTimer.Instance.OnPreCountdownCompleted.AddListener(OnPreCountdownCompleted);
                 GameTimer.Instance.OnCountdownTimeChanged.AddListener(SetTimeLabel);
             }
+        }
+
+        private void Start()
+        {
+            _preCountdownLabel.transform.localScale = Vector3.one;
         }
 
         private void OnDisable()
@@ -32,7 +32,7 @@ namespace UI
             if (GameTimer.instanceExists)
             {
                 GameTimer.Instance.OnPreCountdownStarted.RemoveListener(OnPreCountdownStarted);
-                GameTimer.Instance.OnPreCountdownTimeChanged.RemoveListener(SetPreCountdownLabel);
+                GameTimer.Instance.OnPreCountdownTimeChanged.RemoveListener(OnPreCountdownTimeChanged);
                 GameTimer.Instance.OnPreCountdownCompleted.RemoveListener(OnPreCountdownCompleted);
                 GameTimer.Instance.OnCountdownTimeChanged.RemoveListener(SetTimeLabel);
             }
@@ -44,9 +44,16 @@ namespace UI
             _preCountdownLabel.text = GameTimer.Instance.PrettyTime;
         }
 
-        private void SetPreCountdownLabel(string timeString)
+        private void OnPreCountdownTimeChanged(string timeString)
         {
             _preCountdownLabel.text = timeString;
+
+            // Animation
+            _preCountdownLabel.transform.DOPunchScale(Vector3.one * 0.4f, 0.5f, 2);
+            _preCountdownLabel.transform.DOScale(transform.localScale.x * 1.5f , 0.2f);
+            int randomRotation = _preCountdownLabel.transform.rotation.z < 0 ? Random.Range(2, 10) : Random.Range(-10, -2);
+            Vector3 position = _preCountdownLabel.transform.position;
+            _preCountdownLabel.transform.DORotate(new Vector3(0, 0, randomRotation), 0.4f);
         }
 
         private void OnPreCountdownCompleted()

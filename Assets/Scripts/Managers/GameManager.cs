@@ -7,18 +7,12 @@ namespace Managers
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private bool _isGameOver;
-        [SerializeField] private bool _isInKidModeDefault;
 
         public bool IsGameOver => _isGameOver;
 
-        private void Start()
+        public void SetGameOver(bool value = true)
         {
-            BadWordFilter.Load();
-        }
-
-        public void SetGameOver()
-        {
-            _isGameOver = true;
+            _isGameOver = value;
 
             LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
         }

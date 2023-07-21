@@ -5043,7 +5043,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1843abb40b0ab4c848b9dfb55ad27a85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerCamera: {fileID: 0}
   _nameLabel: {fileID: 7702470943473041431}
   _mesh: {fileID: 6867569425734593540}
   _playerState: 0
@@ -5083,7 +5082,19 @@ MonoBehaviour:
         m_CallState: 2
   OnDeath:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8297036946307159333}
+        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+        m_MethodName: Emit
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 25
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnBirth:
     m_PersistentCalls:
       m_Calls: []
@@ -5114,7 +5125,7 @@ CharacterController:
   serializedVersion: 3
   m_Height: 0.25
   m_Radius: 0.28
-  m_SlopeLimit: 10
+  m_SlopeLimit: 1
   m_StepOffset: 0.001
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001

@@ -4,6 +4,9 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Utility;
 
 namespace UI
 {
@@ -15,6 +18,9 @@ namespace UI
 
         [SerializeField] private TMP_Text _timeLabel;
         [SerializeField] private TMP_Text _scoreLabel;
+        [SerializeField] private TMP_Text _newHighScoreLabel;
+
+        [SerializeField] private Button _firstButton;
 
         [Header("Fade Time")]
         [SerializeField] private float _fadeInTime = 0.3f;
@@ -38,6 +44,22 @@ namespace UI
 
             _scoreLabel.text = ScoreManager.Instance.PointsFormatted;
             _timeLabel.text = GameTimer.Instance.PrettyTime;
+
+            if (_newHighScoreLabel)
+            {
+                if (LootLockerTool.Instance.PreviousHighScore < ScoreManager.Instance.Points)
+                {
+                    _newHighScoreLabel.gameObject.SetActive(true);
+                    _newHighScoreLabel.transform.DOPunchScale(Vector3.one * 0.25f, 4, 3);
+                }
+                else
+                {
+                    _newHighScoreLabel.gameObject.SetActive(false);
+                }
+            }
+
+            if (_firstButton)
+                EventSystem.current.SetSelectedGameObject(_firstButton.gameObject);
         }
 
         #region Button Events
@@ -45,6 +67,7 @@ namespace UI
         {
             OnResumeTapped?.Invoke();
             gameObject.SetActive(false);
+
             if (GameTimer.instanceExists)
                 GameTimer.Instance.TogglePause();
         }
@@ -53,6 +76,7 @@ namespace UI
         {
             _canvasGroup.interactable = false;
             OnRetryTapped?.Invoke();
+
             SceneFader.Instance.FadeToCurrentScene();
         }
 
@@ -65,6 +89,7 @@ namespace UI
         {
             _canvasGroup.interactable = false;
             OnQuitTapped?.Invoke();
+
             SceneFader.Instance.FadeToStart();
         }
         #endregion

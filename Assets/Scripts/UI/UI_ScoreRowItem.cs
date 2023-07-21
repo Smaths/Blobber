@@ -24,7 +24,7 @@ namespace UI
             string playerName = member.player.name;
 
             if (PlayerPrefs.HasKey(PrefKeys.IsInKidMode) && PlayerPrefs.GetInt(PrefKeys.IsInKidMode) != 0)
-                playerName = BadWordFilter.ContainsBadWord(playerName) ? "Blobber" : playerName;
+                playerName = BadWordFilter.Instance.ContainsBadWord(playerName) ? "Blobber" : playerName;
 
             _playerName.text = string.IsNullOrWhiteSpace(playerName) ? "Some blob" : playerName;
 
