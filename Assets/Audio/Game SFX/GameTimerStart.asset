@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102682c3d6f4ab78af725eb54a096a1, type: 3}
   m_Name: GameTimerStart
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: 52b5b6adc689847f1bd6b541a9baf193, type: 3}
   playType: 0
   volume: 1
   volumeVariation: 0
