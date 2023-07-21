@@ -28,10 +28,9 @@ namespace Managers
         public bool IsPaused => _isPaused;
         public bool IsStarted => _isStarted;
         public bool IsCompleted => _isCompleted;
+        public float PreCountdownDuration => _preCountdownDuration;
         public float CurrentTime => _currentTime;
         public string PrettyTime => NumberFormatter.FormatCleanTime(_timer.InvertedDuration);
-
-        public float PreCountdownDuration => _preCountdownDuration;
         #endregion
 
         #region Events
