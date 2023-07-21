@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
@@ -10,11 +11,6 @@ namespace Managers
         [SerializeField] private bool _isInKidModeDefault;
 
         public bool IsGameOver => _isGameOver;
-
-        private void Start()
-        {
-            BadWordFilter.Load();
-        }
 
         public void SetGameOver()
         {
