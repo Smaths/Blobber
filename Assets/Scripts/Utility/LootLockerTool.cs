@@ -82,6 +82,7 @@ namespace Utility
 
                     GetPlayerData();
                     GetTopScores();
+                    GetScoresAroundMember();
                 }
                 else
                 {
@@ -165,6 +166,10 @@ namespace Utility
 #if UNITY_EDITOR
                     Debug.Log($"<color=#58AE91>––LootLocker––Submit Score Successful–memberID: {memberID} | player name: {_playerName} | score: {score} | leaderboard: {_leaderboardKey}</color>");
 #endif
+
+                    // Get updated data
+                    GetPlayerData();
+                    GetTopScores();
                 }
                 else
                 {
