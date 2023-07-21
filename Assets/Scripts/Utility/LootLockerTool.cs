@@ -5,11 +5,11 @@ using UnityEngine.Events;
 
 // Lootlocker source: https://docs.lootlocker.com/players/authentication/guest-login
 // Script execution order modified.
-// TODO: Remove the modified Script execution order when GameLoad scene is complete and working.
 namespace Utility
 {
     public class LootLockerTool : Singleton<LootLockerTool>
     {
+        #region Private Fields
         [Title("Leaderboard", "Responsible for leaderboard functionality.")]
         [SerializeField, DisplayAsString] private bool _isInitialized;
         [Title("Settings", horizontalLine: false)]
@@ -29,6 +29,7 @@ namespace Utility
         [SerializeField] [ReadOnly] private int _playerID;
         [SerializeField] [ReadOnly] private string _playerPublicUID;
         [SerializeField] [ReadOnly] private int _rank;
+        [SerializeField] [ReadOnly] private int _previousRank;
         [SerializeField] [ReadOnly] private int _previousHighScore;
         [SerializeField] [ReadOnly] private int _highScore;
         [SerializeField] private bool _hasPlayerInfo;
@@ -40,22 +41,30 @@ namespace Utility
         private bool _hasAttemptedTopLeaderboardData;
         private bool _hasAttemptedNearbyLeaderboardData;
         private bool _hasAttemptedPlayerData;
+        #endregion
 
         #region Public Properties
         public LootLockerLeaderboardMember[] TopMembers => _topMembers;
         public LootLockerLeaderboardMember[] NearbyMembers => _nearbyMembers;
         public string PlayerName => _playerName;
         public bool IsInitialized => _isInitialized;
+        public int PreviousRank => _previousRank;
+        public string PrettyPreviousRank => "# " + NumberFormatter.FormatNumberWithCommas(_previousRank);
         public int Rank => _rank;
+        public string PrettyRank => "# " + NumberFormatter.FormatNumberWithCommas(_rank);
+        public int PreviousHighScore => _previousHighScore;
+        public string PrettyPreviousHighScore => NumberFormatter.FormatNumberWithCommas(_previousHighScore);
         public int HighScore => _highScore;
-
+        public string PrettyHighScore => NumberFormatter.FormatNumberWithCommas(_highScore);
         public bool HasPlayerInfo => _hasPlayerInfo;
         #endregion
 
+        #region Events
         [TitleGroup("Unity Events")]
         [FoldoutGroup("Unity Events/Events")] public UnityEvent<bool, string> OnSetupComplete; // isSuccess, response
         [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnPlayerDataUpdated;
         [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnLeaderboardDataUpdated;
+        #endregion
 
         #region Lifecycle
         private void Start()
@@ -75,7 +84,7 @@ namespace Utility
                 }
                 else
                 {
-                    Debug.LogWarning($"<color=ECAB34>––LootLocker––Error starting Lootlocker session | error: {response.Error}</color>");
+                    Debug.LogWarning($"<color=ECAB34>LootLocker––Error starting Lootlocker session | error: {response.Error}</color>");
                 }
             });
         }
@@ -84,7 +93,7 @@ namespace Utility
         {
 
 #if UNITY_EDITOR
-            if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
+            if (_showDebug) Debug.Log($"<color=#58AE91>LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
 #endif
             _memberID = response.player_id.ToString();
             _playerID = response.player_id;
@@ -92,24 +101,29 @@ namespace Utility
             _isInitialized = true;
 
             GetPlayerData();
-            GetTopScores();
-            GetNearbyScores();
         }
         #endregion
 
-        #region Scores
-        #region Top Scores
-        public void GetTopScores()
+        #region Leaderboard Data
+        public void GetLeaderboardData()
+        {
+            GetLeaderboardScoresTop();
+            GetLeaderboardScoresNearby();
+        }
+        #endregion
+
+        #region Top Leaderboard Scores
+        private void GetLeaderboardScoresTop()
         {
             LootLockerSDKManager.GetScoreList(_leaderboardKey, _downloadCount, 0, response =>
             {
                 if (response.statusCode == 200)
                 {
-                    OnGetTopScoresCompleted(response);
+                    OnGetTopScores_Completed(response);
                 }
                 else
                 {
-                    Debug.LogWarning($"<color=ECAB34>––LootLocker––Get Top Scores Failed: {response.Error}</color>");
+                    Debug.LogWarning($"<color=ECAB34>LootLocker––Get Top Scores Failed: {response.Error}</color>");
                 }
 
                 _hasAttemptedTopLeaderboardData = true;
@@ -117,17 +131,17 @@ namespace Utility
             });
         }
 
-        private void OnGetTopScoresCompleted(LootLockerGetScoreListResponse response)
+        private void OnGetTopScores_Completed(LootLockerGetScoreListResponse response)
         {
 #if UNITY_EDITOR
-            if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Get Top Scores Successful – {response.items.Length} leaderboard member(s) downloaded.</color>");
+            if (_showDebug) Debug.Log($"<color=#58AE91>LootLocker––Get top scores success – {response.items.Length} leaderboard member(s) downloaded.</color>");
 #endif
             _topMembers = response.items;
         }
         #endregion
 
-        #region Nearby Scores
-        private void GetNearbyScores()
+        #region Nearby Leaderboard Scores
+        private void GetLeaderboardScoresNearby()
         {
             int rank = _rank;
             int count = _downloadCount;
@@ -137,11 +151,11 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    OnGetNearbyScoresCompleted(response);
+                    OnGetNearbyScores_Completed(response);
                 }
                 else
                 {
-                    Debug.LogWarning("<color=ECAB34>––LootLocker––Leaderboard Get Scores Around Member Failed: {scoreResponse.Error}</color>");
+                    Debug.LogWarning("<color=ECAB34>LootLocker––Leaderboard Get Scores Around Member Failed: {scoreResponse.Error}</color>");
                 }
 
                 _hasAttemptedNearbyLeaderboardData = true;
@@ -149,10 +163,10 @@ namespace Utility
             });
         }
 
-        private void OnGetNearbyScoresCompleted(LootLockerGetScoreListResponse response)
+        private void OnGetNearbyScores_Completed(LootLockerGetScoreListResponse response)
         {
 #if UNITY_EDITOR
-            if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Leaderboard Get Scores Around Member Successful – {response.items.Length} leaderboard member(s) downloaded.</color>");
+            if (_showDebug) Debug.Log($"<color=#58AE91>LootLocker––Get nearby scores success – {response.items.Length} leaderboard member(s) downloaded.</color>");
 #endif
             _nearbyMembers = response.items;
         }
@@ -163,7 +177,13 @@ namespace Utility
         {
             if (score <= 0)
             {
-                Debug.Log($"––LootLocker––Score is 0 and was not submitted to leaderboard.");
+                Debug.Log($"LootLocker––Score is 0 and was not submitted to leaderboard.");
+                return;
+            }
+
+            if (score < _highScore)
+            {
+                Debug.Log($"LootLocker––Score ({score}) is less than previous high score ({_highScore}) and was not submitted to leaderboard.");
                 return;
             }
 
@@ -171,28 +191,27 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    OnScoreSubmitCompleted(score, response);
+                    OnScoreSubmit_Completed(score, response);
                 }
                 else
                 {
-                    Debug.LogWarning($"<color=#ECAB34>––LootLocker––Submit Score Failed: {response.Error}</color>");
+                    Debug.LogWarning($"<color=#ECAB34>LootLocker––Submit score failed: {response.Error}</color>");
                 }
             });
         }
 
-        private void OnScoreSubmitCompleted(int sentScore, LootLockerSubmitScoreResponse response)
+        private void OnScoreSubmit_Completed(int sentScore, LootLockerSubmitScoreResponse response)
         {
 #if UNITY_EDITOR
-            Debug.Log($"<color=#58AE91>––LootLocker––Submit Score Successful–memberID: {_memberID} | player name: {_playerName} | score: (sent {sentScore}) (received: {_highScore}) | leaderboard: {_leaderboardKey}</color>");
+            Debug.Log($"<color=#58AE91>LootLocker––Submit score success–memberID: {_memberID} | player name: {_playerName} | score: (sent {sentScore}) (received: {_highScore}) | leaderboard: {_leaderboardKey}</color>");
 #endif
+            _highScore = sentScore;
             _rank = response.rank;
-            _highScore = response.score;
 
-            // Get updated data after submitting
-            GetTopScores();
-            GetNearbyScores();
+            OnPlayerDataUpdated?.Invoke();
+
+            GetLeaderboardData();
         }
-        #endregion
         #endregion
 
         #region Player Data
@@ -202,11 +221,11 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    OnGetPlayerDataCompleted(response);
+                    OnGetPlayerData_Completed(response);
                 }
                 else
                 {
-                    Debug.Log("<color=ECAB34>––LootLocker––Error getting player name</color>");
+                    Debug.Log("<color=ECAB34>LootLocker––Error getting player name</color>");
                 }
 
                 _hasAttemptedPlayerData = true;
@@ -214,12 +233,12 @@ namespace Utility
             });
         }
 
-        private void OnGetPlayerDataCompleted(LootLockerGetMemberRankResponse response)
+        private void OnGetPlayerData_Completed(LootLockerGetMemberRankResponse response)
         {
 #if UNITY_EDITOR
-            Debug.Log("<color=#58AE91>––LootLocker––Successfully retrieved player data</color>");
+            Debug.Log("<color=#58AE91>LootLocker––Get player data success</color>");
 #endif
-            _rank = response.rank;
+            _rank = _previousRank = response.rank;
             _highScore = _previousHighScore = response.score;
             _memberID = response.member_id;
             _playerName = response.player.name;
@@ -229,7 +248,7 @@ namespace Utility
 
             OnPlayerDataUpdated?.Invoke();
 
-            GetNearbyScores();
+            GetLeaderboardData();
         }
 
         public void UpdatePlayerName(string playerName)
@@ -238,27 +257,26 @@ namespace Utility
             {
                 if (response.success)
                 {
-                    OnUpdatePlayerNameCompleted(response);
+                    OnUpdatePlayerName_Completed(response);
                 }
                 else
                 {
-                    Debug.Log("<color=ECAB34>––LootLocker––Error setting player name</color>");
+                    Debug.Log("<color=ECAB34>LootLocker––Error setting player name</color>");
                 }
             });
         }
 
-        private void OnUpdatePlayerNameCompleted(PlayerNameResponse response)
+        private void OnUpdatePlayerName_Completed(PlayerNameResponse response)
         {
 #if UNITY_EDITOR
-            Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_playerID})</color>");
+            Debug.Log($"<color=#58AE91>LootLocker––Successfully set player name: {_playerName} (ID: {_playerID})</color>");
 #endif
             _playerName = response.name;
             _hasAttemptedPlayerData = true;
 
             OnPlayerDataUpdated?.Invoke();
 
-            GetTopScores();
-            GetNearbyScores();
+            GetLeaderboardData();
         }
         #endregion
 

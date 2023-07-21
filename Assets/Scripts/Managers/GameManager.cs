@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
@@ -8,13 +7,12 @@ namespace Managers
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private bool _isGameOver;
-        [SerializeField] private bool _isInKidModeDefault;
 
         public bool IsGameOver => _isGameOver;
 
-        public void SetGameOver()
+        public void SetGameOver(bool value = true)
         {
-            _isGameOver = true;
+            _isGameOver = value;
 
             LootLockerTool.Instance.SubmitPlayerScore(ScoreManager.Instance.Points);
         }

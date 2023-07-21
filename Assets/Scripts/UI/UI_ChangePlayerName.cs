@@ -2,12 +2,13 @@ using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utility;
 
 namespace UI
 {
-    public class UI_PlayerSetup : MonoBehaviour
+    public class UI_ChangePlayerName : MonoBehaviour
     {
         [SerializeField] private TMP_InputField _playerNameInput;
         [SerializeField] private int _maxCharacterCount = 12;
@@ -24,6 +25,8 @@ namespace UI
 
             _playerNameInput.text = string.Empty;
             _submitButton.interactable = false;
+
+            EventSystem.current.SetSelectedGameObject(_submitButton.gameObject);
         }
 
         private void OnDisable()

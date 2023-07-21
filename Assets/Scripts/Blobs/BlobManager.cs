@@ -12,15 +12,12 @@ using Utility;
 namespace Blobs
 {
     [RequireComponent(typeof(PoolManager))]
-    public class BlobManager : Utility.Singleton<BlobManager>
+    public class BlobManager : Singleton<BlobManager>
     {
         [TitleGroup("Blob Manager", "Spawn blobs from object pool.", TitleAlignments.Split)]
         [Tooltip("Additional number of objects spawned for object pooling. They are inactive on start.")]
         [MinValue(0)] [SuffixLabel("object(s)")]
         [SerializeField] private int _poolBufferAmount = 1; // Additional objects created in pool (inactive on start)
-        [LabelText("Disable On Start")]
-        [Tooltip("Disable blobs on level start, usually re-enabled when pre-countdown is complete.")]
-        [SerializeField] private bool _shouldDisableOnStart = true;
 
         [TitleGroup("Good Blob Spawner", horizontalLine: false)]
         [SceneObjectsOnly] [LabelText("Container")]
@@ -65,7 +62,6 @@ namespace Blobs
 
         private void OnEnable()
         {
-            // Attach events
             if (GameTimer.instanceExists)
             {
                 GameTimer.Instance.OnCountdownStarted.AddListener(EnableBlobs);
@@ -82,7 +78,6 @@ namespace Blobs
 
         private void OnDisable()
         {
-            // Detach events
             if (GameTimer.instanceExists)
             {
                 GameTimer.Instance.OnCountdownStarted.RemoveListener(EnableBlobs);
@@ -101,7 +96,8 @@ namespace Blobs
         {
             CreateBlobPools();
 
-            if (_shouldDisableOnStart)
+            // Disable blobs for pre-timer to complete
+            if (GameTimer.instanceExists && GameTimer.Instance.PreCountdownDuration > 0)
                 DisableBlobs();
         }
         #endregion
@@ -149,62 +145,55 @@ namespace Blobs
         #endregion
 
         #region Public Methods
+        // Enable
         public void EnableBlobs()
         {
             List<GameObject> goodBlobs = PoolManager.Instance.GetPoolObjects(_goodBlobPrefab);
+            EnableBlobs(goodBlobs);
+
             List<GameObject> badBlobs = PoolManager.Instance.GetPoolObjects(_badBlobPrefab);
-
-            foreach (GameObject blob in goodBlobs)
-            {
-                if (blob.activeInHierarchy == false) continue;
-
-                var stateManager = blob.GetComponent<BlobStateManager>();
-                if(stateManager != null)
-                {
-                    stateManager.ReturnToPreviousState();
-                }
-            }
-
-            foreach (GameObject blob in badBlobs)
-            {
-                if (blob.activeInHierarchy == false) continue;
-
-                var stateManager = blob.GetComponent<BlobStateManager>();
-                if(stateManager != null)
-                {
-                    stateManager.ReturnToPreviousState();
-                }
-            }
+            EnableBlobs(badBlobs);
         }
 
+        private static void EnableBlobs(List<GameObject> blobs)
+        {
+            foreach (GameObject blob in blobs)
+                EnableBlob(blob);
+        }
+
+        private static void EnableBlob(GameObject blob)
+        {
+            if (blob.activeInHierarchy == false) return;
+
+            if (blob.TryGetComponent(out BlobStateManager stateManager))
+                stateManager.ReturnToPreviousState();
+        }
+
+        // Disable
         public void DisableBlobs()
         {
             List<GameObject> goodBlobs = PoolManager.Instance.GetPoolObjects(_goodBlobPrefab);
+            DisableBlobs(goodBlobs);
+
             List<GameObject> badBlobs = PoolManager.Instance.GetPoolObjects(_badBlobPrefab);
-
-            foreach (GameObject blob in goodBlobs)
-            {
-                if (blob.activeInHierarchy == false) continue;
-
-                var stateManager = blob.GetComponent<BlobStateManager>();
-                if(stateManager != null)
-                {
-                    stateManager.SwitchState(BlobState.Paused);
-                }
-            }
-
-            foreach (GameObject blob in badBlobs)
-            {
-                if (blob.activeInHierarchy == false) continue;
-
-                var stateManager = blob.GetComponent<BlobStateManager>();
-                if(stateManager != null)
-                {
-                    stateManager.SwitchState(BlobState.Paused);
-                }
-            }
+            DisableBlobs(badBlobs);
         }
 
+        private static void DisableBlobs(List<GameObject> blobs)
+        {
+            foreach (GameObject blob in blobs)
+                DisableBlob(blob);
+        }
+
+        private static void DisableBlob(GameObject blob)
+        {
+            if (blob.activeInHierarchy == false) return;
+
+            if (blob.TryGetComponent(out BlobStateManager stateManager))
+                stateManager.SwitchState(BlobState.Paused);
+        }
+
+        // Spawn
         [ButtonGroup("Spawn")] [PropertyOrder(50)]
         public void SpawnGoodBlob()
         {

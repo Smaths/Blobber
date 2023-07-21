@@ -740,7 +740,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Best
+  m_text: Prev Best
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c45eb6ded7b14905812b4e9a2a50318, type: 2}
   m_sharedMaterial: {fileID: 6154284786544456080, guid: 5c45eb6ded7b14905812b4e9a2a50318,
@@ -867,6 +867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerLabel: {fileID: 2726329018075403824}
   _rankValueLabel: {fileID: 4914759145893626613}
+  _scoreLabel: {fileID: 3944834465373422347}
   _scoreValueLabel: {fileID: 2852197174692750665}
 --- !u!114 &7260096142231978980
 MonoBehaviour:

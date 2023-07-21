@@ -46,13 +46,13 @@ namespace UI
 
         private void OnEnable()
         {
+            // Disable quit button for WebGL
+            _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
+
             if (LootLockerTool.instanceExists)
             {
                 LootLockerTool.Instance.OnPlayerDataUpdated.AddListener(OnPlayerDataUpdated);
             }
-
-            // Disable quit button for WebGL
-            _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
         }
 
         private void OnDisable()
@@ -78,7 +78,7 @@ namespace UI
             {
                 // Request player name if missing
                 _setupCanvas.gameObject.SetActive(true);
-                _setupCanvas.GetComponent<UI_PlayerSetup>().OnSubmit.AddListener(
+                _setupCanvas.GetComponent<UI_ChangePlayerName>().OnSubmit.AddListener(
                     delegate
                     {
                         SceneFader.Instance.FadeToGame();
@@ -135,8 +135,6 @@ namespace UI
         private void OnPlayerDataUpdated()
         {
             _playerNameLabel.text = LootLockerTool.Instance.PlayerName;
-
-            if (LootLockerTool.instanceExists) LootLockerTool.Instance.GetTopScores();
         }
     }
 }

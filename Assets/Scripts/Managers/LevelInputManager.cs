@@ -45,6 +45,8 @@ namespace Managers
                 GameTimer.Instance.OnPreCountdownStarted.AddListener(DisablePlayerInput);
                 GameTimer.Instance.OnCountdownStarted.AddListener(EnablePlayerInput);
             }
+
+            GameManager.Instance.SetGameOver(false);
         }
 
         private void OnDisable()
@@ -85,7 +87,10 @@ namespace Managers
 
         private void OnPausePerformed(InputAction.CallbackContext context)
         {
-            if (GameTimer.Instance.IsStarted == false) return;
+            Debug.Log($"{gameObject.name} - Pause performed");
+
+            if (!GameTimer.Instance.IsStarted) return;
+            if (GameTimer.Instance.IsCompleted) return;
             if (GameManager.Instance.IsGameOver) return;
 
             _gameTimer.TogglePause();
