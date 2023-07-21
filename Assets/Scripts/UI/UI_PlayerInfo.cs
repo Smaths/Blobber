@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -19,7 +18,7 @@ namespace UI
         {
             if (LootLockerTool.instanceExists)
             {
-                LootLockerTool.Instance.OnPlayerNameUpdated.AddListener(UpdateUI);
+                LootLockerTool.Instance.OnPlayerDataUpdated.AddListener(UpdateUI);
             }
 
             UpdateUI();
@@ -29,7 +28,7 @@ namespace UI
         {
             if (LootLockerTool.instanceExists)
             {
-                LootLockerTool.Instance.OnPlayerNameUpdated.RemoveListener(UpdateUI);
+                LootLockerTool.Instance.OnPlayerDataUpdated.RemoveListener(UpdateUI);
             }
         }
 
@@ -37,40 +36,35 @@ namespace UI
         {
             if (LootLockerTool.instanceExists)
             {
-                UpdateUI(LootLockerTool.Instance.PlayerName);
+                // Name
+                if (string.IsNullOrEmpty(LootLockerTool.Instance.PlayerName))
+                {
+                    _playerLabel.text = "Unnamed";
+                    _playerLabel.alpha = 0.8f;
+                }
+                else
+                {
+                    _playerLabel.text = LootLockerTool.Instance.PlayerName;
+                    _playerLabel.alpha = 1f;
+                }
+
+                // Rank
+                if (LootLockerTool.Instance.Rank <= 0 )
+                {
+                    _rankValueLabel.text = "None";
+                }
+                else
+                {
+                    _rankValueLabel.text = "#" + NumberFormatter.FormatNumberWithCommas(LootLockerTool.Instance.Rank);
+                }
+
+                // Score
+                _scoreValueLabel.text = NumberFormatter.FormatNumberWithCommas(LootLockerTool.Instance.HighScore);
             }
             else
             {
                 Debug.Log($"Lootlocker missing, no player data found.");
             }
-        }
-
-        private void UpdateUI(string newName)
-        {
-            // Name
-            if (string.IsNullOrEmpty(newName))
-            {
-                _playerLabel.text = "Unnamed";
-                _playerLabel.alpha = 0.8f;
-            }
-            else
-            {
-                _playerLabel.text = newName;
-                _playerLabel.alpha = 1f;
-            }
-
-            // Rank
-            if (LootLockerTool.Instance.Rank <= 0 )
-            {
-                _rankValueLabel.text = "None";
-            }
-            else
-            {
-                _rankValueLabel.text = "#" + NumberFormatter.FormatNumberWithCommas(LootLockerTool.Instance.Rank);
-            }
-
-            // Score
-            _scoreValueLabel.text = NumberFormatter.FormatNumberWithCommas(LootLockerTool.Instance.HighScore);
         }
     }
 }

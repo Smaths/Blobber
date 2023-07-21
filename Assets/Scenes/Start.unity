@@ -5294,6 +5294,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5747670366435253559, guid: 4002fd9855b2745f9a3d5217044f6435,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11900507}
+    - target: {fileID: 5747670366435253559, guid: 4002fd9855b2745f9a3d5217044f6435,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
     - target: {fileID: 5944597403683936767, guid: 4002fd9855b2745f9a3d5217044f6435,
         type: 3}
       propertyPath: m_AnchorMax.y

@@ -29,6 +29,19 @@ namespace UI
             SetupUI();
 
             SwitchPage(_currentPage);
+
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnLeaderboardDataUpdated.AddListener(OnLeaderboardDataUpdated);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnLeaderboardDataUpdated.RemoveListener(OnLeaderboardDataUpdated);
+            }
         }
 
         private void SetupUI()
@@ -103,6 +116,11 @@ namespace UI
         public void ResetData()
         {
             SetupUI();
+        }
+
+        private void OnLeaderboardDataUpdated()
+        {
+            ResetData();
         }
     }
 }

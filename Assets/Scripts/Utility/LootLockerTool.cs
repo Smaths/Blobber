@@ -1,13 +1,11 @@
 using LootLocker.Requests;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 
 // Lootlocker source: https://docs.lootlocker.com/players/authentication/guest-login
 // Script execution order modified.
 // TODO: Remove the modified Script execution order when GameLoad scene is complete and working.
-
 namespace Utility
 {
     public class LootLockerTool : Singleton<LootLockerTool>
@@ -31,6 +29,7 @@ namespace Utility
         [SerializeField] [ReadOnly] private int _playerID;
         [SerializeField] [ReadOnly] private string _playerPublicUID;
         [SerializeField] [ReadOnly] private int _rank;
+        [SerializeField] [ReadOnly] private int _previousHighScore;
         [SerializeField] [ReadOnly] private int _highScore;
         [SerializeField] private bool _hasPlayerInfo;
 
@@ -54,8 +53,9 @@ namespace Utility
         #endregion
 
         [TitleGroup("Unity Events")]
-        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent<string> OnPlayerNameUpdated;
         [FoldoutGroup("Unity Events/Events")] public UnityEvent<bool, string> OnSetupComplete; // isSuccess, response
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnPlayerDataUpdated;
+        [FoldoutGroup("Unity Events/Events", false)] public UnityEvent OnLeaderboardDataUpdated;
 
         #region Lifecycle
         private void Start()
@@ -71,18 +71,7 @@ namespace Utility
             {
                 if (response.success)
                 {
-#if UNITY_EDITOR
-                    if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
-#endif
-
-                    _memberID = response.player_id.ToString();
-                    _playerID = response.player_id;
-
-                    _isInitialized = true;
-
-                    GetPlayerData();
-                    GetTopScores();
-                    GetScoresAroundMember();
+                    OnGuestSessionSetupCompleted(response);
                 }
                 else
                 {
@@ -90,24 +79,33 @@ namespace Utility
                 }
             });
         }
+
+        private void OnGuestSessionSetupCompleted( LootLockerGuestSessionResponse response)
+        {
+
+#if UNITY_EDITOR
+            if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
+#endif
+            _memberID = response.player_id.ToString();
+            _playerID = response.player_id;
+
+            _isInitialized = true;
+
+            GetPlayerData();
+            GetTopScores();
+            GetNearbyScores();
+        }
         #endregion
 
         #region Scores
+        #region Top Scores
         public void GetTopScores()
         {
             LootLockerSDKManager.GetScoreList(_leaderboardKey, _downloadCount, 0, response =>
             {
                 if (response.statusCode == 200)
                 {
-                    _topMembers = response.items;
-
-#if UNITY_EDITOR
-                    if (_showDebug)
-                    {
-                        Debug.Log($"<color=#58AE91>––LootLocker––Get Top Scores Successful – {response.items.Length} leaderboard member(s) downloaded.</color>");
-                        // LogMemberData(response.items);
-                    }
-#endif
+                    OnGetTopScoresCompleted(response);
                 }
                 else
                 {
@@ -119,24 +117,27 @@ namespace Utility
             });
         }
 
-        private void GetScoresAroundMember()
+        private void OnGetTopScoresCompleted(LootLockerGetScoreListResponse response)
+        {
+#if UNITY_EDITOR
+            if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Get Top Scores Successful – {response.items.Length} leaderboard member(s) downloaded.</color>");
+#endif
+            _topMembers = response.items;
+        }
+        #endregion
+
+        #region Nearby Scores
+        private void GetNearbyScores()
         {
             int rank = _rank;
             int count = _downloadCount;
             int after = rank < 6 ? 0 : rank - 5;
 
-            LootLockerSDKManager.GetScoreList(_leaderboardKey, count, after, scoreResponse =>
+            LootLockerSDKManager.GetScoreList(_leaderboardKey, count, after, response =>
             {
-                if (scoreResponse.statusCode == 200)
+                if (response.statusCode == 200)
                 {
-                    _nearbyMembers = scoreResponse.items;
-#if UNITY_EDITOR
-                    if (_showDebug)
-                    {
-                        Debug.Log($"<color=#58AE91>––LootLocker––Leaderboard Get Scores Around Member Successful – {scoreResponse.items.Length} leaderboard member(s) downloaded.</color>");
-                        // LogMemberData(scoreResponse.items);
-                    }
-#endif
+                    OnGetNearbyScoresCompleted(response);
                 }
                 else
                 {
@@ -148,28 +149,29 @@ namespace Utility
             });
         }
 
+        private void OnGetNearbyScoresCompleted(LootLockerGetScoreListResponse response)
+        {
+#if UNITY_EDITOR
+            if (_showDebug) Debug.Log($"<color=#58AE91>––LootLocker––Leaderboard Get Scores Around Member Successful – {response.items.Length} leaderboard member(s) downloaded.</color>");
+#endif
+            _nearbyMembers = response.items;
+        }
+        #endregion
+
+        #region Submit Score
         public void SubmitPlayerScore(int score)
         {
-
             if (score <= 0)
             {
                 Debug.Log($"––LootLocker––Score is 0 and was not submitted to leaderboard.");
                 return;
             }
 
-            string memberID = _memberID.IsNullOrWhitespace() ? "Test" : _memberID;
-
-            LootLockerSDKManager.SubmitScore(memberID, score, _leaderboardKey, response =>
+            LootLockerSDKManager.SubmitScore(_memberID, score, _leaderboardKey, response =>
             {
                 if (response.statusCode == 200)
                 {
-#if UNITY_EDITOR
-                    Debug.Log($"<color=#58AE91>––LootLocker––Submit Score Successful–memberID: {memberID} | player name: {_playerName} | score: {score} | leaderboard: {_leaderboardKey}</color>");
-#endif
-
-                    // Get updated data
-                    GetPlayerData();
-                    GetTopScores();
+                    OnScoreSubmitCompleted(score, response);
                 }
                 else
                 {
@@ -177,6 +179,20 @@ namespace Utility
                 }
             });
         }
+
+        private void OnScoreSubmitCompleted(int sentScore, LootLockerSubmitScoreResponse response)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"<color=#58AE91>––LootLocker––Submit Score Successful–memberID: {_memberID} | player name: {_playerName} | score: (sent {sentScore}) (received: {_highScore}) | leaderboard: {_leaderboardKey}</color>");
+#endif
+            _rank = response.rank;
+            _highScore = response.score;
+
+            // Get updated data after submitting
+            GetTopScores();
+            GetNearbyScores();
+        }
+        #endregion
         #endregion
 
         #region Player Data
@@ -186,19 +202,7 @@ namespace Utility
             {
                 if (response.statusCode == 200)
                 {
-                    _rank = response.rank;
-                    _highScore = response.score;
-                    _memberID = response.member_id;
-                    _playerName = response.player.name;
-                    _playerID = response.player.id;
-                    _playerPublicUID = response.player.public_uid;
-                    _hasPlayerInfo = true;
-                    OnPlayerNameUpdated?.Invoke(_playerName);
-#if UNITY_EDITOR
-                    Debug.Log("<color=#58AE91>––LootLocker––Successfully retrieved player data</color>");
-#endif
-
-                    GetScoresAroundMember();
+                    OnGetPlayerDataCompleted(response);
                 }
                 else
                 {
@@ -210,44 +214,65 @@ namespace Utility
             });
         }
 
+        private void OnGetPlayerDataCompleted(LootLockerGetMemberRankResponse response)
+        {
+#if UNITY_EDITOR
+            Debug.Log("<color=#58AE91>––LootLocker––Successfully retrieved player data</color>");
+#endif
+            _rank = response.rank;
+            _highScore = _previousHighScore = response.score;
+            _memberID = response.member_id;
+            _playerName = response.player.name;
+            _playerID = response.player.id;
+            _playerPublicUID = response.player.public_uid;
+            _hasPlayerInfo = true;
+
+            OnPlayerDataUpdated?.Invoke();
+
+            GetNearbyScores();
+        }
+
         public void UpdatePlayerName(string playerName)
         {
             LootLockerSDKManager.SetPlayerName(playerName, response =>
             {
                 if (response.success)
                 {
-                    _playerName = playerName;
-#if UNITY_EDITOR
-                    Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_playerID})</color>");
-#endif
-                    GetTopScores();
-                    GetScoresAroundMember();
-
-                    OnPlayerNameUpdated?.Invoke(playerName);
+                    OnUpdatePlayerNameCompleted(response);
                 }
                 else
                 {
                     Debug.Log("<color=ECAB34>––LootLocker––Error setting player name</color>");
                 }
-
-                _hasAttemptedPlayerData = true;
             });
+        }
+
+        private void OnUpdatePlayerNameCompleted(PlayerNameResponse response)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"<color=#58AE91>––LootLocker––Successfully set player name: {_playerName} (ID: {_playerID})</color>");
+#endif
+            _playerName = response.name;
+            _hasAttemptedPlayerData = true;
+
+            OnPlayerDataUpdated?.Invoke();
+
+            GetTopScores();
+            GetNearbyScores();
         }
         #endregion
 
         #region Callbacks
         private void CheckForDataCompletelyDownloaded()
         {
-            if (!_hasAttemptedTopLeaderboardData || !_hasAttemptedNearbyLeaderboardData || !_hasAttemptedPlayerData) return;
+            if (!_hasAttemptedTopLeaderboardData) return;
+            if (!_hasAttemptedNearbyLeaderboardData) return;
+            if (!_hasAttemptedPlayerData) return;
 
             // All data loading is done
             string outputText = string.IsNullOrEmpty(_playerName) ? "Yay! All done loading." : $"Hey there {_playerName}!";
             OnSetupComplete?.Invoke(true, outputText);
-        }
-
-        private void LogMemberData(LootLockerLeaderboardMember[] members)
-        {
-            foreach (LootLockerLeaderboardMember member in members) Debug.Log(GetFormattedLeaderboardString(member));
+            OnLeaderboardDataUpdated?.Invoke();
         }
 
         private string GetFormattedLeaderboardString(LootLockerLeaderboardMember member)
@@ -255,5 +280,11 @@ namespace Utility
             return $"<color=grey>\tMemberID: {member.member_id} | Score: {member.score} –– Player Name: {member.player.name} | Player ID: {member.player.id} | Player UID: {member.player.public_uid}</color>";
         }
         #endregion
+
+        // Logging
+        private void LogMemberData(LootLockerLeaderboardMember[] members)
+        {
+            foreach (LootLockerLeaderboardMember member in members) Debug.Log(GetFormattedLeaderboardString(member));
+        }
     }
 }
