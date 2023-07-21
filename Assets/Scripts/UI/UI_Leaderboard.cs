@@ -29,6 +29,19 @@ namespace UI
             SetupUI();
 
             SwitchPage(_currentPage);
+
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnLeaderboardDataUpdated.AddListener(OnLeaderboardDataUpdated);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnLeaderboardDataUpdated.RemoveListener(OnLeaderboardDataUpdated);
+            }
         }
 
         private void SetupUI()
@@ -57,11 +70,9 @@ namespace UI
             {
                 case LeaderBoardPage.Top:
                     EventSystem.current.SetSelectedGameObject(_topButton.gameObject);
-                    ;
                     break;
                 case LeaderBoardPage.Nearby:
                     EventSystem.current.SetSelectedGameObject(_nearbyButton.gameObject);
-                    ;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -105,6 +116,11 @@ namespace UI
         public void ResetData()
         {
             SetupUI();
+        }
+
+        private void OnLeaderboardDataUpdated()
+        {
+            ResetData();
         }
     }
 }

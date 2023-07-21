@@ -28,6 +28,7 @@ namespace Managers
         public bool IsPaused => _isPaused;
         public bool IsStarted => _isStarted;
         public bool IsCompleted => _isCompleted;
+        public float PreCountdownDuration => _preCountdownDuration;
         public float CurrentTime => _currentTime;
         public string PrettyTime => NumberFormatter.FormatCleanTime(_timer.InvertedDuration);
         #endregion
@@ -57,25 +58,9 @@ namespace Managers
             _timer ??= GetComponent<Timer>();
         }
 
-        private void OnEnable()
-        {
-            if (GameManager.instanceExists)
-            {
-                OnCountdownCompleted.AddListener(GameManager.Instance.SetGameOver);
-            }
-        }
-
         private void Start()
         {
             StartPreCountdownTimer();;
-        }
-
-        private void OnDisable()
-        {
-            if (GameManager.instanceExists)
-            {
-                OnCountdownCompleted.RemoveListener(GameManager.Instance.SetGameOver);
-            }
         }
         #endregion
 
@@ -150,7 +135,11 @@ namespace Managers
             Debug.Log($"{gameObject.name} - Primary countdown Finished. Game is over.");
 #endif
             _isCompleted = true;
+
             OnCountdownCompleted?.Invoke();
+
+            if (GameManager.instanceExists)
+                GameManager.Instance.SetGameOver();
         }
         #endregion
     }

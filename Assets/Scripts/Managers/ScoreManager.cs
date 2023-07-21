@@ -1,5 +1,6 @@
 using System.Globalization;
 using DG.Tweening;
+using Extensions;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -45,25 +46,9 @@ namespace Managers
         #endregion
 
         #region Lifecycle
-        private void OnEnable()
-        {
-            if (GameManager.instanceExists)
-            {
-                OnScoreIsZero.AddListener(GameManager.Instance.SetGameOver);
-            }
-        }
-
         private void Start()
         {
             _camera = Camera.main;
-        }
-
-        private void OnDisable()
-        {
-            if (GameManager.instanceExists)
-            {
-                OnScoreIsZero.RemoveListener(GameManager.Instance.SetGameOver);
-            }
         }
         #endregion
 
@@ -91,14 +76,20 @@ namespace Managers
 
             ScoreChanged?.Invoke(value, _points);
 
-            // End game
-            if (_points <= 0)
-            {
-                _points = 0;
-                _arePointsDepleted = true;
+            ArePointsDepletedCheck();
+        }
 
-                OnScoreIsZero?.Invoke();
-            }
+        private void ArePointsDepletedCheck()
+        {
+            if (_points > 0) return;
+
+            _points = 0;
+            _arePointsDepleted = true;
+
+            OnScoreIsZero?.Invoke();
+
+            if (GameManager.instanceExists)
+                GameManager.Instance.SetGameOver();
         }
         #endregion
 

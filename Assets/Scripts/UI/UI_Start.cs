@@ -39,32 +39,27 @@ namespace UI
         {
             _canvasGroup.alpha = 1;
 
-            if (string.IsNullOrEmpty(LootLockerTool.Instance.PlayerName))
-                _playerNameLabel.text = "Change Name";
-            else
-                _playerNameLabel.text = LootLockerTool.Instance.PlayerName;
+            _playerNameLabel.text = string.IsNullOrEmpty(LootLockerTool.Instance.PlayerName)
+                ? "Change Name"
+                : LootLockerTool.Instance.PlayerName;
         }
 
         private void OnEnable()
         {
-            if (LootLockerTool.instanceExists)
-            {
-                LootLockerTool.Instance.OnPlayerNameUpdated.AddListener(SetPlayerNameLabel);
-            }
-
-            if (LootLockerTool.instanceExists && LootLockerTool.Instance.IsInitialized)
-                // Fetch leaderboard data again
-                LootLockerTool.Instance.GetTopScores();
-
             // Disable quit button for WebGL
             _quitButton.gameObject.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
+
+            if (LootLockerTool.instanceExists)
+            {
+                LootLockerTool.Instance.OnPlayerDataUpdated.AddListener(OnPlayerDataUpdated);
+            }
         }
 
         private void OnDisable()
         {
             if (LootLockerTool.instanceExists)
             {
-                LootLockerTool.Instance.OnPlayerNameUpdated.RemoveListener(SetPlayerNameLabel);
+                LootLockerTool.Instance.OnPlayerDataUpdated.RemoveListener(OnPlayerDataUpdated);
             }
         }
         #endregion
@@ -83,7 +78,7 @@ namespace UI
             {
                 // Request player name if missing
                 _setupCanvas.gameObject.SetActive(true);
-                _setupCanvas.GetComponent<UI_PlayerSetup>().OnSubmit.AddListener(
+                _setupCanvas.GetComponent<UI_ChangePlayerName>().OnSubmit.AddListener(
                     delegate
                     {
                         SceneFader.Instance.FadeToGame();
@@ -137,11 +132,9 @@ namespace UI
         }
         #endregion
 
-        private void SetPlayerNameLabel(string playerName)
+        private void OnPlayerDataUpdated()
         {
-            _playerNameLabel.text = playerName;
-
-            if (LootLockerTool.instanceExists) LootLockerTool.Instance.GetTopScores();
+            _playerNameLabel.text = LootLockerTool.Instance.PlayerName;
         }
     }
 }

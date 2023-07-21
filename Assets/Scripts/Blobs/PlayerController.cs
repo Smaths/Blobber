@@ -37,9 +37,9 @@ namespace Blobs {
         [SerializeField] private int _currentBoostCount;
         [SerializeField] private int _maxBoostCount = 3;
 
-        [Header("Info")]
-        [SerializeField] [DisplayAsString] private bool _isMoving;
-        [SerializeField] [DisplayAsString] private bool _isBoosting;
+        [TitleGroup("Info", horizontalLine: false)]
+        [HorizontalGroup("Info/H")] [SerializeField] [DisplayAsString] private bool _isMoving;
+        [HorizontalGroup("Info/H")] [SerializeField] [DisplayAsString] private bool _isBoosting;
 
         [Header("Faces :D")]
         [SerializeField] private global::Plugins.Kawaii_Slimes.Scripts.AI.Face _faceData;
@@ -236,6 +236,9 @@ namespace Blobs {
 
             // Rotate character to face movement direction
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), _rotationSpeed);
+
+            // Keep character grounded.
+            transform.position = new Vector3(transform.position.x, 0, transform.position.y);
 
             _controller.Move(movement);
         }

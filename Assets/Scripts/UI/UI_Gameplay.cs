@@ -7,7 +7,7 @@ namespace UI
     public class UI_Gameplay : MonoBehaviour
     {
         [SerializeField] private float _animationTime = 0.4f;
-        
+
         [SerializeField] private CanvasGroup[] _canvasGroups;
 
         private void OnEnable()
@@ -23,15 +23,17 @@ namespace UI
                 GameTimer.Instance.OnResume.AddListener(Show);
             }
 
-            if (ScoreManager.instanceExists)
-            {
-                ScoreManager.Instance.OnScoreIsZero.AddListener(Hide);
-            }
+            if (ScoreManager.instanceExists) ScoreManager.Instance.OnScoreIsZero.AddListener(Hide);
         }
 
         private void Start()
         {
-            Hide();
+            // Hide game UI's on start
+            foreach (CanvasGroup canvasGroup in _canvasGroups)
+            {
+                canvasGroup.alpha = 0;
+                canvasGroup.interactable = false;
+            }
         }
 
         private void OnDestroy()
@@ -45,27 +47,33 @@ namespace UI
                 GameTimer.Instance.OnResume.RemoveListener(Show);
             }
 
-            if (ScoreManager.instanceExists)
-            {
-                ScoreManager.Instance.OnScoreIsZero.RemoveListener(Hide);
-            }
+            if (ScoreManager.instanceExists) ScoreManager.Instance.OnScoreIsZero.RemoveListener(Hide);
         }
 
         private void Show()
         {
-            foreach (var canvasGroup in _canvasGroups)
+            foreach (CanvasGroup canvasGroup in _canvasGroups)
             {
                 canvasGroup.interactable = true;
-                canvasGroup.DOFade(1, _animationTime);
+                canvasGroup.DOFade(1, _animationTime)
+                    .OnComplete(() => canvasGroup.interactable = true);
             }
         }
 
         private void Hide()
         {
-            foreach (var canvasGroup in _canvasGroups)
+            foreach (CanvasGroup canvasGroup in _canvasGroups)
             {
-                canvasGroup.DOFade(0, _animationTime)
-                    .OnComplete(() => canvasGroup.interactable = false);
+                if (_animationTime > 0)
+                {
+                    canvasGroup.DOFade(0, _animationTime)
+                        .OnComplete(() => canvasGroup.interactable = false);
+                }
+                else
+                {
+                    canvasGroup.alpha = 0;
+                    canvasGroup.interactable = false;
+                }
             }
         }
     }
