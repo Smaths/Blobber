@@ -16068,7 +16068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preCountdownDuration: 3
-  _countdownDuration: 2
+  _countdownDuration: 60
   _currentTime: 0
   _isPaused: 0
   OnPause:

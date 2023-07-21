@@ -355,24 +355,10 @@ MonoBehaviour:
     icon: VideoPlayer Icon
     color: {r: 0.5764706, g: 0.43921572, b: 0.8588236, a: 1}
   _sceneHistory:
-  - name: DemoSceneURP
-    path: Assets/Plugins/DreamTeamMobile/Scenes/DemoSceneURP.unity
-  - name: Level_1
-    path: Assets/Scenes/Level_1.unity
   - name: Start
     path: Assets/Scenes/Start.unity
   - name: GameLoad
     path: Assets/Scenes/GameLoad.unity
-  - name: Tutorial
-    path: Assets/Scenes/Tutorial.unity
-  - name: Test
-    path: Assets/Scenes/Test.unity
-  - name: Level_1_Test
-    path: Assets/Scenes/Level_1_Test.unity
-  - name: Test_2
-    path: Assets/Scenes/Test_2.unity
-  - name: Level_1 Test
-    path: Assets/Scenes/Level_1 Test.unity
-  - name: Level_1 New
-    path: Assets/Scenes/Level_1 New.unity
+  - name: Level_1
+    path: Assets/Scenes/Level_1.unity
   _notes: []
