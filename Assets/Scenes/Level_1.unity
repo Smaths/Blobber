@@ -22796,11 +22796,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6314015459740216412, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
-        type: 3}
-      propertyPath: m_ReceiveGI
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 6314015459740216413, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
         type: 3}
       propertyPath: m_RootOrder
@@ -22860,16 +22855,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GroundTerrain
-      objectReference: {fileID: 0}
-    - target: {fileID: 6314015459740216414, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6314015461098927278, guid: cd2e0cf2899ec4deba49f0ed1a17e3b2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

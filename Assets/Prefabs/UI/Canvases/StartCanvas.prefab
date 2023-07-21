@@ -919,8 +919,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: BLOBBER
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5c45eb6ded7b14905812b4e9a2a50318, type: 2}
-  m_sharedMaterial: {fileID: 6154284786544456080, guid: 5c45eb6ded7b14905812b4e9a2a50318,
+  m_fontAsset: {fileID: 11400000, guid: db8e6aa3d17fc49e99dd52c39a50c544, type: 2}
+  m_sharedMaterial: {fileID: -5806990447490858648, guid: db8e6aa3d17fc49e99dd52c39a50c544,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -945,8 +945,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 300
-  m_fontSizeBase: 300
+  m_fontSize: 220
+  m_fontSizeBase: 220
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

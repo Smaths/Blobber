@@ -57,11 +57,9 @@ namespace UI
             {
                 case LeaderBoardPage.Top:
                     EventSystem.current.SetSelectedGameObject(_topButton.gameObject);
-                    ;
                     break;
                 case LeaderBoardPage.Nearby:
                     EventSystem.current.SetSelectedGameObject(_nearbyButton.gameObject);
-                    ;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
