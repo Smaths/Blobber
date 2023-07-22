@@ -1,6 +1,8 @@
 using System;
 using LootLocker.Requests;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,10 +19,11 @@ namespace UI
         }
 
         [SerializeField] private LeaderBoardPage _currentPage = LeaderBoardPage.Nearby;
-        [SerializeField] private UI_List _topList;
-        [SerializeField] private UI_List _nearbyList;
-        [SerializeField] private Button _nearbyButton;
-        [SerializeField] private Button _topButton;
+        [Required, ChildGameObjectsOnly] [SerializeField] private UI_List _topList;
+        [Required, ChildGameObjectsOnly] [SerializeField] private UI_List _nearbyList;
+        [Required, ChildGameObjectsOnly] [SerializeField] private Button _nearbyButton;
+        [Required, ChildGameObjectsOnly] [SerializeField] private Button _topButton;
+        [Required, ChildGameObjectsOnly] [SerializeField] private TMP_Text _kidFriendlyLabel;
 
         private LootLockerLeaderboardMember[] _topMembers;
         private LootLockerLeaderboardMember[] _nearbyMembers;
@@ -65,6 +68,16 @@ namespace UI
             {
                 _currentPage = LeaderBoardPage.Top;
                 _nearbyButton.gameObject.SetActive(false);
+            }
+
+            // Kid-friendly Table
+            if (PlayerPrefs.GetInt(PrefKeys.IsInKidMode) == 1)
+            {
+                _kidFriendlyLabel.text = "kid-friendly leaderboard <b>IS</b> enabled.";
+            }
+            else
+            {
+                _kidFriendlyLabel.text = "kid-friendly leaderboard is <b>NOT</b> enabled.";
             }
 
             switch (_currentPage)

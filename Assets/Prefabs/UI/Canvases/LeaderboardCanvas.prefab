@@ -2449,7 +2449,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2039
 --- !u!114 &3446220156487603790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2467,6 +2467,7 @@ MonoBehaviour:
   _nearbyList: {fileID: 8998904693774550762}
   _nearbyButton: {fileID: 2360984441766790985}
   _topButton: {fileID: 6851421667947050805}
+  _kidFriendlyLabel: {fileID: 3584115388416055223}
 --- !u!1 &4009100966260450795
 GameObject:
   m_ObjectHideFlags: 0

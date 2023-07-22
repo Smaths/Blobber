@@ -42,8 +42,7 @@ namespace UI
             if (PlayerPrefs.HasKey(PrefKeys.UILevel)) _uiSlider.value = PlayerPrefs.GetFloat(PrefKeys.UILevel);
             else _uiSlider.value = 1;
 
-            if (PlayerPrefs.HasKey(PrefKeys.IsInKidMode))
-                _kidFriendlyToggle.isOn = PlayerPrefs.GetInt(PrefKeys.IsInKidMode) == 1;
+            _kidFriendlyToggle.isOn = PlayerPrefs.GetInt(PrefKeys.IsInKidMode) == 1;
 
             EventSystem.current.SetSelectedGameObject(_musicSlider.gameObject);
         }

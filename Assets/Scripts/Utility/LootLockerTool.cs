@@ -222,7 +222,6 @@ namespace Utility
             OnPlayerDataUpdated?.Invoke();
 
             GetLeaderboardData();
-            // GetPlayerData();
         }
         #endregion
 
