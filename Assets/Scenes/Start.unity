@@ -3255,8 +3255,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2398675970596826465, guid: fda2abc4d678b4389a83016f16c869dd,
         type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2398675970596826465, guid: fda2abc4d678b4389a83016f16c869dd,
+        type: 3}
       propertyPath: ShapeModule.m_Scale.z
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2398675970596826465, guid: fda2abc4d678b4389a83016f16c869dd,
         type: 3}
@@ -3281,7 +3286,7 @@ PrefabInstance:
     - target: {fileID: 2560279431103530001, guid: fda2abc4d678b4389a83016f16c869dd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.37
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2560279431103530001, guid: fda2abc4d678b4389a83016f16c869dd,
         type: 3}

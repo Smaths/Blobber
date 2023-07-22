@@ -19,7 +19,7 @@
             {
                 "type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "buildOutputDirList",
-                "value": "{\"m_Value\":\"/Users/snarfum/Developer/Unity Projects/Blobber/WebGL Builds/0.1.1;/Users/snarfum/Developer/Unity Projects/ScoreSpaceJam26/WebGL Builds;/Users/snarfum/Developer/Unity Projects/ScoreSpaceJam26/WebGL Builds/Build2;;;;;;;\"}"
+                "value": "{\"m_Value\":\"/Users/snarfum/Developer/Unity Projects/Blobber/WebGL Builds;/Users/snarfum/Developer/Unity Projects/Blobber/WebGL Builds/0.1.1;/Users/snarfum/Developer/Unity Projects/ScoreSpaceJam26/WebGL Builds;/Users/snarfum/Developer/Unity Projects/ScoreSpaceJam26/WebGL Builds/Build2;;;;;;\"}"
             }
         ]
     }

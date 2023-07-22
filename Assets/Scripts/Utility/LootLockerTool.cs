@@ -12,7 +12,17 @@ namespace Utility
         #region Private Fields
         [Title("Leaderboard", "Responsible for leaderboard functionality.")]
         [SerializeField, DisplayAsString] private bool _isInitialized;
-        [Title("Settings", horizontalLine: false)]
+
+        [Title("Player Info")]
+        [DisplayAsString]
+        [SerializeField] private bool _hasPlayerInfo;
+        [SerializeField] [ReadOnly] private string _playerPublicUID;
+        [SerializeField] [ReadOnly] private string _playerName;
+        [SerializeField] [ReadOnly] private string _memberID;
+        [SerializeField] [ReadOnly] private string _playerIdentifier;
+        private int _playerID;
+
+        [Title("Leaderboard Settings", horizontalLine: false)]
         [Space]
         [MinValue(1)] [MaxValue(100)]
         [Tooltip("Number of leaderboard members to download for display in the leaderboard UI. Current needed is 11 members to make UI look nice.")]
@@ -20,19 +30,14 @@ namespace Utility
         [Tooltip("Lootlocker key, required to correctly connect to the leaderboard data.")]
         [SerializeField] private string _leaderboardKey = "production_blobber_leaderboard";
         [LabelText("Leaderboard Member Data")]
-        [SerializeField] private LootLockerLeaderboardMember[] _topMembers;
-        [SerializeField] private LootLockerLeaderboardMember[] _nearbyMembers;
+        private LootLockerLeaderboardMember[] _topMembers;
+        private LootLockerLeaderboardMember[] _nearbyMembers;
 
-        [Title("Player Info")]
-        [SerializeField] [ReadOnly] private string _playerName;
-        [SerializeField] [ReadOnly] private string _memberID;
-        [SerializeField] [ReadOnly] private int _playerID;
-        [SerializeField] [ReadOnly] private string _playerPublicUID;
+        [Title("Leaderboard Info")]
         [SerializeField] [ReadOnly] private int _rank;
-        [SerializeField] [ReadOnly] private int _previousRank;
-        [SerializeField] [ReadOnly] private int _previousHighScore;
+        [Indent] [SerializeField] [ReadOnly] private int _previousRank;
         [SerializeField] [ReadOnly] private int _highScore;
-        [SerializeField] private bool _hasPlayerInfo;
+        [Indent] [SerializeField] [ReadOnly] private int _previousHighScore;
 
         [PropertyOrder(100)] [Space]
         [SerializeField] private bool _showDebug;
@@ -89,14 +94,16 @@ namespace Utility
             });
         }
 
-        private void OnGuestSessionSetupCompleted( LootLockerGuestSessionResponse response)
+        private void OnGuestSessionSetupCompleted(LootLockerGuestSessionResponse response)
         {
 
 #if UNITY_EDITOR
             if (_showDebug) Debug.Log($"<color=#58AE91>LootLocker––Successfully started LootLocker session with player ID: {response.player_id}</color>");
 #endif
-            _memberID = response.player_id.ToString();
+            _playerPublicUID = response.public_uid;
             _playerID = response.player_id;
+            _memberID = response.player_id.ToString();
+            _playerIdentifier = response.player_identifier;
 
             _isInitialized = true;
 
@@ -105,10 +112,14 @@ namespace Utility
         #endregion
 
         #region Leaderboard Data
-        public void GetLeaderboardData()
+        private void GetLeaderboardData()
         {
+            if (_rank > 0)
+                GetLeaderboardScoresNearby();
+            else
+                _hasAttemptedNearbyLeaderboardData = true;
+
             GetLeaderboardScoresTop();
-            GetLeaderboardScoresNearby();
         }
         #endregion
 
@@ -241,14 +252,19 @@ namespace Utility
             _rank = _previousRank = response.rank;
             _highScore = _previousHighScore = response.score;
             _memberID = response.member_id;
-            _playerName = response.player.name;
-            _playerID = response.player.id;
-            _playerPublicUID = response.player.public_uid;
+
+            if (response.player != null)
+            {
+                _playerName = response.player.name;
+                _playerID = response.player.id;
+                _playerPublicUID = response.player.public_uid;
+            }
+
             _hasPlayerInfo = true;
 
-            OnPlayerDataUpdated?.Invoke();
-
             GetLeaderboardData();
+
+            OnPlayerDataUpdated?.Invoke();
         }
 
         public void UpdatePlayerName(string playerName)

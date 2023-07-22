@@ -45,9 +45,6 @@ namespace UI
         private void OnPlayerDataUpdated()
         {
             SetLabels();
-
-            Debug.Log($"{gameObject.name} - Animation On Rank Should happen");
-
             // Perform rank animation during gameplay
             if (!ScoreManager.instanceExists) return;
             Sequence sequence = DOTween.Sequence();
