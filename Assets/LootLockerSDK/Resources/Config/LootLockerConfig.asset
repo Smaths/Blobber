@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LootLockerConfig
   m_EditorClassIdentifier: 
   apiKey: prod_1934adef66be456ba1e47db5581ec28c
-  token: a72b8d3b91a02045c20b8208aeac796cff6b745c
+  token: 0589e91cc57336dd615ad459a4a89485fc5b5609
   adminToken: 
   refreshToken: 
   domainKey: tsfp1bkd
@@ -28,5 +28,5 @@ MonoBehaviour:
   userUrl: https://tsfp1bkd.api.lootlocker.io/game
   baseUrl: https://tsfp1bkd.api.lootlocker.io
   clientSideRequestTimeOut: 5
-  currentDebugLevel: 0
+  currentDebugLevel: 1
   allowTokenRefresh: 1
