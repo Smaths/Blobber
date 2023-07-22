@@ -1,5 +1,6 @@
 using System;
 using LootLocker.Requests;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -53,7 +54,7 @@ namespace UI
             _nearbyList.Initialize(_nearbyMembers);
 
             // Player info
-            if (LootLockerTool.Instance.HasPlayerInfo)
+            if (_nearbyMembers.IsNullOrEmpty() == false)
             {
                 _nearbyButton.gameObject.SetActive(true);
 

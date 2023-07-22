@@ -357,8 +357,10 @@ MonoBehaviour:
   _sceneHistory:
   - name: Start
     path: Assets/Scenes/Start.unity
-  - name: GameLoad
-    path: Assets/Scenes/GameLoad.unity
   - name: Level_1
     path: Assets/Scenes/Level_1.unity
+  - name: Tutorial
+    path: Assets/Scenes/Tutorial.unity
+  - name: GameLoad
+    path: Assets/Scenes/GameLoad.unity
   _notes: []
