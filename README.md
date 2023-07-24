@@ -22,10 +22,9 @@ We hope you enjoy this little romp.
 - **Esc** - Pause
 
 ## Screenshots
-
 <table style="padding:5px">
   <tr>
-    <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/5b06535e-c883-44a6-a223-0a3aca838b62" alt="Blobber Home Screen" width = 512px></td>
+    <td><img src="https://github.com/Smaths/Blobber/assets/13316137/8e85c4a2-ba54-432e-856b-4f3cf10daae2" alt="Blobber Start Screen" width = 512px></td>
     <td><img src="https://github.com/Smaths/ScoreSpaceJam26/assets/13316137/dc0a3a2c-e451-4802-94fd-16a34df7e93c" alt="Blobber Gameplay Screenshot One" width = 512px></td>
   </tr>
   <tr>
@@ -52,5 +51,5 @@ This was a great project to implement some common game development systems and p
 _*Some 3rd party assets used (for example the blobs)._
 
 ## Links
-- [Play the Game](https://play.unity.com/mg/other/webgl-builds-356030) on Unity (WebGL)
+- [Play the Game](https://snarfum.itch.io/blobber) on itch.io
 - [ScoreSpace Jam #26 details](https://itch.io/jam/scorejam26)
